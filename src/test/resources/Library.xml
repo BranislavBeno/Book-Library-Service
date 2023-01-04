@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="windows-1250"?>
+<Library>
+    <Book id="1">
+        <Name>Starec a more</Name>
+        <Author>Ernest Hemingway</Author>
+        <Borrowed>
+            <FirstName>Peter</FirstName>
+            <LastName>Prvý</LastName>
+            <From>25.3.2016</From>
+        </Borrowed>
+    </Book>
+    <Book id="2">
+        <Name>Rómeo a Júlia</Name>
+        <Author>William Shakespeare</Author>
+        <Borrowed>
+            <FirstName>Lukáš</FirstName>
+            <LastName>Druhý</LastName>
+            <From>16.6.2018</From>
+        </Borrowed>
+    </Book>
+    <Book id="3">
+        <Name>Krvavé sonety</Name>
+        <Author>Pavol Országh Hviezdoslav</Author>
+        <Borrowed>
+            <FirstName>Matej</FirstName>
+            <LastName>Tretí</LastName>
+            <From>1.2.2017</From>
+        </Borrowed>
+    </Book>
+    <Book id="4">
+        <Name>Hájniková žena</Name>
+        <Author>Pavol Országh Hviezdoslav</Author>
+        <Borrowed>
+            <FirstName></FirstName>
+            <LastName></LastName>
+            <From></From>
+        </Borrowed>
+    </Book>
+    <Book id="5">
+        <Name>Hamlet</Name>
+        <Author>William Shakespeare</Author>
+        <Borrowed>
+            <FirstName>Jozef</FirstName>
+            <LastName>Štvrtý</LastName>
+            <From>25.10.2009</From>
+        </Borrowed>
+    </Book>
+    <Book id="6">
+        <Name>Živý bič</Name>
+        <Author>Milo Urban</Author>
+        <Borrowed>
+            <FirstName></FirstName>
+            <LastName></LastName>
+            <From></From>
+        </Borrowed>
+    </Book>
+</Library>
