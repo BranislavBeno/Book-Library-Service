@@ -8,29 +8,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class BookFileRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(BookFileRepository.class);
 
+    private final String path;
     private List<Book> books;
 
     public BookFileRepository(String path) {
-        initializeRepository(path);
+        this.path = Objects.requireNonNull(path);
+
+        initializeRepository();
     }
 
-    private void initializeRepository(String path) {
-        books = new ArrayList<>();
+    private void initializeRepository() {
         try {
+            XmlMapper mapper = getXmlMapper();
             File file = new File(path);
-            XmlMapper mapper = XmlMapper.builder()
-                    .addModule(new JavaTimeModule())
-                    .build();
-            List<Book> values = mapper.readValue(file, new TypeReference<>() {
+            books = mapper.readValue(file, new TypeReference<>() {
             });
-            books.addAll(values);
 
             String message = "Input file read successfully. %d books imported.".formatted(books.size());
             logger.info(message);
@@ -42,6 +41,27 @@ public class BookFileRepository {
     }
 
     public List<Book> findAll() {
-        return books;
+        return List.copyOf(books);
+    }
+
+    public void exportToFile(String path) {
+        try {
+            XmlMapper xmlMapper = getXmlMapper();
+            File file = new File(path);
+            xmlMapper.writeValue(file, books);
+
+            String message = "Output file saved successfully. %d books exported.".formatted(books.size());
+            logger.info(message);
+        } catch (Exception e) {
+            String message = "Output file '%s' writing failed.".formatted(path);
+            logger.error(message, e);
+            throw new BookFileNotFoundException(message);
+        }
+    }
+
+    private static XmlMapper getXmlMapper() {
+        return XmlMapper.builder()
+                .addModule(new JavaTimeModule())
+                .build();
     }
 }
