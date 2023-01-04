@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-public class BookFileRepository {
+public class BookFileRepository implements BookRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(BookFileRepository.class);
 
@@ -41,15 +41,18 @@ public class BookFileRepository {
         }
     }
 
+    @Override
     public List<Book> findAll() {
-        return List.copyOf(books);
+        return books;
     }
 
+    @Override
     public List<Book> findAllAvailable() {
         Predicate<Book> bookPredicate = b -> b.getBorrowed() != null && b.getBorrowed().from() == null;
         return filterBooks(bookPredicate);
     }
 
+    @Override
     public List<Book> findAllBorrowed() {
         Predicate<Book> bookPredicate = b -> b.getBorrowed() != null && b.getBorrowed().from() != null;
         return filterBooks(bookPredicate);
