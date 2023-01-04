@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 public class BookFileRepository {
 
@@ -44,6 +45,16 @@ public class BookFileRepository {
         return List.copyOf(books);
     }
 
+    public List<Book> findAllAvailable() {
+        Predicate<Book> bookPredicate = b -> b.getBorrowed() != null && b.getBorrowed().from() == null;
+        return filterBooks(bookPredicate);
+    }
+
+    public List<Book> findAllBorrowed() {
+        Predicate<Book> bookPredicate = b -> b.getBorrowed() != null && b.getBorrowed().from() != null;
+        return filterBooks(bookPredicate);
+    }
+
     public void exportToFile(String path) {
         try {
             XmlMapper xmlMapper = getXmlMapper();
@@ -57,6 +68,12 @@ public class BookFileRepository {
             logger.error(message, e);
             throw new BookFileNotFoundException(message);
         }
+    }
+
+    private List<Book> filterBooks(Predicate<Book> predicate) {
+        return books.stream()
+                .filter(predicate)
+                .toList();
     }
 
     private static XmlMapper getXmlMapper() {

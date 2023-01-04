@@ -20,13 +20,13 @@ class BookFileRepositoryTest implements WithAssertions {
     private BookFileRepository cut;
 
     @Test
-    void testFailingRepositoryPopulating() {
+    void testFailingRepositoryImport() {
         assertThatThrownBy(() -> new BookFileRepository("/src/test/repository/file.xml"))
                 .isInstanceOf(BookFileNotFoundException.class);
     }
 
     @Test
-    void testNonEmptyRepository() {
+    void testAllBooks() {
         assertThat(cut.findAll()).hasSize(6);
 
         Book book = cut.findAll().get(0);
@@ -35,6 +35,16 @@ class BookFileRepositoryTest implements WithAssertions {
         Borrowed borrowed = book.getBorrowed();
         assertThat(borrowed).isNotNull();
         assertThat(borrowed.from()).isEqualTo(LocalDate.of(2016, 3, 25));
+    }
+
+    @Test
+    void testAvailableBooks() {
+        assertThat(cut.findAllAvailable()).hasSize(2);
+    }
+
+    @Test
+    void testBorrowedBooks() {
+        assertThat(cut.findAllBorrowed()).hasSize(4);
     }
 
     @Test
