@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/static-layout}"
+      th:with="cardHeader='Available books'" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Library service</title>
+</head>
+<body>
+<section layout:fragment="dynamic-content">
+    <div class="alert alert-warning" role="alert" th:if="${!found}">
+        <strong>Warning:</strong>
+        <span>No available books have been found.</span>
+    </div>
+    <div th:if="${found}">
+        <table aria-label="Available books" class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Author</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${books}">
+                <td th:text="${item.name}"></td>
+                <td th:text="${item.author}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/static-layout}"
+      th:with="cardHeader='All books'" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Library service</title>
+</head>
+<body>
+<section layout:fragment="dynamic-content">
+    <div class="alert alert-warning" role="alert" th:if="${!found}">
+        <strong>Warning:</strong>
+        <span>No books have been found.</span>
+    </div>
+    <div th:if="${found}">
+        <table aria-label="All books" class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Author</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${books}">
+                <td class="table-success" th:text="${item.name}" th:if="${!item.borrowed}" data-bs-toggle="tooltip"
+                    data-bs-placement="right" title="Available"></td>
+                <td class="table-danger" th:text="${item.name}" th:if="${item.borrowed}" data-bs-toggle="tooltip"
+                    data-bs-placement="right" title="Borrowed"></td>
+                <td class="table-success" th:text="${item.author}" th:if="${!item.borrowed}" data-bs-toggle="tooltip"
+                    data-bs-placement="right" title="Available"></td>
+                <td class="table-danger" th:text="${item.author}" th:if="${item.borrowed}" data-bs-toggle="tooltip"
+                    data-bs-placement="right" title="Borrowed"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</body>
+</html>

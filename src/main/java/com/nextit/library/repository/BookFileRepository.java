@@ -9,31 +9,28 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Predicate;
 
-public class BookFileRepository implements BookRepository {
+public final class BookFileRepository implements BookRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(BookFileRepository.class);
 
-    private final String path;
-    private List<Book> books;
+    private final List<Book> books;
 
     public BookFileRepository(String path) {
-        this.path = Objects.requireNonNull(path);
-
-        initializeRepository();
+        this.books = initializeRepository(path);
     }
 
-    private void initializeRepository() {
+    private List<Book> initializeRepository(String path) {
         try {
             XmlMapper mapper = getXmlMapper();
             File file = new File(path);
-            books = mapper.readValue(file, new TypeReference<>() {
+            List<Book> list = mapper.readValue(file, new TypeReference<>() {
             });
-
-            String message = "Input file read successfully. %d books imported.".formatted(books.size());
+            String message = "Input file read successfully. %d books imported.".formatted(list.size());
             logger.info(message);
+
+            return list;
         } catch (Exception e) {
             String message = "Input file '%s' reading failed.".formatted(path);
             logger.error(message, e);

@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 @Converter
-public class BorrowedConverter implements AttributeConverter<Borrowed, String> {
+public final class BorrowedConverter implements AttributeConverter<Borrowed, String> {
 
     private static final Logger logger = LoggerFactory.getLogger(BorrowedConverter.class);
 
