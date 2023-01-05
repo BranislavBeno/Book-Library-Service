@@ -10,7 +10,7 @@ public interface BookRepository {
 
     Page<Book> findAll(Pageable pageable);
 
-    List<Book> findAllAvailable();
+    Page<Book> findAllAvailable(Pageable pageable);
 
     List<Book> findAllBorrowed();
 }

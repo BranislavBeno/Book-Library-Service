@@ -9,15 +9,19 @@ import java.util.List;
 
 public record BookService(BookRepository repository, int pageSize) {
 
-    public Page<Book> findAll(int currentPage) {
-        return repository.findAll(PageRequest.of(currentPage, pageSize));
+    public Page<Book> findAll(int page) {
+        return repository.findAll(getPageRequest(page));
     }
 
-    public List<Book> findAllAvailable() {
-        return List.copyOf(repository.findAllAvailable());
+    public Page<Book> findAllAvailable(int page) {
+        return repository.findAllAvailable(getPageRequest(page));
     }
 
     public List<Book> findAllBorrowed() {
         return List.copyOf(repository.findAllBorrowed());
+    }
+
+    private PageRequest getPageRequest(int page) {
+        return PageRequest.of(page, pageSize);
     }
 }

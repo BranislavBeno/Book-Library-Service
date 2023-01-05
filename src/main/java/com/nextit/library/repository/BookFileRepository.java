@@ -45,25 +45,13 @@ public final class BookFileRepository implements BookRepository {
 
     @Override
     public Page<Book> findAll(Pageable pageable) {
-        int pageSize = pageable.getPageSize();
-        int currentPage = pageable.getPageNumber();
-        int startItem = currentPage * pageSize;
-        List<Book> list;
-
-        if (books.size() < startItem) {
-            list = Collections.emptyList();
-        } else {
-            int toIndex = Math.min(startItem + pageSize, books.size());
-            list = books.subList(startItem, toIndex);
-        }
-
-        return new PageImpl<>(list, PageRequest.of(currentPage, pageSize), books.size());
+        return provideBookPage(pageable, List.copyOf(books));
     }
 
     @Override
-    public List<Book> findAllAvailable() {
+    public Page<Book> findAllAvailable(Pageable pageable) {
         Predicate<Book> predicate = b -> b.getBorrowed() != null && b.getBorrowed().from() == null;
-        return filterBooks(predicate);
+        return provideBookPage(pageable, filterBooks(predicate));
     }
 
     @Override
@@ -97,5 +85,21 @@ public final class BookFileRepository implements BookRepository {
         return XmlMapper.builder()
                 .addModule(new JavaTimeModule())
                 .build();
+    }
+
+    private PageImpl<Book> provideBookPage(Pageable pageable, List<Book> books) {
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<Book> list;
+
+        if (books.size() < startItem) {
+            list = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, books.size());
+            list = books.subList(startItem, toIndex);
+        }
+
+        return new PageImpl<>(list, PageRequest.of(currentPage, pageSize), books.size());
     }
 }

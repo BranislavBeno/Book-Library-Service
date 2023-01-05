@@ -48,7 +48,8 @@ class BookFileRepositoryTest implements WithAssertions {
 
     @Test
     void testAvailableBooks() {
-        assertThat(cut.findAllAvailable()).hasSize(2);
+        Page<Book> books = cut.findAllAvailable(PageRequest.of(0, 5));
+        assertThat(books).hasSize(2);
     }
 
     @Test

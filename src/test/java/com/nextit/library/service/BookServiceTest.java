@@ -13,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.Collections;
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 
@@ -40,9 +39,9 @@ class BookServiceTest implements WithAssertions {
 
     @Test
     void testFindAllAvailable() {
-        Mockito.when(repository.findAllAvailable()).thenReturn(List.of(new Book(), new Book()));
-        cut.findAllAvailable();
-        Mockito.verify(repository).findAllAvailable();
+        Mockito.when(repository.findAllAvailable(any(PageRequest.class))).thenReturn(page);
+        cut.findAllAvailable(0);
+        Mockito.verify(repository).findAllAvailable(any(PageRequest.class));
     }
 
     @Test

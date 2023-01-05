@@ -34,9 +34,9 @@
             </tr>
             </tbody>
         </table>
-        <nav aria-label="Page navigation">
+        <nav aria-label="Page navigation" th:if="${pageNumbers.size() > 1}">
             <ul class="pagination justify-content-center">
-                <li class="page-item" th:if="${books.totalPages > 0}" th:each="pageNumber : ${pageNumbers}">
+                <li class="page-item" th:each="pageNumber : ${pageNumbers}">
                     <a class="page-link" th:href="@{/(page=${pageNumber - 1})}" th:text=${pageNumber}></a>
                 </li>
             </ul>

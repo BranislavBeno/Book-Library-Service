@@ -22,12 +22,19 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="item : ${books}">
+            <tr th:each="item : ${books.content}">
                 <td th:text="${item.name}"></td>
                 <td th:text="${item.author}"></td>
             </tr>
             </tbody>
         </table>
+        <nav aria-label="Page navigation" th:if="${pageNumbers.size() > 1}">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:each="pageNumber : ${pageNumbers}">
+                    <a class="page-link" th:href="@{/available(page=${pageNumber - 1})}" th:text=${pageNumber}></a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </section>
 </body>
