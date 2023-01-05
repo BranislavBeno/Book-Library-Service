@@ -2,6 +2,7 @@ package com.nextit.library.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
@@ -11,12 +12,13 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotNull
+    @NotEmpty
     @JsonProperty("Name")
     private String name;
-    @NotNull
+    @NotEmpty
     @JsonProperty("Author")
     private String author;
+    @NotNull
     @Convert(converter = BorrowedConverter.class)
     @JsonProperty("Borrowed")
     private Borrowed borrowed;

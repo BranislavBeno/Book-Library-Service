@@ -86,3 +86,19 @@
   color: #eee;
   border-color: #555;
 }
+
+[data-theme="dark"] .page-link {
+  color: #375a7f;
+  background-color: #333;
+  border: 1px solid #555;
+}
+
+[data-theme="dark"] .page-link:hover {
+  color: #375a7f;
+  background-color: #444;
+}
+
+[data-theme="dark"] .page-link:focus {
+  color: #375a7f;
+  background-color: #444;
+}

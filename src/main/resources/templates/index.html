@@ -22,7 +22,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="item : ${books}">
+            <tr th:each="item : ${books.content}">
                 <td class="table-success" th:text="${item.name}" th:if="${!item.borrowed}" data-bs-toggle="tooltip"
                     data-bs-placement="right" title="Available"></td>
                 <td class="table-danger" th:text="${item.name}" th:if="${item.borrowed}" data-bs-toggle="tooltip"
@@ -34,6 +34,13 @@
             </tr>
             </tbody>
         </table>
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:if="${books.totalPages > 0}" th:each="pageNumber : ${pageNumbers}">
+                    <a class="page-link" th:href="@{/(page=${pageNumber - 1})}" th:text=${pageNumber}></a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </section>
 </body>

@@ -6,8 +6,13 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.nextit.library.domain.Book;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -39,20 +44,32 @@ public final class BookFileRepository implements BookRepository {
     }
 
     @Override
-    public List<Book> findAll() {
-        return books;
+    public Page<Book> findAll(Pageable pageable) {
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<Book> list;
+
+        if (books.size() < startItem) {
+            list = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, books.size());
+            list = books.subList(startItem, toIndex);
+        }
+
+        return new PageImpl<>(list, PageRequest.of(currentPage, pageSize), books.size());
     }
 
     @Override
     public List<Book> findAllAvailable() {
-        Predicate<Book> bookPredicate = b -> b.getBorrowed() != null && b.getBorrowed().from() == null;
-        return filterBooks(bookPredicate);
+        Predicate<Book> predicate = b -> b.getBorrowed() != null && b.getBorrowed().from() == null;
+        return filterBooks(predicate);
     }
 
     @Override
     public List<Book> findAllBorrowed() {
-        Predicate<Book> bookPredicate = b -> b.getBorrowed() != null && b.getBorrowed().from() != null;
-        return filterBooks(bookPredicate);
+        Predicate<Book> predicate = b -> b.getBorrowed() != null && b.getBorrowed().from() != null;
+        return filterBooks(predicate);
     }
 
     public void exportToFile(String path) {

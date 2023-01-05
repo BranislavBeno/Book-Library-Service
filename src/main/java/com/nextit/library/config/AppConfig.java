@@ -18,8 +18,9 @@ public class AppConfig {
     }
 
     @Bean
-    public BookService bookService(@Autowired BookRepository repository) {
-        return new BookService(repository);
+    public BookService bookService(@Autowired BookRepository repository,
+                                   @Value("${book.service.page.size:20}") int pageSize) {
+        return new BookService(repository, pageSize);
     }
 
     @Bean

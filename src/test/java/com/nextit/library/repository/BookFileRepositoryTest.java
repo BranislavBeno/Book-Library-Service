@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -21,15 +23,22 @@ class BookFileRepositoryTest implements WithAssertions {
 
     @Test
     void testFailingRepositoryImport() {
-        assertThatThrownBy(() -> new BookFileRepository("/src/test/repository/file.xml"))
+        assertThatThrownBy(() -> new BookFileRepository("src/test/resources/Dummy.xml"))
                 .isInstanceOf(BookFileNotFoundException.class);
     }
 
     @Test
-    void testAllBooks() {
-        assertThat(cut.findAll()).hasSize(6);
+    void testEmptyBookPage() {
+        Page<Book> books = cut.findAll(PageRequest.of(1, 10));
+        assertThat(books).isEmpty();
+    }
 
-        Book book = cut.findAll().get(0);
+    @Test
+    void testAllBooks() {
+        Page<Book> books = cut.findAll(PageRequest.of(0, 5));
+        assertThat(books).hasSize(5);
+
+        Book book = books.getContent().get(0);
         assertThat(book.getAuthor()).isEqualTo("Ernest Hemingway");
 
         Borrowed borrowed = book.getBorrowed();
@@ -52,7 +61,11 @@ class BookFileRepositoryTest implements WithAssertions {
         String filePath = path.resolve("temp.xml").toString();
         cut.exportToFile(filePath);
 
+        PageRequest request = PageRequest.of(1, 5);
+        int size = cut.findAll(request).getContent().size();
         BookFileRepository repository = new BookFileRepository(filePath);
-        assertThat(repository.findAll()).hasSize(repository.findAll().size());
+        Page<Book> items = repository.findAll(request);
+
+        assertThat(items).hasSize(size);
     }
 }
