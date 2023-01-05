@@ -19,15 +19,16 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @Import(AppConfig.class)
 class BookControllerTest {
 
+    @Autowired
+    private BookService service;
+    @Autowired
+    private BookMapper mapper;
+
     @Nested
     class EmptyBookListTest {
 
         @Autowired
         private MockMvc mockMvc;
-        @Autowired
-        private BookService service;
-        @Autowired
-        private BookMapper mapper;
 
         @DynamicPropertySource
         static void properties(DynamicPropertyRegistry registry) {
@@ -51,10 +52,6 @@ class BookControllerTest {
 
         @Autowired
         private MockMvc mockMvc;
-        @Autowired
-        private BookService service;
-        @Autowired
-        private BookMapper mapper;
 
         @DynamicPropertySource
         static void properties(DynamicPropertyRegistry registry) {
@@ -62,13 +59,19 @@ class BookControllerTest {
         }
 
         @ParameterizedTest
-        @CsvSource(value = {"/,index", "/available,available-books", "/borrowed,borrowed-books"})
-        void testShowingBookList(String url, String viewName) throws Exception {
+        @CsvSource(value = {
+                "/,index,1,true",
+                "/,index,2,false",
+                "/available,available-books,0,true",
+                "/borrowed,borrowed-books,0,true"
+        })
+        void testShowingBookList(String url, String viewName, String page, boolean found) throws Exception {
             this.mockMvc
-                    .perform(MockMvcRequestBuilders.get(url))
+                    .perform(MockMvcRequestBuilders.get(url)
+                            .param("page", page))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.view().name(viewName))
-                    .andExpect(MockMvcResultMatchers.model().attribute("found", true))
+                    .andExpect(MockMvcResultMatchers.model().attribute("found", found))
                     .andExpect(MockMvcResultMatchers.model().attributeExists("books", "pageNumbers"));
         }
     }
