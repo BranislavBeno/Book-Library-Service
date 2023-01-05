@@ -1,11 +1,9 @@
 package com.nextit.library.dto;
 
 import com.nextit.library.domain.Book;
-import com.nextit.library.domain.Borrowed;
+import com.nextit.library.util.BookUtils;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
 
 class BookMapperTest implements WithAssertions {
 
@@ -13,7 +11,7 @@ class BookMapperTest implements WithAssertions {
 
     @Test
     void testMappingToBookDto() {
-        Book book = createBook();
+        Book book = BookUtils.createBook();
         BookDto dto = cut.toBookDto(book);
 
         assertThat(dto.id()).isEqualTo(1);
@@ -24,7 +22,7 @@ class BookMapperTest implements WithAssertions {
 
     @Test
     void testMappingToAvailableDto() {
-        Book book = createBook();
+        Book book = BookUtils.createBook();
         BookAvailableDto dto = cut.toAvailableDto(book);
 
         assertThat(dto.id()).isEqualTo(1);
@@ -34,7 +32,7 @@ class BookMapperTest implements WithAssertions {
 
     @Test
     void testMappingToBorrowedDto() {
-        Book book = createBook();
+        Book book = BookUtils.createBook();
         BookBorrowedDto dto = cut.toBorrowedDto(book);
 
         assertThat(dto.id()).isEqualTo(1);
@@ -42,16 +40,5 @@ class BookMapperTest implements WithAssertions {
         assertThat(dto.author()).isEqualTo("William Shakespeare");
         assertThat(dto.borrowedTo()).isEqualTo("Peter Pavol");
         assertThat(dto.borrowedOn()).isEqualTo("04/01/2023");
-    }
-
-    private Book createBook() {
-        Book book = new Book();
-        book.setId(1);
-        book.setName("Hamlet");
-        book.setAuthor("William Shakespeare");
-        Borrowed borrowed = new Borrowed("Peter", "Pavol", LocalDate.of(2023, 1, 4));
-        book.setBorrowed(borrowed);
-
-        return book;
     }
 }
