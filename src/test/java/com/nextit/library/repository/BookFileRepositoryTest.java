@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -20,6 +22,11 @@ class BookFileRepositoryTest implements WithAssertions {
     private Path path;
     @Autowired
     private BookFileRepository cut;
+
+    @DynamicPropertySource
+    static void properties(DynamicPropertyRegistry registry) {
+        registry.add("book.repository.path", () -> "src/test/resources/Library.xml");
+    }
 
     @Test
     void testFailingRepositoryImport() {
@@ -35,10 +42,10 @@ class BookFileRepositoryTest implements WithAssertions {
 
     @Test
     void testAllBooks() {
-        Page<Book> books = cut.findAll(PageRequest.of(0, 5));
-        assertThat(books).hasSize(5);
+        Page<Book> page = cut.findAll(getRequest());
+        assertThat(page).hasSize(5);
 
-        Book book = books.getContent().get(0);
+        Book book = page.getContent().get(0);
         assertThat(book.getAuthor()).isEqualTo("Ernest Hemingway");
 
         Borrowed borrowed = book.getBorrowed();
@@ -48,13 +55,14 @@ class BookFileRepositoryTest implements WithAssertions {
 
     @Test
     void testAvailableBooks() {
-        Page<Book> books = cut.findAllAvailable(PageRequest.of(0, 5));
-        assertThat(books).hasSize(2);
+        Page<Book> page = cut.findAllAvailable(getRequest());
+        assertThat(page).hasSize(2);
     }
 
     @Test
     void testBorrowedBooks() {
-        assertThat(cut.findAllBorrowed()).hasSize(4);
+        Page<Book> page = cut.findAllBorrowed(getRequest());
+        assertThat(page).hasSize(4);
     }
 
     @Test
@@ -68,5 +76,9 @@ class BookFileRepositoryTest implements WithAssertions {
         Page<Book> items = repository.findAll(request);
 
         assertThat(items).hasSize(size);
+    }
+
+    private static PageRequest getRequest() {
+        return PageRequest.of(0, 5);
     }
 }

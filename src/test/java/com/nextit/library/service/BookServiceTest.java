@@ -12,8 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import java.util.Collections;
-
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
@@ -46,8 +44,8 @@ class BookServiceTest implements WithAssertions {
 
     @Test
     void testFindAllBorrowed() {
-        Mockito.when(repository.findAllBorrowed()).thenReturn(Collections.emptyList());
-        cut.findAllBorrowed();
-        Mockito.verify(repository).findAllBorrowed();
+        Mockito.when(repository.findAllBorrowed(any(PageRequest.class))).thenReturn(page);
+        cut.findAllBorrowed(2);
+        Mockito.verify(repository).findAllBorrowed(any(PageRequest.class));
     }
 }

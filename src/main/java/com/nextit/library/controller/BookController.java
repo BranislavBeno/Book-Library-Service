@@ -3,7 +3,6 @@ package com.nextit.library.controller;
 import com.nextit.library.domain.Book;
 import com.nextit.library.dto.BookDto;
 import com.nextit.library.dto.BookMapper;
-import com.nextit.library.dto.BorrowedBookDto;
 import com.nextit.library.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -60,13 +59,13 @@ public final class BookController {
     }
 
     @GetMapping("/borrowed")
-    public String showBorrowed(Model model) {
-        List<BorrowedBookDto> books = bookService.findAllBorrowed().stream()
-                .map(mapper::toBorrowedDto)
-                .toList();
+    public String showBorrowed(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+        Page<Book> bookPage = bookService.findAllBorrowed(page);
+        PageData pageData = providePageData(page, bookPage, mapper::toBorrowedDto);
 
-        model.addAttribute(FOUND_ATTR, !books.isEmpty());
-        model.addAttribute(BOOKS_ATTR, books);
+        model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
+        model.addAttribute(BOOKS_ATTR, pageData.dtoPage());
+        model.addAttribute(PAGE_NUMBERS_ATTR, pageData.pageNumbers());
 
         return "borrowed-books";
     }

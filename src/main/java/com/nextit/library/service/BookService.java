@@ -5,8 +5,6 @@ import com.nextit.library.repository.BookRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import java.util.List;
-
 public record BookService(BookRepository repository, int pageSize) {
 
     public Page<Book> findAll(int page) {
@@ -17,8 +15,8 @@ public record BookService(BookRepository repository, int pageSize) {
         return repository.findAllAvailable(getPageRequest(page));
     }
 
-    public List<Book> findAllBorrowed() {
-        return List.copyOf(repository.findAllBorrowed());
+    public Page<Book> findAllBorrowed(int page) {
+        return repository.findAllBorrowed(getPageRequest(page));
     }
 
     private PageRequest getPageRequest(int page) {

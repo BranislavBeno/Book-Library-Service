@@ -36,13 +36,13 @@ class BookControllerTest {
 
         @ParameterizedTest
         @CsvSource(value = {"/,index", "/available,available-books", "/borrowed,borrowed-books"})
-        void testShowingBookList(String url, String viewName) throws Exception {
+        void testShowingEmptyBookList(String url, String viewName) throws Exception {
             this.mockMvc
                     .perform(MockMvcRequestBuilders.get(url))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.view().name(viewName))
                     .andExpect(MockMvcResultMatchers.model().attribute("found", false))
-                    .andExpect(MockMvcResultMatchers.model().attributeExists("books"));
+                    .andExpect(MockMvcResultMatchers.model().attributeExists("books", "pageNumbers"));
         }
     }
 
@@ -56,6 +56,11 @@ class BookControllerTest {
         @Autowired
         private BookMapper mapper;
 
+        @DynamicPropertySource
+        static void properties(DynamicPropertyRegistry registry) {
+            registry.add("book.repository.path", () -> "src/test/resources/Library.xml");
+        }
+
         @ParameterizedTest
         @CsvSource(value = {"/,index", "/available,available-books", "/borrowed,borrowed-books"})
         void testShowingBookList(String url, String viewName) throws Exception {
@@ -64,7 +69,7 @@ class BookControllerTest {
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.view().name(viewName))
                     .andExpect(MockMvcResultMatchers.model().attribute("found", true))
-                    .andExpect(MockMvcResultMatchers.model().attributeExists("books"));
+                    .andExpect(MockMvcResultMatchers.model().attributeExists("books", "pageNumbers"));
         }
     }
 }
