@@ -35,13 +35,13 @@ class BookFileRepositoryTest implements WithAssertions {
     }
 
     @Test
-    void testEmptyBookPage() {
+    void testFindEmptyBookPage() {
         Page<Book> books = cut.findAll(PageRequest.of(1, 10));
         assertThat(books).isEmpty();
     }
 
     @Test
-    void testAllBooks() {
+    void testFindAllBooks() {
         Page<Book> page = cut.findAll(getRequest());
         assertThat(page).hasSize(5);
 
@@ -54,13 +54,13 @@ class BookFileRepositoryTest implements WithAssertions {
     }
 
     @Test
-    void testAvailableBooks() {
+    void testFindAvailableBooks() {
         Page<Book> page = cut.findAllAvailable(getRequest());
         assertThat(page).hasSize(2);
     }
 
     @Test
-    void testBorrowedBooks() {
+    void testFindBorrowedBooks() {
         Page<Book> page = cut.findAllBorrowed(getRequest());
         assertThat(page).hasSize(4);
     }
@@ -76,6 +76,41 @@ class BookFileRepositoryTest implements WithAssertions {
         Page<Book> items = repository.findAll(request);
 
         assertThat(items).hasSize(size);
+    }
+
+    @Test
+    void testCreateNewBook() {
+        PageRequest request = PageRequest.of(0, 10);
+        int previousSize = cut.findAll(request).getContent().size();
+
+        Book entity = new Book();
+        entity.setName("King Rat");
+        entity.setAuthor("James Clavell");
+
+        assertThat(entity.getId()).isZero();
+        cut.save(entity);
+        assertThat(entity.getId()).isNotZero();
+
+        int currentSize = cut.findAll(request).getContent().size();
+        assertThat(currentSize).isGreaterThan(previousSize);
+    }
+
+    @Test
+    void testChangeExistingBook() {
+        PageRequest request = PageRequest.of(0, 10);
+        int previousSize = cut.findAll(request).getContent().size();
+
+        Book entity = new Book();
+        entity.setId(5);
+        entity.setName("Macbeth");
+        Borrowed borrowed = new Borrowed("Maria", "Tudor", LocalDate.now());
+        entity.setBorrowed(borrowed);
+
+        Book book = cut.save(entity);
+        assertThat(entity.getId()).isEqualTo(book.getId());
+
+        int currentSize = cut.findAll(request).getContent().size();
+        assertThat(currentSize).isEqualTo(previousSize);
     }
 
     private static PageRequest getRequest() {

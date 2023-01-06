@@ -10,7 +10,7 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     @NotEmpty
     @JsonProperty("Name")
@@ -23,11 +23,11 @@ public class Book {
     @JsonProperty("Borrowed")
     private Borrowed borrowed;
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -53,5 +53,10 @@ public class Book {
 
     public void setBorrowed(Borrowed borrowed) {
         this.borrowed = borrowed;
+    }
+
+    @Override
+    public String toString() {
+        return "Book[id=%d, name='%s', author='%s']".formatted(id, name, author);
     }
 }

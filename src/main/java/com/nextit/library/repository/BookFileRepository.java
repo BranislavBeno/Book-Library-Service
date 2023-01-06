@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
 public final class BookFileRepository implements BookRepository {
@@ -21,21 +23,30 @@ public final class BookFileRepository implements BookRepository {
     private static final Logger logger = LoggerFactory.getLogger(BookFileRepository.class);
 
     private final List<Book> books;
+    private final AtomicInteger identifier;
 
     public BookFileRepository(String path) {
-        this.books = initializeRepository(path);
+        InitialData data = initialize(path);
+
+        this.books = data.books;
+        this.identifier = data.id;
     }
 
-    private List<Book> initializeRepository(String path) {
+    private InitialData initialize(String path) {
         try {
             XmlMapper mapper = getXmlMapper();
             File file = new File(path);
             List<Book> list = mapper.readValue(file, new TypeReference<>() {
             });
+            int maxId = list.stream()
+                    .mapToInt(Book::getId)
+                    .max()
+                    .orElse(0);
+
             String message = "Input file read successfully. %d books imported.".formatted(list.size());
             logger.info(message);
 
-            return list;
+            return new InitialData(list, new AtomicInteger(maxId));
         } catch (Exception e) {
             String message = "Input file '%s' reading failed.".formatted(path);
             logger.error(message, e);
@@ -58,6 +69,35 @@ public final class BookFileRepository implements BookRepository {
     public Page<Book> findAllBorrowed(Pageable pageable) {
         Predicate<Book> predicate = b -> b.getBorrowed() != null && b.getBorrowed().from() != null;
         return provideBookPage(pageable, filterBooks(predicate));
+    }
+
+    @Override
+    public Book save(Book entity) {
+        try {
+            Book book = findById(entity.getId()).orElseThrow();
+            book.setAuthor(entity.getAuthor());
+            book.setName(entity.getName());
+            book.setBorrowed(entity.getBorrowed());
+
+            String message = "Entity \"%s\" saved successfully.".formatted(book.toString());
+            logger.info(message);
+
+            return book;
+        } catch (Exception e) {
+            entity.setId(identifier.incrementAndGet());
+            books.add(entity);
+
+            String message = "New entity \"%s\" added into repository.".formatted(entity.toString());
+            logger.info(message);
+
+            return entity;
+        }
+    }
+
+    private Optional<Book> findById(int id) {
+        return books.stream()
+                .filter(b -> b.getId() == id)
+                .findFirst();
     }
 
     public void exportToFile(String path) {
@@ -101,5 +141,8 @@ public final class BookFileRepository implements BookRepository {
         }
 
         return new PageImpl<>(list, PageRequest.of(currentPage, pageSize), books.size());
+    }
+
+    private record InitialData(List<Book> books, AtomicInteger id) {
     }
 }

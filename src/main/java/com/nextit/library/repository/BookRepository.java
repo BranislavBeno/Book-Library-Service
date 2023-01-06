@@ -11,4 +11,6 @@ public interface BookRepository {
     Page<Book> findAllAvailable(Pageable pageable);
 
     Page<Book> findAllBorrowed(Pageable pageable);
+
+    Book save(Book entity);
 }
