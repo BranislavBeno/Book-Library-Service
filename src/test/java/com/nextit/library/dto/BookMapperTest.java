@@ -25,9 +25,19 @@ class BookMapperTest implements WithAssertions {
         Book book = BookUtils.createBook();
         AvailableBookDto dto = cut.toAvailableDto(book);
 
-        assertThat(dto.id()).isEqualTo(1);
-        assertThat(dto.name()).isEqualTo("Hamlet");
-        assertThat(dto.author()).isEqualTo("William Shakespeare");
+        assertThat(dto.getId()).isEqualTo(1);
+        assertThat(dto.getName()).isEqualTo("Hamlet");
+        assertThat(dto.getAuthor()).isEqualTo("William Shakespeare");
+    }
+
+    @Test
+    void testMappingFromAvailableDto() {
+        AvailableBookDto dto = BookUtils.createAvailableDto();
+        Book book = cut.toEntity(dto);
+
+        assertThat(book.getId()).isEqualTo(1);
+        assertThat(book.getName()).isEqualTo("Hamlet");
+        assertThat(book.getAuthor()).isEqualTo("William Shakespeare");
     }
 
     @Test

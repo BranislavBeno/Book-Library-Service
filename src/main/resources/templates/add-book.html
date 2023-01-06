@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/static-layout}"
+      th:with="cardHeader='Add new book'" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Library service</title>
+</head>
+<body>
+<section layout:fragment="dynamic-content">
+    <form class="row g-2" th:method="POST" th:object="${availableBookDto}" th:action="@{/create}">
+        <div class="col-12">
+            <label class="form-label" for="bookName">Book name</label>
+            <input id="bookName" class="form-control" type="text" aria-describedby="bookNameHelp" th:field="*{name}"
+                   th:classappend="${#fields.hasErrors('name')}? 'is-invalid'">
+            <div id="bookNameHelp" class="form-text">Book name can't be empty, or longer than 15 signs.</div>
+        </div>
+        <div class="col-12">
+            <label class="form-label" for="bookAuthor">Book author</label>
+            <input id="bookAuthor" class="form-control" type="text" aria-describedby="bookAuthorHelp"
+                   th:field="*{author}"
+                   th:classappend="${#fields.hasErrors('author')}? 'is-invalid'">
+            <div id="bookAuthorHelp" class="form-text">Book author can't be empty.</div>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</section>
+</body>
+</html>

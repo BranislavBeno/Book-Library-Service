@@ -1,16 +1,20 @@
 package com.nextit.library.controller;
 
 import com.nextit.library.domain.Book;
+import com.nextit.library.dto.AvailableBookDto;
 import com.nextit.library.dto.BookDto;
 import com.nextit.library.dto.BookMapper;
 import com.nextit.library.service.BookService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Collections;
@@ -64,6 +68,25 @@ public final class BookController extends AbstractBookController {
         model.addAttribute(PAGE_NUMBERS_ATTR, pageData.pageNumbers());
 
         return "borrowed-books";
+    }
+
+    @GetMapping("/add")
+    public String addBook(Model model) {
+        model.addAttribute("availableBookDto", new AvailableBookDto());
+
+        return "add-book";
+    }
+
+    @PostMapping("/create")
+    public String create(@Valid AvailableBookDto availableBookDto, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "add-book";
+        }
+
+        Book book = getMapper().toEntity(availableBookDto);
+        getBookService().save(book);
+
+        return "redirect:/";
     }
 
     private Page<BookDto> provideDtoPage(int page, Page<Book> bookPage, Function<Book, BookDto> function) {

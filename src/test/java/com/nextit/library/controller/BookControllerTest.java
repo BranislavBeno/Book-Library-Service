@@ -4,6 +4,7 @@ import com.nextit.library.config.AppConfig;
 import com.nextit.library.dto.BookMapper;
 import com.nextit.library.service.BookService;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 @WebMvcTest(BookController.class)
 @Import(AppConfig.class)
 class BookControllerTest {
@@ -23,29 +27,6 @@ class BookControllerTest {
     private BookService service;
     @Autowired
     private BookMapper mapper;
-
-    @Nested
-    class EmptyBookListTest {
-
-        @Autowired
-        private MockMvc mockMvc;
-
-        @DynamicPropertySource
-        static void properties(DynamicPropertyRegistry registry) {
-            registry.add("book.repository.path", () -> "src/test/resources/Empty.xml");
-        }
-
-        @ParameterizedTest
-        @CsvSource(value = {"/,index", "/available,available-books", "/borrowed,borrowed-books"})
-        void testShowingEmptyBookList(String url, String viewName) throws Exception {
-            this.mockMvc
-                    .perform(MockMvcRequestBuilders.get(url))
-                    .andExpect(MockMvcResultMatchers.status().isOk())
-                    .andExpect(MockMvcResultMatchers.view().name(viewName))
-                    .andExpect(MockMvcResultMatchers.model().attribute("found", false))
-                    .andExpect(MockMvcResultMatchers.model().attributeExists("books", "pageNumbers"));
-        }
-    }
 
     @Nested
     class BookListTest {
@@ -72,6 +53,60 @@ class BookControllerTest {
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.view().name(viewName))
                     .andExpect(MockMvcResultMatchers.model().attribute("found", found))
+                    .andExpect(MockMvcResultMatchers.model().attributeExists("books", "pageNumbers"));
+        }
+
+        @Test
+        void testShowAddBookForm() throws Exception {
+            this.mockMvc
+                    .perform(MockMvcRequestBuilders.get("/add"))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.view().name("add-book"))
+                    .andExpect(MockMvcResultMatchers.model().attributeExists("availableBookDto"));
+        }
+
+        @Test
+        void testRejectingAddingNewBook() throws Exception {
+            this.mockMvc
+                    .perform(post("/create")
+                            .param("name", "Very long book name")
+                            .param("author", "John Doe"))
+                    .andExpect(status().isOk())
+                    .andExpect(view().name("add-book"))
+                    .andExpect(model().hasErrors())
+                    .andExpect(model().attributeHasErrors("availableBookDto"));
+        }
+
+        @Test
+        void testAddingNewBook() throws Exception {
+            this.mockMvc
+                    .perform(post("/create")
+                            .param("name", "Book name")
+                            .param("author", "John Doe"))
+                    .andExpect(status().is3xxRedirection())
+                    .andExpect(header().string("Location", "/"));
+        }
+    }
+
+    @Nested
+    class EmptyBookListTest {
+
+        @Autowired
+        private MockMvc mockMvc;
+
+        @DynamicPropertySource
+        static void properties(DynamicPropertyRegistry registry) {
+            registry.add("book.repository.path", () -> "src/test/resources/Empty.xml");
+        }
+
+        @ParameterizedTest
+        @CsvSource(value = {"/,index", "/available,available-books", "/borrowed,borrowed-books"})
+        void testShowingEmptyBookList(String url, String viewName) throws Exception {
+            this.mockMvc
+                    .perform(MockMvcRequestBuilders.get(url))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.view().name(viewName))
+                    .andExpect(MockMvcResultMatchers.model().attribute("found", false))
                     .andExpect(MockMvcResultMatchers.model().attributeExists("books", "pageNumbers"));
         }
     }

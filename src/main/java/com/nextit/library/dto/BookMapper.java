@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 public final class BookMapper {
 
     public AnyBookDto toAnyDto(Book book) {
-        long id = book.getId();
+        int id = book.getId();
         String name = book.getName();
         String author = book.getAuthor();
         boolean borrowed = book.getBorrowed() != null && book.getBorrowed().from() != null;
@@ -15,8 +15,17 @@ public final class BookMapper {
         return new AnyBookDto(id, name, author, borrowed);
     }
 
+    public Book toEntity(AvailableBookDto dto) {
+        Book book = new Book();
+        book.setId(dto.getId());
+        book.setName(dto.getName());
+        book.setAuthor(dto.getAuthor());
+
+        return book;
+    }
+
     public AvailableBookDto toAvailableDto(Book book) {
-        long id = book.getId();
+        int id = book.getId();
         String name = book.getName();
         String author = book.getAuthor();
 
@@ -24,7 +33,7 @@ public final class BookMapper {
     }
 
     public BorrowedBookDto toBorrowedDto(Book book) {
-        long id = book.getId();
+        int id = book.getId();
         String name = book.getName();
         String author = book.getAuthor();
         String borrowedTo = String.join(" ", book.getBorrowed().firstName(), book.getBorrowed().lastName());

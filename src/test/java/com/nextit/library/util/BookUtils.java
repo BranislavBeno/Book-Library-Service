@@ -2,6 +2,7 @@ package com.nextit.library.util;
 
 import com.nextit.library.domain.Book;
 import com.nextit.library.domain.Borrowed;
+import com.nextit.library.dto.AvailableBookDto;
 
 import java.time.LocalDate;
 
@@ -19,5 +20,9 @@ public final class BookUtils {
         book.setBorrowed(borrowed);
 
         return book;
+    }
+
+    public static AvailableBookDto createAvailableDto() {
+        return new AvailableBookDto(1, "Hamlet", "William Shakespeare");
     }
 }
