@@ -19,6 +19,10 @@ public record BookService(BookRepository repository, int pageSize) {
         return repository.findAllBorrowed(getPageRequest(page));
     }
 
+    public Book save(Book book) {
+        return repository.save(book);
+    }
+
     private PageRequest getPageRequest(int page) {
         return PageRequest.of(page, pageSize);
     }

@@ -21,6 +21,8 @@ class BookServiceTest implements WithAssertions {
     private BookRepository repository;
     @Mock
     private Page<Book> page;
+    @Mock
+    private Book book;
     private BookService cut;
 
     @BeforeEach
@@ -47,5 +49,12 @@ class BookServiceTest implements WithAssertions {
         Mockito.when(repository.findAllBorrowed(any(PageRequest.class))).thenReturn(page);
         cut.findAllBorrowed(2);
         Mockito.verify(repository).findAllBorrowed(any(PageRequest.class));
+    }
+
+    @Test
+    void testSaveBook() {
+        Mockito.when(repository.save(any(Book.class))).thenReturn(book);
+        cut.save(book);
+        Mockito.verify(repository).save(any(Book.class));
     }
 }
