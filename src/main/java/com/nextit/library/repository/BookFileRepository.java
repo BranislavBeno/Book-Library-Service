@@ -50,7 +50,7 @@ public final class BookFileRepository implements BookRepository {
 
     @Override
     public Page<Book> findAllAvailable(Pageable pageable) {
-        Predicate<Book> predicate = b -> b.getBorrowed() != null && b.getBorrowed().from() == null;
+        Predicate<Book> predicate = b -> b.getBorrowed() == null || b.getBorrowed().from() == null;
         return provideBookPage(pageable, filterBooks(predicate));
     }
 
