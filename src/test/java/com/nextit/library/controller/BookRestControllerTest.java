@@ -3,7 +3,9 @@ package com.nextit.library.controller;
 import com.nextit.library.config.AppConfig;
 import com.nextit.library.dto.BookMapper;
 import com.nextit.library.service.BookService;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -24,27 +26,68 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class BookRestControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
-    @Autowired
     private BookService service;
     @MockBean
     private BookMapper mapper;
 
-    @DynamicPropertySource
-    static void properties(DynamicPropertyRegistry registry) {
-        registry.add("book.repository.path", () -> "src/test/resources/Library.xml");
+    @Nested
+    class BookListTest {
+
+        @Autowired
+        private MockMvc mockMvc;
+
+        @DynamicPropertySource
+        static void properties(DynamicPropertyRegistry registry) {
+            registry.add("book.repository.path", () -> "src/test/resources/Library.xml");
+        }
+
+        @ParameterizedTest
+        @CsvSource(value = {
+                "all,1,1",
+                "all,2,0",
+                "available,0,2",
+                "borrowed,0,4"
+        })
+        void testFindAll(String endpoint, String page, int size) throws Exception {
+            this.mockMvc
+                    .perform(get("/api/v1/books/" + endpoint)
+                            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+                            .param("page", page))
+                    .andExpect(status().is(200))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.size()", is(size)))
+                    .andDo(print())
+                    .andReturn();
+        }
     }
 
-    @Test
-    void testFindAll() throws Exception {
-        this.mockMvc
-                .perform(get("/api/v1/books/all")
-                        .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                        .param("page", "1"))
-                .andExpect(status().is(200))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.size()", is(1)))
-                .andDo(print())
-                .andReturn();
+    @Nested
+    class EmptyBookListTest {
+
+        @Autowired
+        private MockMvc mockMvc;
+
+        @DynamicPropertySource
+        static void properties(DynamicPropertyRegistry registry) {
+            registry.add("book.repository.path", () -> "src/test/resources/Empty.xml");
+        }
+
+        @ParameterizedTest
+        @CsvSource(value = {
+                "all,0,0",
+                "available,0,0",
+                "borrowed,0,0"
+        })
+        void testFindAll(String endpoint, String page, int size) throws Exception {
+            this.mockMvc
+                    .perform(get("/api/v1/books/" + endpoint)
+                            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+                            .param("page", page))
+                    .andExpect(status().is(200))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.size()", is(size)))
+                    .andDo(print())
+                    .andReturn();
+        }
     }
 }
