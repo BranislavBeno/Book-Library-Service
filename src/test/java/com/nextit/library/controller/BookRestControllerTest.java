@@ -3,12 +3,15 @@ package com.nextit.library.controller;
 import com.nextit.library.config.AppConfig;
 import com.nextit.library.dto.BookMapper;
 import com.nextit.library.service.BookService;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -18,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -27,10 +31,11 @@ class BookRestControllerTest {
 
     @Autowired
     private BookService service;
-    @MockBean
+    @Autowired
     private BookMapper mapper;
 
     @Nested
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     class BookListTest {
 
         @Autowired
@@ -41,6 +46,7 @@ class BookRestControllerTest {
             registry.add("book.repository.path", () -> "src/test/resources/Library.xml");
         }
 
+        @Order(1)
         @ParameterizedTest
         @CsvSource(value = {
                 "all,1,1",
@@ -58,6 +64,45 @@ class BookRestControllerTest {
                     .andExpect(jsonPath("$.size()", is(size)))
                     .andDo(print())
                     .andReturn();
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {
+                """
+                        {
+                            "name": "Very long book name",
+                            "author": "John Doe"
+                        }""",
+                """
+                        {
+                            "name": "",
+                            "author": "John Doe"
+                        }""",
+                """
+                        {
+                            "name": "Book name",
+                            "author": ""
+                        }"""})
+        void testFailingAdd(String body) throws Exception {
+            this.mockMvc
+                    .perform(post("/api/v1/books/add")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(body))
+                    .andExpect(status().isBadRequest());
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"""
+                {
+                "name": "Book name",
+                "author": "John Doe"
+                }"""})
+        void testSuccessfulAdd(String body) throws Exception {
+            this.mockMvc
+                    .perform(post("/api/v1/books/add")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(body))
+                    .andExpect(status().isCreated());
         }
     }
 
