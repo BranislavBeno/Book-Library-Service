@@ -15,29 +15,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
 @Controller
-public final class BookController {
+public final class BookController extends AbstractBookController {
 
     private static final String FOUND_ATTR = "found";
     private static final String BOOKS_ATTR = "books";
     private static final String PAGE_NUMBERS_ATTR = "pageNumbers";
-    private final BookService bookService;
-    private final BookMapper mapper;
 
-    public BookController(@Autowired BookService bookService,
+    public BookController(@Autowired BookService service,
                           @Autowired BookMapper mapper) {
-        this.bookService = Objects.requireNonNull(bookService);
-        this.mapper = Objects.requireNonNull(mapper);
+        super(service, mapper);
     }
 
     @GetMapping("/")
     public String showAll(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-        Page<Book> bookPage = bookService.findAll(page);
-        PageData pageData = providePageData(page, bookPage, mapper::toAnyDto);
+        Page<Book> bookPage = getBookService().findAll(page);
+        PageData pageData = providePageData(page, bookPage, b -> getMapper().toAnyDto(b));
 
         model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
         model.addAttribute(BOOKS_ATTR, pageData.dtoPage());
@@ -48,8 +44,8 @@ public final class BookController {
 
     @GetMapping("/available")
     public String showAvailable(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-        Page<Book> bookPage = bookService.findAllAvailable(page);
-        PageData pageData = providePageData(page, bookPage, mapper::toAvailableDto);
+        Page<Book> bookPage = getBookService().findAllAvailable(page);
+        PageData pageData = providePageData(page, bookPage, b -> getMapper().toAvailableDto(b));
 
         model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
         model.addAttribute(BOOKS_ATTR, pageData.dtoPage());
@@ -60,8 +56,8 @@ public final class BookController {
 
     @GetMapping("/borrowed")
     public String showBorrowed(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-        Page<Book> bookPage = bookService.findAllBorrowed(page);
-        PageData pageData = providePageData(page, bookPage, mapper::toBorrowedDto);
+        Page<Book> bookPage = getBookService().findAllBorrowed(page);
+        PageData pageData = providePageData(page, bookPage, b -> getMapper().toBorrowedDto(b));
 
         model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
         model.addAttribute(BOOKS_ATTR, pageData.dtoPage());
@@ -76,7 +72,7 @@ public final class BookController {
                 .map(function)
                 .toList();
 
-        return new PageImpl<>(content, PageRequest.of(page, bookService.pageSize()), bookPage.getTotalPages());
+        return new PageImpl<>(content, PageRequest.of(page, getBookService().pageSize()), bookPage.getTotalPages());
     }
 
     private List<Integer> providePageNumbers(int totalPages) {
