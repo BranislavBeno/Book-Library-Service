@@ -1,25 +1,15 @@
 package com.nextit.library.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 
-@Entity
 public class Book {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotEmpty
     @JsonProperty("Name")
     private String name;
-    @NotEmpty
     @JsonProperty("Author")
     private String author;
-    @NotNull
-    @Convert(converter = BorrowedConverter.class)
     @JsonProperty("Borrowed")
     private Borrowed borrowed;
 

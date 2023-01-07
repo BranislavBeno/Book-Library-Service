@@ -5,7 +5,6 @@ import com.nextit.library.domain.Borrowed;
 import com.nextit.library.util.BookUtils;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +14,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Optional;
 
 @SpringBootTest
 class BookFileRepositoryTest implements WithAssertions {
 
-    @TempDir
-    private Path path;
     @Autowired
     private BookFileRepository cut;
 
@@ -67,19 +63,6 @@ class BookFileRepositoryTest implements WithAssertions {
     void testFindBorrowedBooks() {
         Page<Book> page = cut.findAllBorrowed(getRequest());
         assertThat(page).hasSize(4);
-    }
-
-    @Test
-    void testRepositoryExport() {
-        String filePath = path.resolve("temp.xml").toString();
-        cut.exportToFile(filePath);
-
-        PageRequest request = PageRequest.of(1, 5);
-        int size = cut.findAll(request).getContent().size();
-        BookFileRepository repository = new BookFileRepository(filePath);
-        Page<Book> items = repository.findAll(request);
-
-        assertThat(items).hasSize(size);
     }
 
     @Test

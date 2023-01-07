@@ -106,21 +106,6 @@ public final class BookFileRepository implements BookRepository {
         books.remove(book);
     }
 
-    public void exportToFile(String path) {
-        try {
-            XmlMapper xmlMapper = getXmlMapper();
-            File file = new File(path);
-            xmlMapper.writeValue(file, books);
-
-            String message = "Output file saved successfully. %d books exported.".formatted(books.size());
-            LOGGER.info(message);
-        } catch (Exception e) {
-            String message = "Output file '%s' writing failed.".formatted(path);
-            LOGGER.error(message, e);
-            throw new BookFileNotFoundException(message);
-        }
-    }
-
     private List<Book> filterBooks(Predicate<Book> predicate) {
         return books.stream()
                 .filter(predicate)

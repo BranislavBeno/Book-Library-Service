@@ -12,8 +12,12 @@ This application allows to provide usual actions with book library, such as:
 - remove book from library
 - borrow and return book
 
+> Application listens on port 8080
+
 ### REST API usage
 For sending requests and receiving responses use `Postman`, `curl` or web browser.
+
+> All endpoints are secured with basic authentication (see [Notes](#notes))
 
 #### API description
 Following endpoints are available for usage:
@@ -51,8 +55,14 @@ Following endpoints are available for usage:
   }
   ```
 
-> Following application settings are configurable over application.properties file:
-> - book.repository.path - input file destination
-> - book.service.page.size - page size for paginated outputs
-> - book.authentication.user - username for authenticated access
-> - book.authentication.password - password for authenticated access
+### Web UI usage
+After application start, click on http://localhost:8080/
+
+> Due to alignment with REST API is login provided over web browser default dialog and not over own login page.
+
+### Notes
+Following application settings are configurable over application.properties file:
+- book.repository.path - input file destination
+- book.service.page.size - page size for paginated outputs
+- book.authentication.user - username for authenticated access
+- book.authentication.password - password for authenticated access
