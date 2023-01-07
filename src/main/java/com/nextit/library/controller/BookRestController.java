@@ -1,6 +1,7 @@
 package com.nextit.library.controller;
 
 import com.nextit.library.domain.Book;
+import com.nextit.library.domain.Borrowed;
 import com.nextit.library.dto.AnyBookDto;
 import com.nextit.library.dto.AvailableBookDto;
 import com.nextit.library.dto.BookMapper;
@@ -54,8 +55,7 @@ public class BookRestController extends AbstractBookController {
 
     @PostMapping("/add")
     public ResponseEntity<AvailableBookDto> add(@Valid @RequestBody AvailableBookDto dto) {
-        Book book = getMapper().toEntity(dto);
-        Book newBook = getBookService().save(book);
+        Book newBook = addBook(dto);
 
         String message = "\"%s\" added into repository.".formatted(newBook.toString());
         LOGGER.info(message);
@@ -100,10 +100,38 @@ public class BookRestController extends AbstractBookController {
         }
     }
 
+    @PutMapping("/avail/{id}")
+    public ResponseEntity<Object> avail(@PathVariable int id) {
+        if (getBookService().existsById(id)) {
+            Book updated = availBook(id);
+
+            String message = "\"%s\" made available successfully.".formatted(updated.toString());
+            LOGGER.info(message);
+
+            return ResponseEntity.ok(getMapper().toAvailableDto(updated));
+        } else {
+            String message = "Book with id='%d' not found.".formatted(id);
+            LOGGER.error(message);
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    private Book addBook(AvailableBookDto dto) {
+        Book book = getMapper().toEntity(dto);
+        return getBookService().save(book);
+    }
+
     private Book updateBook(AvailableBookDto dto) {
         Book book = getBookService().findById(dto.getId());
         book.setName(dto.getName());
         book.setAuthor(dto.getAuthor());
+
+        return getBookService().save(book);
+    }
+
+    private Book availBook(int id) {
+        Book book = getBookService().findById(id);
+        book.setBorrowed(new Borrowed());
 
         return getBookService().save(book);
     }

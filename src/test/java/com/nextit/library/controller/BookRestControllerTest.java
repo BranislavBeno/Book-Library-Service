@@ -99,6 +99,7 @@ class BookRestControllerTest {
                     .andReturn();
         }
 
+        @Order(2)
         @ParameterizedTest
         @MethodSource("creationRequests")
         void testAddingBook(String body, ResultMatcher status) throws Exception {
@@ -118,6 +119,7 @@ class BookRestControllerTest {
             );
         }
 
+        @Order(3)
         @ParameterizedTest
         @MethodSource("updateRequests")
         void testUpdatingBook(String body, ResultMatcher status) throws Exception {
@@ -138,6 +140,23 @@ class BookRestControllerTest {
             );
         }
 
+        @Order(4)
+        @ParameterizedTest
+        @MethodSource("availRequests")
+        void testAvailingBook(int id, ResultMatcher status) throws Exception {
+            this.mockMvc
+                    .perform(put("/api/v1/books/avail/" + id))
+                    .andExpect(status);
+        }
+
+        private static Stream<Arguments> availRequests() {
+            return Stream.of(
+                    Arguments.of(10, status().isBadRequest()),
+                    Arguments.of(1, status().isOk())
+            );
+        }
+
+        @Order(6)
         @ParameterizedTest
         @MethodSource("deleteRequests")
         void testDeletingBook(int id, ResultMatcher status) throws Exception {
