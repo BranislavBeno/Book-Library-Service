@@ -99,7 +99,8 @@ public final class BookFileRepository implements BookRepository {
         return findById(id).isPresent();
     }
 
-    private Optional<Book> findById(int id) {
+    @Override
+    public Optional<Book> findById(int id) {
         return books.stream()
                 .filter(b -> b.getId() == id)
                 .findFirst();

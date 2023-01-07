@@ -4,6 +4,8 @@ import com.nextit.library.domain.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Optional;
+
 public interface BookRepository {
 
     Page<Book> findAll(Pageable pageable);
@@ -15,4 +17,6 @@ public interface BookRepository {
     Book save(Book entity);
 
     boolean existsById(int id);
+
+    Optional<Book> findById(int id);
 }

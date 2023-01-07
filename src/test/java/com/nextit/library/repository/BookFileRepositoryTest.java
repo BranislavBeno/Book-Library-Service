@@ -2,6 +2,7 @@ package com.nextit.library.repository;
 
 import com.nextit.library.domain.Book;
 import com.nextit.library.domain.Borrowed;
+import com.nextit.library.util.BookUtils;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -16,6 +17,7 @@ import org.springframework.test.context.DynamicPropertySource;
 
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.Optional;
 
 @SpringBootTest
 class BookFileRepositoryTest implements WithAssertions {
@@ -119,6 +121,17 @@ class BookFileRepositoryTest implements WithAssertions {
     @CsvSource({"1,true", "10,false"})
     void testBookExists(int id, boolean found) {
         assertThat(cut.existsById(id)).isEqualTo(found);
+    }
+
+    @Test
+    void testBookFound() {
+        Book book = BookUtils.createBook();
+        cut.findById(5).ifPresent(b -> assertThat(b.getAuthor()).isEqualTo(book.getAuthor()));
+    }
+
+    @Test
+    void testBookNotFound() {
+        assertThat(cut.findById(50)).isEqualTo(Optional.empty());
     }
 
     private static PageRequest getRequest() {

@@ -14,6 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.Optional;
+
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
@@ -66,5 +68,13 @@ class BookServiceTest implements WithAssertions {
         Mockito.when(repository.existsById(id)).thenReturn(found);
         cut.existsById(id);
         Mockito.verify(repository).existsById(id);
+    }
+
+    @Test
+    void testBookFound() {
+        int id = 1;
+        Mockito.when(repository.findById(id)).thenReturn(Optional.ofNullable(any(Book.class)));
+        cut.findById(id);
+        Mockito.verify(repository).findById(id);
     }
 }
