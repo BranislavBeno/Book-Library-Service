@@ -9,7 +9,7 @@
 </head>
 <body>
 <section layout:fragment="dynamic-content">
-    <form class="row g-2" th:method="POST" th:object="${availableBookDto}" th:action="@{/create}">
+    <form class="row g-2" th:method="POST" th:object="${availableBookDto}" th:action="@{/add}">
         <div class="col-12">
             <label class="form-label" for="bookName">Book name</label>
             <input id="bookName" class="form-control" type="text" aria-describedby="bookNameHelp" th:field="*{name}"

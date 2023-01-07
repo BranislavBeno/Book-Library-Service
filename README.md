@@ -50,3 +50,9 @@ Following endpoints are available for usage:
      "from": "2023-01-05"
   }
   ```
+
+> Following application settings are configurable over application.properties file:
+> - book.repository.path - input file destination
+> - book.service.page.size - page size for paginated outputs
+> - book.authentication.user - username for authenticated access
+> - book.authentication.password - password for authenticated access

@@ -20,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,6 +30,7 @@ import java.time.LocalDate;
 import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.is;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -113,6 +115,7 @@ class BookRestControllerTest {
         }
 
         @Order(1)
+        @WithMockUser(username = "user")
         @ParameterizedTest
         @CsvSource(value = {
                 "all,1,1",
@@ -133,13 +136,15 @@ class BookRestControllerTest {
         }
 
         @Order(2)
+        @WithMockUser(username = "user")
         @ParameterizedTest
         @MethodSource("creationRequests")
         void testAddingBook(String body, ResultMatcher status) throws Exception {
             this.mockMvc
                     .perform(post("/api/v1/books/add")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(body))
+                            .content(body)
+                            .with(csrf()))
                     .andExpect(status);
         }
 
@@ -153,13 +158,15 @@ class BookRestControllerTest {
         }
 
         @Order(3)
+        @WithMockUser(username = "user")
         @ParameterizedTest
         @MethodSource("updateRequests")
         void testUpdatingBook(String body, ResultMatcher status) throws Exception {
             this.mockMvc
                     .perform(put("/api/v1/books/update")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(body))
+                            .content(body)
+                            .with(csrf()))
                     .andExpect(status);
         }
 
@@ -174,13 +181,15 @@ class BookRestControllerTest {
         }
 
         @Order(4)
+        @WithMockUser(username = "user")
         @ParameterizedTest
         @MethodSource("borrowRequests")
         void testBorrowingBook(String body, ResultMatcher status) throws Exception {
             this.mockMvc
                     .perform(put("/api/v1/books/borrow")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(body))
+                            .content(body)
+                            .with(csrf()))
                     .andExpect(status);
         }
 
@@ -193,11 +202,13 @@ class BookRestControllerTest {
         }
 
         @Order(5)
+        @WithMockUser(username = "user")
         @ParameterizedTest
         @MethodSource("availRequests")
         void testAvailingBook(int id, ResultMatcher status) throws Exception {
             this.mockMvc
-                    .perform(put("/api/v1/books/avail/" + id))
+                    .perform(put("/api/v1/books/avail/" + id)
+                            .with(csrf()))
                     .andExpect(status);
         }
 
@@ -209,11 +220,13 @@ class BookRestControllerTest {
         }
 
         @Order(6)
+        @WithMockUser(username = "user")
         @ParameterizedTest
         @MethodSource("deleteRequests")
         void testDeletingBook(int id, ResultMatcher status) throws Exception {
             this.mockMvc
-                    .perform(delete("/api/v1/books/delete/" + id))
+                    .perform(delete("/api/v1/books/delete/" + id)
+                            .with(csrf()))
                     .andExpect(status);
         }
 
@@ -236,6 +249,7 @@ class BookRestControllerTest {
             registry.add("book.repository.path", () -> "src/test/resources/Empty.xml");
         }
 
+        @WithMockUser(username = "user")
         @ParameterizedTest
         @CsvSource(value = {
                 "all,0,0",

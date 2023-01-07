@@ -10,12 +10,14 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -39,6 +41,7 @@ class BookControllerTest {
             registry.add("book.repository.path", () -> "src/test/resources/Library.xml");
         }
 
+        @WithMockUser(username = "user")
         @ParameterizedTest
         @CsvSource(value = {
                 "/,index,1,true",
@@ -56,33 +59,38 @@ class BookControllerTest {
                     .andExpect(MockMvcResultMatchers.model().attributeExists("books", "pageNumbers"));
         }
 
+        @WithMockUser(username = "user")
         @Test
         void testShowAddBookForm() throws Exception {
             this.mockMvc
-                    .perform(MockMvcRequestBuilders.get("/add"))
+                    .perform(MockMvcRequestBuilders.get("/create"))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.view().name("add-book"))
                     .andExpect(MockMvcResultMatchers.model().attributeExists("availableBookDto"));
         }
 
+        @WithMockUser(username = "user")
         @Test
         void testRejectingAddingNewBook() throws Exception {
             this.mockMvc
-                    .perform(post("/create")
+                    .perform(post("/add")
                             .param("name", "Very long book name")
-                            .param("author", "John Doe"))
+                            .param("author", "John Doe")
+                            .with(csrf()))
                     .andExpect(status().isOk())
                     .andExpect(view().name("add-book"))
                     .andExpect(model().hasErrors())
                     .andExpect(model().attributeHasErrors("availableBookDto"));
         }
 
+        @WithMockUser(username = "user")
         @Test
         void testAddingNewBook() throws Exception {
             this.mockMvc
-                    .perform(post("/create")
+                    .perform(post("/add")
                             .param("name", "Book name")
-                            .param("author", "John Doe"))
+                            .param("author", "John Doe")
+                            .with(csrf()))
                     .andExpect(status().is3xxRedirection())
                     .andExpect(header().string("Location", "/"));
         }
@@ -99,6 +107,7 @@ class BookControllerTest {
             registry.add("book.repository.path", () -> "src/test/resources/Empty.xml");
         }
 
+        @WithMockUser(username = "user")
         @ParameterizedTest
         @CsvSource(value = {"/,index", "/available,available-books", "/borrowed,borrowed-books"})
         void testShowingEmptyBookList(String url, String viewName) throws Exception {

@@ -55,9 +55,6 @@ public class BookRestController extends AbstractBookController {
     public ResponseEntity<AvailableBookDto> add(@Valid @RequestBody AvailableBookDto dto) {
         Book newBook = addBook(dto);
 
-        String message = "\"%s\" added into repository.".formatted(newBook.toString());
-        LOGGER.info(message);
-
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(newBook.getId())
@@ -129,11 +126,6 @@ public class BookRestController extends AbstractBookController {
             LOGGER.error(message);
             return ResponseEntity.badRequest().build();
         }
-    }
-
-    private Book addBook(AvailableBookDto dto) {
-        Book book = getMapper().toEntity(dto);
-        return getBookService().save(book);
     }
 
     private Book updateBook(AvailableBookDto dto) {

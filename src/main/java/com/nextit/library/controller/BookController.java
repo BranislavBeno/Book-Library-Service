@@ -70,21 +70,20 @@ public final class BookController extends AbstractBookController {
         return "borrowed-books";
     }
 
-    @GetMapping("/add")
+    @GetMapping("/create")
     public String addBook(Model model) {
         model.addAttribute("availableBookDto", new AvailableBookDto());
 
         return "add-book";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/add")
     public String create(@Valid AvailableBookDto availableBookDto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "add-book";
         }
 
-        Book book = getMapper().toEntity(availableBookDto);
-        getBookService().save(book);
+        addBook(availableBookDto);
 
         return "redirect:/";
     }
