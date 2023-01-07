@@ -20,7 +20,7 @@ import java.util.function.Predicate;
 
 public final class BookFileRepository implements BookRepository {
 
-    private static final Logger logger = LoggerFactory.getLogger(BookFileRepository.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BookFileRepository.class);
 
     private final List<Book> books;
     private final AtomicInteger identifier;
@@ -44,12 +44,12 @@ public final class BookFileRepository implements BookRepository {
                     .orElse(0);
 
             String message = "Input file read successfully. %d books imported.".formatted(list.size());
-            logger.info(message);
+            LOGGER.info(message);
 
             return new InitialData(list, new AtomicInteger(maxId));
         } catch (Exception e) {
             String message = "Input file '%s' reading failed.".formatted(path);
-            logger.error(message, e);
+            LOGGER.error(message, e);
             throw new BookFileNotFoundException(message);
         }
     }
@@ -80,7 +80,7 @@ public final class BookFileRepository implements BookRepository {
             book.setBorrowed(entity.getBorrowed());
 
             String message = "Entity \"%s\" saved successfully.".formatted(book.toString());
-            logger.info(message);
+            LOGGER.info(message);
 
             return book;
         } catch (Exception e) {
@@ -88,10 +88,15 @@ public final class BookFileRepository implements BookRepository {
             books.add(entity);
 
             String message = "New entity \"%s\" added into repository.".formatted(entity.toString());
-            logger.info(message);
+            LOGGER.info(message);
 
             return entity;
         }
+    }
+
+    @Override
+    public boolean existsById(int id) {
+        return findById(id).isPresent();
     }
 
     private Optional<Book> findById(int id) {
@@ -107,10 +112,10 @@ public final class BookFileRepository implements BookRepository {
             xmlMapper.writeValue(file, books);
 
             String message = "Output file saved successfully. %d books exported.".formatted(books.size());
-            logger.info(message);
+            LOGGER.info(message);
         } catch (Exception e) {
             String message = "Output file '%s' writing failed.".formatted(path);
-            logger.error(message, e);
+            LOGGER.error(message, e);
             throw new BookFileNotFoundException(message);
         }
     }

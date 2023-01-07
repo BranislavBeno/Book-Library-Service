@@ -5,6 +5,8 @@ import com.nextit.library.domain.Borrowed;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -111,6 +113,12 @@ class BookFileRepositoryTest implements WithAssertions {
 
         int currentSize = cut.findAll(request).getContent().size();
         assertThat(currentSize).isEqualTo(previousSize);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"1,true", "10,false"})
+    void testBookExists(int id, boolean found) {
+        assertThat(cut.existsById(id)).isEqualTo(found);
     }
 
     private static PageRequest getRequest() {

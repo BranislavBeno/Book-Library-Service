@@ -23,6 +23,10 @@ public record BookService(BookRepository repository, int pageSize) {
         return repository.save(book);
     }
 
+    public boolean existsById(int id) {
+        return repository.existsById(id);
+    }
+
     private PageRequest getPageRequest(int page) {
         return PageRequest.of(page, pageSize);
     }

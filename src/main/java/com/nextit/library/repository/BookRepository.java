@@ -13,4 +13,6 @@ public interface BookRepository {
     Page<Book> findAllBorrowed(Pageable pageable);
 
     Book save(Book entity);
+
+    boolean existsById(int id);
 }

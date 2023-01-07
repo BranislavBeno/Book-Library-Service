@@ -6,6 +6,8 @@ import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -56,5 +58,13 @@ class BookServiceTest implements WithAssertions {
         Mockito.when(repository.save(any(Book.class))).thenReturn(book);
         cut.save(book);
         Mockito.verify(repository).save(any(Book.class));
+    }
+
+    @ParameterizedTest
+    @CsvSource({"1,true", "2,false"})
+    void testBookExists(int id, boolean found) {
+        Mockito.when(repository.existsById(id)).thenReturn(found);
+        cut.existsById(id);
+        Mockito.verify(repository).existsById(id);
     }
 }
