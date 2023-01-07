@@ -8,8 +8,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -18,10 +19,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
+
+import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -29,6 +32,36 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(AppConfig.class)
 class BookRestControllerTest {
 
+    private static final String BAD_REQUEST_1 = """
+            {
+               "id": 1,
+                "name": "Very long book name",
+                "author": "John Doe"
+            }""";
+    private static final String BAD_REQUEST_2 = """
+            {
+                "id": 1,
+                "name": "",
+                "author": "John Doe"
+            }""";
+    private static final String BAD_REQUEST_3 = """
+            {
+                "id": 1,
+                "name": "Book name",
+                "author": ""
+            }""";
+    private static final String BAD_REQUEST_4 = """
+            {
+            "id": 10,
+            "name": "Book name",
+            "author": "John Doe"
+            }""";
+    private static final String REQUEST = """
+            {
+            "id": 1,
+            "name": "Book name",
+            "author": "John Doe"
+            }""";
     @Autowired
     private BookService service;
     @Autowired
@@ -67,42 +100,42 @@ class BookRestControllerTest {
         }
 
         @ParameterizedTest
-        @ValueSource(strings = {
-                """
-                        {
-                            "name": "Very long book name",
-                            "author": "John Doe"
-                        }""",
-                """
-                        {
-                            "name": "",
-                            "author": "John Doe"
-                        }""",
-                """
-                        {
-                            "name": "Book name",
-                            "author": ""
-                        }"""})
-        void testFailingAdd(String body) throws Exception {
+        @MethodSource("creationRequests")
+        void testAddingBook(String body, ResultMatcher status) throws Exception {
             this.mockMvc
                     .perform(post("/api/v1/books/add")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(body))
-                    .andExpect(status().isBadRequest());
+                    .andExpect(status);
+        }
+
+        private static Stream<Arguments> creationRequests() {
+            return Stream.of(
+                    Arguments.of(BAD_REQUEST_1, status().isBadRequest()),
+                    Arguments.of(BAD_REQUEST_2, status().isBadRequest()),
+                    Arguments.of(BAD_REQUEST_3, status().isBadRequest()),
+                    Arguments.of(REQUEST, status().isCreated())
+            );
         }
 
         @ParameterizedTest
-        @ValueSource(strings = {"""
-                {
-                "name": "Book name",
-                "author": "John Doe"
-                }"""})
-        void testSuccessfulAdd(String body) throws Exception {
+        @MethodSource("updateRequests")
+        void testSuccessfulUpdate(String body, ResultMatcher status) throws Exception {
             this.mockMvc
-                    .perform(post("/api/v1/books/add")
+                    .perform(put("/api/v1/books/update")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(body))
-                    .andExpect(status().isCreated());
+                    .andExpect(status);
+        }
+
+        private static Stream<Arguments> updateRequests() {
+            return Stream.of(
+                    Arguments.of(BAD_REQUEST_1, status().isBadRequest()),
+                    Arguments.of(BAD_REQUEST_2, status().isBadRequest()),
+                    Arguments.of(BAD_REQUEST_3, status().isBadRequest()),
+                    Arguments.of(BAD_REQUEST_4, status().isBadRequest()),
+                    Arguments.of(REQUEST, status().isOk())
+            );
         }
     }
 

@@ -7,6 +7,8 @@ import com.nextit.library.dto.BookMapper;
 import com.nextit.library.dto.BorrowedBookDto;
 import com.nextit.library.service.BookService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/books")
 public class BookRestController extends AbstractBookController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BookRestController.class);
 
     public BookRestController(@Autowired BookService bookService,
                               @Autowired BookMapper mapper) {
@@ -51,12 +55,32 @@ public class BookRestController extends AbstractBookController {
     @PostMapping("/add")
     public ResponseEntity<AvailableBookDto> add(@Valid @RequestBody AvailableBookDto dto) {
         Book book = getMapper().toEntity(dto);
-        Book customer = getBookService().save(book);
+        Book newBook = getBookService().save(book);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(customer.getId())
+                .buildAndExpand(newBook.getId())
                 .toUri();
 
-        return ResponseEntity.created(uri).body(getMapper().toAvailableDto(customer));
+        return ResponseEntity.created(uri).body(getMapper().toAvailableDto(newBook));
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<AvailableBookDto> update(@Valid @RequestBody AvailableBookDto dto) {
+        if (getBookService().existsById(dto.getId())) {
+            Book updated = updateBook(dto);
+            return ResponseEntity.ok(getMapper().toAvailableDto(updated));
+        } else {
+            String message = "Book '%s' not found.".formatted(dto.getName());
+            LOGGER.error(message);
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    private Book updateBook(AvailableBookDto dto) {
+        Book book = getBookService().findById(dto.getId());
+        book.setName(dto.getName());
+        book.setAuthor(dto.getAuthor());
+
+        return getBookService().save(book);
     }
 }
