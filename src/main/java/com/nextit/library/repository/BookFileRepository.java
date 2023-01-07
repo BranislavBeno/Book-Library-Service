@@ -102,7 +102,8 @@ public final class BookFileRepository implements BookRepository {
 
     @Override
     public void deleteById(int id) {
-        books.remove(id);
+        Book book = findById(id).orElseThrow();
+        books.remove(book);
     }
 
     public void exportToFile(String path) {

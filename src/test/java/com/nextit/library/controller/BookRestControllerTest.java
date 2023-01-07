@@ -120,7 +120,7 @@ class BookRestControllerTest {
 
         @ParameterizedTest
         @MethodSource("updateRequests")
-        void testSuccessfulUpdate(String body, ResultMatcher status) throws Exception {
+        void testUpdatingBook(String body, ResultMatcher status) throws Exception {
             this.mockMvc
                     .perform(put("/api/v1/books/update")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -135,6 +135,21 @@ class BookRestControllerTest {
                     Arguments.of(BAD_REQUEST_3, status().isBadRequest()),
                     Arguments.of(BAD_REQUEST_4, status().isBadRequest()),
                     Arguments.of(REQUEST, status().isOk())
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("deleteRequests")
+        void testDeletingBook(int id, ResultMatcher status) throws Exception {
+            this.mockMvc
+                    .perform(delete("/api/v1/books/delete/" + id))
+                    .andExpect(status);
+        }
+
+        private static Stream<Arguments> deleteRequests() {
+            return Stream.of(
+                    Arguments.of(10, status().isBadRequest()),
+                    Arguments.of(1, status().isNoContent())
             );
         }
     }

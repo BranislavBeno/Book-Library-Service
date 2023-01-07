@@ -38,3 +38,4 @@ Following endpoints are available for usage:
      "author": "John Doe"
   }
   ```
+- **DELETE /api/v1/books/delete/{id}** - deletes book with given ID. Deletion is refused when book with given ID doesn't exist.  

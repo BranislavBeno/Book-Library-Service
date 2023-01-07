@@ -142,7 +142,7 @@ class BookFileRepositoryTest implements WithAssertions {
     void testDeleteBook() {
         PageRequest request = PageRequest.of(0, 10);
         int previousSize = cut.findAll(request).getContent().size();
-        cut.deleteById(1);
+        cut.deleteById(3);
 
         int currentSize = cut.findAll(request).getContent().size();
         assertThat(currentSize).isLessThan(previousSize);

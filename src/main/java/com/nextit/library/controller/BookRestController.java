@@ -56,6 +56,10 @@ public class BookRestController extends AbstractBookController {
     public ResponseEntity<AvailableBookDto> add(@Valid @RequestBody AvailableBookDto dto) {
         Book book = getMapper().toEntity(dto);
         Book newBook = getBookService().save(book);
+
+        String message = "\"%s\" added into repository.".formatted(newBook.toString());
+        LOGGER.info(message);
+
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(newBook.getId())
@@ -68,9 +72,29 @@ public class BookRestController extends AbstractBookController {
     public ResponseEntity<AvailableBookDto> update(@Valid @RequestBody AvailableBookDto dto) {
         if (getBookService().existsById(dto.getId())) {
             Book updated = updateBook(dto);
+
+            String message = "\"%s\" saved successfully.".formatted(updated.toString());
+            LOGGER.info(message);
+
             return ResponseEntity.ok(getMapper().toAvailableDto(updated));
         } else {
             String message = "Book '%s' not found.".formatted(dto.getName());
+            LOGGER.error(message);
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Object> delete(@PathVariable int id) {
+        if (getBookService().existsById(id)) {
+            getBookService().deleteById(id);
+
+            String message = "Book with id='%d' deleted successfully.".formatted(id);
+            LOGGER.info(message);
+
+            return ResponseEntity.noContent().build();
+        } else {
+            String message = "Book with id='%d' not found.".formatted(id);
             LOGGER.error(message);
             return ResponseEntity.badRequest().build();
         }
