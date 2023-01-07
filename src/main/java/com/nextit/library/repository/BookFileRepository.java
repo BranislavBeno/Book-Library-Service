@@ -79,16 +79,10 @@ public final class BookFileRepository implements BookRepository {
             book.setName(entity.getName());
             book.setBorrowed(entity.getBorrowed());
 
-            String message = "Entity \"%s\" saved successfully.".formatted(book.toString());
-            LOGGER.info(message);
-
             return book;
         } catch (Exception e) {
             entity.setId(identifier.incrementAndGet());
             books.add(entity);
-
-            String message = "New entity \"%s\" added into repository.".formatted(entity.toString());
-            LOGGER.info(message);
 
             return entity;
         }
@@ -104,6 +98,11 @@ public final class BookFileRepository implements BookRepository {
         return books.stream()
                 .filter(b -> b.getId() == id)
                 .findFirst();
+    }
+
+    @Override
+    public void deleteById(int id) {
+        books.remove(id);
     }
 
     public void exportToFile(String path) {

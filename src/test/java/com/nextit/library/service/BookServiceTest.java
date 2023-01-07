@@ -77,4 +77,12 @@ class BookServiceTest implements WithAssertions {
         cut.findById(id);
         Mockito.verify(repository).findById(id);
     }
+
+    @Test
+    void testDeleteBook() {
+        int id = 1;
+        Mockito.doNothing().when(repository).deleteById(id);
+        cut.deleteById(id);
+        Mockito.verify(repository).deleteById(id);
+    }
 }

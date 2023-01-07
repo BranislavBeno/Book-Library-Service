@@ -19,4 +19,6 @@ public interface BookRepository {
     boolean existsById(int id);
 
     Optional<Book> findById(int id);
+
+    void deleteById(int id);
 }

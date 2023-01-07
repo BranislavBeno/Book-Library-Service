@@ -31,6 +31,10 @@ public record BookService(BookRepository repository, int pageSize) {
         return repository.findById(id).orElse(null);
     }
 
+    public void deleteById(int id) {
+        repository.deleteById(id);
+    }
+
     private PageRequest getPageRequest(int page) {
         return PageRequest.of(page, pageSize);
     }
