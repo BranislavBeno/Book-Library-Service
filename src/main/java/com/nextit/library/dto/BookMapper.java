@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 
 public final class BookMapper {
 
-    public AnyBookDto toAnyDto(Book book) {
+    public AnyBookDto toAnyBookDto(Book book) {
         int id = book.getId();
         String name = book.getName();
         String author = book.getAuthor();
@@ -24,7 +24,7 @@ public final class BookMapper {
         return book;
     }
 
-    public AvailableBookDto toAvailableDto(Book book) {
+    public AvailableBookDto toAvailableBookDto(Book book) {
         int id = book.getId();
         String name = book.getName();
         String author = book.getAuthor();
@@ -32,7 +32,7 @@ public final class BookMapper {
         return new AvailableBookDto(id, name, author);
     }
 
-    public BorrowedBookDto toBorrowedDto(Book book) {
+    public BorrowedBookDto toBorrowedBookDto(Book book) {
         int id = book.getId();
         String name = book.getName();
         String author = book.getAuthor();

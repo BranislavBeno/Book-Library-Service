@@ -2,10 +2,7 @@ package com.nextit.library.controller;
 
 import com.nextit.library.domain.Book;
 import com.nextit.library.domain.Borrowed;
-import com.nextit.library.dto.AnyBookDto;
-import com.nextit.library.dto.AvailableBookDto;
-import com.nextit.library.dto.BookMapper;
-import com.nextit.library.dto.BorrowedBookDto;
+import com.nextit.library.dto.*;
 import com.nextit.library.service.BookService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -23,6 +20,7 @@ import java.util.List;
 public class BookRestController extends AbstractBookController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookRestController.class);
+    private static final String MESSAGE = "Book with id='%d' not found.";
 
     public BookRestController(@Autowired BookService bookService,
                               @Autowired BookMapper mapper) {
@@ -33,7 +31,7 @@ public class BookRestController extends AbstractBookController {
     public List<AnyBookDto> all(@RequestParam(name = "page", defaultValue = "0") int page) {
         return getBookService().findAll(page)
                 .stream()
-                .map(b -> getMapper().toAnyDto(b))
+                .map(b -> getMapper().toAnyBookDto(b))
                 .toList();
     }
 
@@ -41,7 +39,7 @@ public class BookRestController extends AbstractBookController {
     public List<AvailableBookDto> available(@RequestParam(name = "page", defaultValue = "0") int page) {
         return getBookService().findAllAvailable(page)
                 .stream()
-                .map(b -> getMapper().toAvailableDto(b))
+                .map(b -> getMapper().toAvailableBookDto(b))
                 .toList();
     }
 
@@ -49,7 +47,7 @@ public class BookRestController extends AbstractBookController {
     public List<BorrowedBookDto> borrowed(@RequestParam(name = "page", defaultValue = "0") int page) {
         return getBookService().findAllBorrowed(page)
                 .stream()
-                .map(b -> getMapper().toBorrowedDto(b))
+                .map(b -> getMapper().toBorrowedBookDto(b))
                 .toList();
     }
 
@@ -65,7 +63,7 @@ public class BookRestController extends AbstractBookController {
                 .buildAndExpand(newBook.getId())
                 .toUri();
 
-        return ResponseEntity.created(uri).body(getMapper().toAvailableDto(newBook));
+        return ResponseEntity.created(uri).body(getMapper().toAvailableBookDto(newBook));
     }
 
     @PutMapping("/update")
@@ -76,7 +74,7 @@ public class BookRestController extends AbstractBookController {
             String message = "\"%s\" saved successfully.".formatted(updated.toString());
             LOGGER.info(message);
 
-            return ResponseEntity.ok(getMapper().toAvailableDto(updated));
+            return ResponseEntity.ok(getMapper().toAvailableBookDto(updated));
         } else {
             String message = "Book '%s' not found.".formatted(dto.getName());
             LOGGER.error(message);
@@ -94,7 +92,7 @@ public class BookRestController extends AbstractBookController {
 
             return ResponseEntity.noContent().build();
         } else {
-            String message = "Book with id='%d' not found.".formatted(id);
+            String message = MESSAGE.formatted(id);
             LOGGER.error(message);
             return ResponseEntity.badRequest().build();
         }
@@ -108,9 +106,26 @@ public class BookRestController extends AbstractBookController {
             String message = "\"%s\" made available successfully.".formatted(updated.toString());
             LOGGER.info(message);
 
-            return ResponseEntity.ok(getMapper().toAvailableDto(updated));
+            return ResponseEntity.ok(getMapper().toAvailableBookDto(updated));
         } else {
-            String message = "Book with id='%d' not found.".formatted(id);
+            String message = MESSAGE.formatted(id);
+            LOGGER.error(message);
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/borrow")
+    public ResponseEntity<BorrowedBookDto> borrow(@Valid @RequestBody BorrowedDto dto) {
+        int bookId = dto.bookId();
+        if (getBookService().existsById(bookId)) {
+            Book updated = borrowBook(dto);
+
+            String message = "\"%s\" borrowed successfully.".formatted(updated.toString());
+            LOGGER.info(message);
+
+            return ResponseEntity.ok(getMapper().toBorrowedBookDto(updated));
+        } else {
+            String message = MESSAGE.formatted(bookId);
             LOGGER.error(message);
             return ResponseEntity.badRequest().build();
         }
@@ -132,6 +147,13 @@ public class BookRestController extends AbstractBookController {
     private Book availBook(int id) {
         Book book = getBookService().findById(id);
         book.setBorrowed(new Borrowed());
+
+        return getBookService().save(book);
+    }
+
+    private Book borrowBook(BorrowedDto dto) {
+        Book book = getBookService().findById(dto.bookId());
+        book.setBorrowed(new Borrowed(dto.firstName(), dto.lastName(), dto.from()));
 
         return getBookService().save(book);
     }

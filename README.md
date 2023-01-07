@@ -29,7 +29,7 @@ Following endpoints are available for usage:
      "author": "John Doe"
   }
   ```
-- **PUT /api/v1/books/update** - updates book data. Update is refused when a book with given ID doesn't exist. Input is validated (see new book adding).  
+- **PUT /api/v1/books/update** - updates book data. Operation is refused when a book with given ID doesn't exist. Input is validated (see new book adding).  
   Request body example for existing book updating:
   ```json
   {
@@ -38,4 +38,15 @@ Following endpoints are available for usage:
      "author": "John Doe"
   }
   ```
-- **DELETE /api/v1/books/delete/{id}** - deletes book with given ID. Deletion is refused when book with given ID doesn't exist.  
+- **DELETE /api/v1/books/delete/{id}** - deletes book with given ID. Operation is refused when book with given ID doesn't exist.  
+- **PUT /api/v1/books/avail/{id}** - makes available book with given ID. Operation is refused when book with given ID doesn't exist.  
+- **PUT /api/v1/books/borrow** - borrows the book. Operation is refused when a book with given ID doesn't exist. Input is validated. Date of borrow can't be later than today.  
+  Request body example for book borrowing:
+  ```json
+  {
+     "bookId": 1,
+     "firstName": "John",
+     "lastName": "Doe",
+     "from": "2023-01-05"
+  }
+  ```

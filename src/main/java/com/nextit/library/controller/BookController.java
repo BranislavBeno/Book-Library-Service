@@ -37,7 +37,7 @@ public final class BookController extends AbstractBookController {
     @GetMapping("/")
     public String showAll(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         Page<Book> bookPage = getBookService().findAll(page);
-        PageData pageData = providePageData(page, bookPage, b -> getMapper().toAnyDto(b));
+        PageData pageData = providePageData(page, bookPage, b -> getMapper().toAnyBookDto(b));
 
         model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
         model.addAttribute(BOOKS_ATTR, pageData.dtoPage());
@@ -49,7 +49,7 @@ public final class BookController extends AbstractBookController {
     @GetMapping("/available")
     public String showAvailable(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         Page<Book> bookPage = getBookService().findAllAvailable(page);
-        PageData pageData = providePageData(page, bookPage, b -> getMapper().toAvailableDto(b));
+        PageData pageData = providePageData(page, bookPage, b -> getMapper().toAvailableBookDto(b));
 
         model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
         model.addAttribute(BOOKS_ATTR, pageData.dtoPage());
@@ -61,7 +61,7 @@ public final class BookController extends AbstractBookController {
     @GetMapping("/borrowed")
     public String showBorrowed(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         Page<Book> bookPage = getBookService().findAllBorrowed(page);
-        PageData pageData = providePageData(page, bookPage, b -> getMapper().toBorrowedDto(b));
+        PageData pageData = providePageData(page, bookPage, b -> getMapper().toBorrowedBookDto(b));
 
         model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
         model.addAttribute(BOOKS_ATTR, pageData.dtoPage());

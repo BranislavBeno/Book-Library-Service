@@ -12,7 +12,7 @@ class BookMapperTest implements WithAssertions {
     @Test
     void testMappingToBookDto() {
         Book book = BookUtils.createBook();
-        AnyBookDto dto = cut.toAnyDto(book);
+        AnyBookDto dto = cut.toAnyBookDto(book);
 
         assertThat(dto.id()).isEqualTo(1);
         assertThat(dto.name()).isEqualTo("Hamlet");
@@ -23,7 +23,7 @@ class BookMapperTest implements WithAssertions {
     @Test
     void testMappingToAvailableDto() {
         Book book = BookUtils.createBook();
-        AvailableBookDto dto = cut.toAvailableDto(book);
+        AvailableBookDto dto = cut.toAvailableBookDto(book);
 
         assertThat(dto.getId()).isEqualTo(1);
         assertThat(dto.getName()).isEqualTo("Hamlet");
@@ -43,7 +43,7 @@ class BookMapperTest implements WithAssertions {
     @Test
     void testMappingToBorrowedDto() {
         Book book = BookUtils.createBook();
-        BorrowedBookDto dto = cut.toBorrowedDto(book);
+        BorrowedBookDto dto = cut.toBorrowedBookDto(book);
 
         assertThat(dto.id()).isEqualTo(1);
         assertThat(dto.name()).isEqualTo("Hamlet");

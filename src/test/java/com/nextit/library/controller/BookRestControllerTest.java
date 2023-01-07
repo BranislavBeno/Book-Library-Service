@@ -1,7 +1,11 @@
 package com.nextit.library.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.nextit.library.config.AppConfig;
 import com.nextit.library.dto.BookMapper;
+import com.nextit.library.dto.BorrowedDto;
 import com.nextit.library.service.BookService;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Nested;
@@ -21,6 +25,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import java.time.LocalDate;
 import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.is;
@@ -32,36 +37,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(AppConfig.class)
 class BookRestControllerTest {
 
-    private static final String BAD_REQUEST_1 = """
-            {
-               "id": 1,
-                "name": "Very long book name",
-                "author": "John Doe"
-            }""";
-    private static final String BAD_REQUEST_2 = """
-            {
-                "id": 1,
-                "name": "",
-                "author": "John Doe"
-            }""";
-    private static final String BAD_REQUEST_3 = """
-            {
-                "id": 1,
-                "name": "Book name",
-                "author": ""
-            }""";
-    private static final String BAD_REQUEST_4 = """
-            {
-            "id": 10,
-            "name": "Book name",
-            "author": "John Doe"
-            }""";
-    private static final String REQUEST = """
-            {
-            "id": 1,
-            "name": "Book name",
-            "author": "John Doe"
-            }""";
     @Autowired
     private BookService service;
     @Autowired
@@ -71,12 +46,70 @@ class BookRestControllerTest {
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     class BookListTest {
 
+        private static final String BAD_REQUEST_1 = """
+                {
+                   "id": 1,
+                    "name": "Very long book name",
+                    "author": "John Doe"
+                }""";
+        private static final String BAD_REQUEST_2 = """
+                {
+                    "id": 1,
+                    "name": "",
+                    "author": "John Doe"
+                }""";
+        private static final String BAD_REQUEST_3 = """
+                {
+                    "id": 1,
+                    "name": "Book name",
+                    "author": ""
+                }""";
+        private static final String BAD_REQUEST_4 = """
+                {
+                    "id": 10,
+                    "name": "Book name",
+                    "author": "John Doe"
+                }""";
+        private static final String REQUEST_1 = """
+                {
+                    "id": 1,
+                    "name": "Book name",
+                    "author": "John Doe"
+                }""";
+        private static final String REQUEST_2 = """
+                {
+                    "bookId": 4,
+                    "firstName": "John",
+                    "lastName": "Doe",
+                    "from": "2023-01-05"
+                }""";
+        private static final String BAD_REQUEST_5 = """
+                {
+                    "bookId": 10,
+                    "firstName": "John",
+                    "lastName": "Doe",
+                    "from": "2023-01-05"
+                }""";
+        private static final String BAD_REQUEST_6 =
+                createNonValidRequest(new BorrowedDto(4, "John", "Doe", LocalDate.now().plusDays(1)));
+
         @Autowired
         private MockMvc mockMvc;
 
         @DynamicPropertySource
         static void properties(DynamicPropertyRegistry registry) {
             registry.add("book.repository.path", () -> "src/test/resources/Library.xml");
+        }
+
+        private static String createNonValidRequest(BorrowedDto dto) {
+            try {
+                JsonMapper jsonMapper = JsonMapper.builder()
+                        .addModule(new JavaTimeModule())
+                        .build();
+                return jsonMapper.writeValueAsString(dto);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         @Order(1)
@@ -115,7 +148,7 @@ class BookRestControllerTest {
                     Arguments.of(BAD_REQUEST_1, status().isBadRequest()),
                     Arguments.of(BAD_REQUEST_2, status().isBadRequest()),
                     Arguments.of(BAD_REQUEST_3, status().isBadRequest()),
-                    Arguments.of(REQUEST, status().isCreated())
+                    Arguments.of(REQUEST_1, status().isCreated())
             );
         }
 
@@ -136,11 +169,30 @@ class BookRestControllerTest {
                     Arguments.of(BAD_REQUEST_2, status().isBadRequest()),
                     Arguments.of(BAD_REQUEST_3, status().isBadRequest()),
                     Arguments.of(BAD_REQUEST_4, status().isBadRequest()),
-                    Arguments.of(REQUEST, status().isOk())
+                    Arguments.of(REQUEST_1, status().isOk())
             );
         }
 
         @Order(4)
+        @ParameterizedTest
+        @MethodSource("borrowRequests")
+        void testBorrowingBook(String body, ResultMatcher status) throws Exception {
+            this.mockMvc
+                    .perform(put("/api/v1/books/borrow")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(body))
+                    .andExpect(status);
+        }
+
+        private static Stream<Arguments> borrowRequests() {
+            return Stream.of(
+                    Arguments.of(REQUEST_2, status().isOk()),
+                    Arguments.of(BAD_REQUEST_5, status().isBadRequest()),
+                    Arguments.of(BAD_REQUEST_6, status().isBadRequest())
+            );
+        }
+
+        @Order(5)
         @ParameterizedTest
         @MethodSource("availRequests")
         void testAvailingBook(int id, ResultMatcher status) throws Exception {
