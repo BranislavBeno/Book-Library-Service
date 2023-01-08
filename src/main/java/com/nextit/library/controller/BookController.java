@@ -78,19 +78,26 @@ public final class BookController extends AbstractBookController {
         return "save-book";
     }
 
+    @GetMapping("/updateBook")
+    public String updateBook(@RequestParam("bookId") int id, Model model) {
+        model.addAttribute("availableBookDto", findBook(id));
+
+        return "save-book";
+    }
+
     @PostMapping("/save")
-    public String save(@Valid AvailableBookDto availableBookDto, BindingResult bindingResult, Model model) {
+    public String save(@Valid AvailableBookDto availableBookDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "save-book";
         }
 
-        addBook(availableBookDto);
+        updateBook(availableBookDto);
 
         return "redirect:/";
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable int id, Model model) {
+    public String delete(@PathVariable int id) {
         deleteBook(id);
 
         return "redirect:/";

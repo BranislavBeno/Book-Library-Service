@@ -75,6 +75,18 @@ class BookControllerTest {
         @Order(3)
         @WithMockUser(username = "user")
         @Test
+        void testShowUpdateBookForm() throws Exception {
+            this.mockMvc
+                    .perform(MockMvcRequestBuilders.get("/updateBook")
+                            .param("bookId", "1"))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.view().name("save-book"))
+                    .andExpect(MockMvcResultMatchers.model().attributeExists("availableBookDto"));
+        }
+
+        @Order(4)
+        @WithMockUser(username = "user")
+        @Test
         void testRejectingAddingNewBook() throws Exception {
             this.mockMvc
                     .perform(post("/save")
@@ -87,7 +99,7 @@ class BookControllerTest {
                     .andExpect(model().attributeHasErrors("availableBookDto"));
         }
 
-        @Order(4)
+        @Order(5)
         @WithMockUser(username = "user")
         @Test
         void testAddingNewBook() throws Exception {
@@ -100,7 +112,7 @@ class BookControllerTest {
                     .andExpect(header().string("Location", "/"));
         }
 
-        @Order(5)
+        @Order(6)
         @WithMockUser(username = "user")
         @Test
         void testDeletingBook() throws Exception {

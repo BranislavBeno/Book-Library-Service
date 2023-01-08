@@ -44,7 +44,7 @@ public class BookRestController extends AbstractBookController {
 
     @PostMapping("/add")
     public ResponseEntity<AvailableBookDto> add(@Valid @RequestBody AvailableBookDto dto) {
-        AvailableBookDto bookDto = addBook(dto);
+        AvailableBookDto bookDto = updateBook(dto);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -57,12 +57,9 @@ public class BookRestController extends AbstractBookController {
     @PutMapping("/update")
     public ResponseEntity<AvailableBookDto> update(@Valid @RequestBody AvailableBookDto dto) {
         if (getService().existsById(dto.getId())) {
-            Book updated = updateBook(dto);
+            AvailableBookDto bookDto = updateBook(dto);
 
-            String message = "\"%s\" saved successfully.".formatted(updated.toString());
-            LOGGER.info(message);
-
-            return ResponseEntity.ok(getMapper().toAvailableBookDto(updated));
+            return ResponseEntity.ok(bookDto);
         } else {
             String message = "Book '%s' not found.".formatted(dto.getName());
             LOGGER.error(message);
@@ -114,14 +111,6 @@ public class BookRestController extends AbstractBookController {
             LOGGER.error(message);
             return ResponseEntity.badRequest().build();
         }
-    }
-
-    private Book updateBook(AvailableBookDto dto) {
-        Book book = getService().findById(dto.getId());
-        book.setName(dto.getName());
-        book.setAuthor(dto.getAuthor());
-
-        return getService().save(book);
     }
 
     private Book availBook(int id) {

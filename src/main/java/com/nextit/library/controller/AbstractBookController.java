@@ -40,11 +40,28 @@ abstract class AbstractBookController {
                 .toList();
     }
 
-    AvailableBookDto addBook(AvailableBookDto dto) {
-        Book book = mapper.toEntity(dto);
+    AvailableBookDto findBook(int id) {
+        Book book = service.findById(id);
+        if (book != null) {
+            return getMapper().toAvailableBookDto(book);
+        }
+
+        return new AvailableBookDto();
+    }
+
+    AvailableBookDto updateBook(AvailableBookDto dto) {
+        Book book = service.findById(dto.getId());
+
+        if (book != null) {
+            book.setName(dto.getName());
+            book.setAuthor(dto.getAuthor());
+        } else {
+            book = mapper.toEntity(dto);
+        }
+
         AvailableBookDto bookDto = mapper.toAvailableBookDto(service.save(book));
 
-        String message = "\"%s\" added into repository.".formatted(bookDto.toString());
+        String message = "\"%s\" saved into repository.".formatted(bookDto.toString());
         LOGGER.info(message);
 
         return bookDto;
