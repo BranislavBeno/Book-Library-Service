@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/static-layout}"
-      th:with="cardHeader='Custom error'">
+      th:with="cardHeader='Forbidden'">
 <head>
     <title>Library service</title>
 </head>
@@ -11,7 +11,7 @@
 <section layout:fragment="dynamic-content">
     <div class="alert alert-danger" role="alert">
         <strong>Error:</strong>
-        <span th:text="${message}"></span>
+        <span>Forbidden.</span>
     </div>
 </section>
 </body>

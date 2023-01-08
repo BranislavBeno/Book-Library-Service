@@ -66,9 +66,9 @@ class BookControllerTest {
         @Test
         void testShowAddBookForm() throws Exception {
             this.mockMvc
-                    .perform(MockMvcRequestBuilders.get("/create"))
+                    .perform(MockMvcRequestBuilders.get("/addBook"))
                     .andExpect(MockMvcResultMatchers.status().isOk())
-                    .andExpect(MockMvcResultMatchers.view().name("add-book"))
+                    .andExpect(MockMvcResultMatchers.view().name("save-book"))
                     .andExpect(MockMvcResultMatchers.model().attributeExists("availableBookDto"));
         }
 
@@ -77,12 +77,12 @@ class BookControllerTest {
         @Test
         void testRejectingAddingNewBook() throws Exception {
             this.mockMvc
-                    .perform(post("/add")
+                    .perform(post("/save")
                             .param("name", "Very long book name")
                             .param("author", "John Doe")
                             .with(csrf()))
                     .andExpect(status().isOk())
-                    .andExpect(view().name("add-book"))
+                    .andExpect(view().name("save-book"))
                     .andExpect(model().hasErrors())
                     .andExpect(model().attributeHasErrors("availableBookDto"));
         }
@@ -92,7 +92,7 @@ class BookControllerTest {
         @Test
         void testAddingNewBook() throws Exception {
             this.mockMvc
-                    .perform(post("/add")
+                    .perform(post("/save")
                             .param("name", "Book name")
                             .param("author", "John Doe")
                             .with(csrf()))
