@@ -112,7 +112,9 @@ public final class BookController extends AbstractBookController {
 
     @GetMapping("/borrowBook")
     public String borrowBook(@RequestParam("bookId") int id, Model model) {
-        model.addAttribute("borrowedDto", new BorrowedDto());
+        BorrowedDto borrowedDto = new BorrowedDto();
+        borrowedDto.setBookId(id);
+        model.addAttribute("borrowedDto", borrowedDto);
 
         return "borrow-book";
     }

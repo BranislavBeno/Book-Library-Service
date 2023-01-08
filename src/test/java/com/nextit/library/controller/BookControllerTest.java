@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static com.nextit.library.util.BookUtils.getTomorrowsDate;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -125,6 +126,39 @@ class BookControllerTest {
         }
 
         @Order(7)
+        @WithMockUser(username = "user")
+        @Test
+        void testRejectingBorrowingBook() throws Exception {
+            String date = getTomorrowsDate().toString();
+
+            this.mockMvc
+                    .perform(post("/borrow")
+                            .param("firstName", "Paul")
+                            .param("lastName", "Newman")
+                            .param("from", date)
+                            .with(csrf()))
+                    .andExpect(status().isOk())
+                    .andExpect(view().name("borrow-book"))
+                    .andExpect(model().hasErrors())
+                    .andExpect(model().attributeHasErrors("borrowedDto"));
+        }
+
+        @Order(8)
+        @WithMockUser(username = "user")
+        @Test
+        void testBorrowingBook() throws Exception {
+            this.mockMvc
+                    .perform(post("/borrow")
+                            .param("bookId", "1")
+                            .param("firstName", "Paul")
+                            .param("lastName", "Newman")
+                            .param("from", "2023-01-05")
+                            .with(csrf()))
+                    .andExpect(status().is3xxRedirection())
+                    .andExpect(header().string("Location", "/available"));
+        }
+
+        @Order(9)
         @WithMockUser(username = "user")
         @Test
         void testDeletingBook() throws Exception {

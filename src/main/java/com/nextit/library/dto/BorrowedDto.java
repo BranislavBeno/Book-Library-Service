@@ -13,7 +13,7 @@ public final class BorrowedDto {
     private LocalDate from;
 
     public BorrowedDto() {
-        this(0, "", "", LocalDate.now());
+        this(0, "", "", null);
     }
 
     public BorrowedDto(int bookId, String firstName, String lastName, LocalDate from) {

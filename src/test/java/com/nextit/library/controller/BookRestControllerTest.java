@@ -1,12 +1,9 @@
 package com.nextit.library.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.nextit.library.config.AppConfig;
 import com.nextit.library.dto.BookMapper;
-import com.nextit.library.dto.BorrowedDto;
 import com.nextit.library.service.BookService;
+import com.nextit.library.util.BookUtils;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
@@ -26,7 +23,6 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 
-import java.time.LocalDate;
 import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.is;
@@ -92,8 +88,7 @@ class BookRestControllerTest {
                     "lastName": "Doe",
                     "from": "2023-01-05"
                 }""";
-        private static final String BAD_REQUEST_6 =
-                createNonValidRequest(new BorrowedDto(4, "John", "Doe", LocalDate.now().plusDays(1)));
+        private static final String BAD_REQUEST_6 = BookUtils.createNonValidBorrowRequest();
 
         @Autowired
         private MockMvc mockMvc;
@@ -101,17 +96,6 @@ class BookRestControllerTest {
         @DynamicPropertySource
         static void properties(DynamicPropertyRegistry registry) {
             registry.add("book.repository.path", () -> "src/test/resources/Library.xml");
-        }
-
-        private static String createNonValidRequest(BorrowedDto dto) {
-            try {
-                JsonMapper jsonMapper = JsonMapper.builder()
-                        .addModule(new JavaTimeModule())
-                        .build();
-                return jsonMapper.writeValueAsString(dto);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
         }
 
         @Order(1)

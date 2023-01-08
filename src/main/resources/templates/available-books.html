@@ -19,12 +19,16 @@
             <tr>
                 <th scope="col">Name</th>
                 <th scope="col">Author</th>
+                <th scope="col">Action</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="item : ${books.content}">
                 <td th:text="${item.name}"></td>
                 <td th:text="${item.author}"></td>
+                <td>
+                    <a th:href="@{/borrowBook(bookId=${item.id})}" class="btn btn-info btn-sm">Borrow</a>
+                </td>
             </tr>
             </tbody>
         </table>

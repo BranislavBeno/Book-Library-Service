@@ -1,8 +1,12 @@
 package com.nextit.library.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.nextit.library.domain.Book;
 import com.nextit.library.domain.Borrowed;
 import com.nextit.library.dto.AvailableBookDto;
+import com.nextit.library.dto.BorrowedDto;
 
 import java.time.LocalDate;
 
@@ -24,5 +28,24 @@ public final class BookUtils {
 
     public static AvailableBookDto createAvailableDto() {
         return new AvailableBookDto(1, "Hamlet", "William Shakespeare");
+    }
+
+    public static String createNonValidBorrowRequest() {
+        return createNonValidRequest(new BorrowedDto(4, "John", "Doe", getTomorrowsDate()));
+    }
+
+    public static LocalDate getTomorrowsDate() {
+        return LocalDate.now().plusDays(1);
+    }
+
+    private static String createNonValidRequest(BorrowedDto dto) {
+        try {
+            JsonMapper jsonMapper = JsonMapper.builder()
+                    .addModule(new JavaTimeModule())
+                    .build();
+            return jsonMapper.writeValueAsString(dto);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
