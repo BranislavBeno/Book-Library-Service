@@ -29,7 +29,7 @@ public class BookRestController extends AbstractBookController {
 
     @GetMapping("/all")
     public List<AnyBookDto> all(@RequestParam(name = "page", defaultValue = "0") int page) {
-        return getBookService().findAll(page)
+        return getService().findAll(page)
                 .stream()
                 .map(b -> getMapper().toAnyBookDto(b))
                 .toList();
@@ -37,7 +37,7 @@ public class BookRestController extends AbstractBookController {
 
     @GetMapping("/available")
     public List<AvailableBookDto> available(@RequestParam(name = "page", defaultValue = "0") int page) {
-        return getBookService().findAllAvailable(page)
+        return getService().findAllAvailable(page)
                 .stream()
                 .map(b -> getMapper().toAvailableBookDto(b))
                 .toList();
@@ -45,7 +45,7 @@ public class BookRestController extends AbstractBookController {
 
     @GetMapping("/borrowed")
     public List<BorrowedBookDto> borrowed(@RequestParam(name = "page", defaultValue = "0") int page) {
-        return getBookService().findAllBorrowed(page)
+        return getService().findAllBorrowed(page)
                 .stream()
                 .map(b -> getMapper().toBorrowedBookDto(b))
                 .toList();
@@ -65,7 +65,7 @@ public class BookRestController extends AbstractBookController {
 
     @PutMapping("/update")
     public ResponseEntity<AvailableBookDto> update(@Valid @RequestBody AvailableBookDto dto) {
-        if (getBookService().existsById(dto.getId())) {
+        if (getService().existsById(dto.getId())) {
             Book updated = updateBook(dto);
 
             String message = "\"%s\" saved successfully.".formatted(updated.toString());
@@ -81,11 +81,8 @@ public class BookRestController extends AbstractBookController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> delete(@PathVariable int id) {
-        if (getBookService().existsById(id)) {
-            getBookService().deleteById(id);
-
-            String message = "Book with id='%d' deleted successfully.".formatted(id);
-            LOGGER.info(message);
+        if (getService().existsById(id)) {
+            deleteBook(id);
 
             return ResponseEntity.noContent().build();
         } else {
@@ -97,7 +94,7 @@ public class BookRestController extends AbstractBookController {
 
     @PutMapping("/avail/{id}")
     public ResponseEntity<Object> avail(@PathVariable int id) {
-        if (getBookService().existsById(id)) {
+        if (getService().existsById(id)) {
             Book updated = availBook(id);
 
             String message = "\"%s\" made available successfully.".formatted(updated.toString());
@@ -114,7 +111,7 @@ public class BookRestController extends AbstractBookController {
     @PutMapping("/borrow")
     public ResponseEntity<BorrowedBookDto> borrow(@Valid @RequestBody BorrowedDto dto) {
         int bookId = dto.bookId();
-        if (getBookService().existsById(bookId)) {
+        if (getService().existsById(bookId)) {
             Book updated = borrowBook(dto);
 
             String message = "\"%s\" borrowed successfully.".formatted(updated.toString());
@@ -129,24 +126,24 @@ public class BookRestController extends AbstractBookController {
     }
 
     private Book updateBook(AvailableBookDto dto) {
-        Book book = getBookService().findById(dto.getId());
+        Book book = getService().findById(dto.getId());
         book.setName(dto.getName());
         book.setAuthor(dto.getAuthor());
 
-        return getBookService().save(book);
+        return getService().save(book);
     }
 
     private Book availBook(int id) {
-        Book book = getBookService().findById(id);
+        Book book = getService().findById(id);
         book.setBorrowed(new Borrowed());
 
-        return getBookService().save(book);
+        return getService().save(book);
     }
 
     private Book borrowBook(BorrowedDto dto) {
-        Book book = getBookService().findById(dto.bookId());
+        Book book = getService().findById(dto.bookId());
         book.setBorrowed(new Borrowed(dto.firstName(), dto.lastName(), dto.from()));
 
-        return getBookService().save(book);
+        return getService().save(book);
     }
 }

@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<a th:fragment="button-delete" th:href="@{/delete/{id}(id=${item.id})}"
+   class="btn btn-danger btn-sm"
+   onclick="if (!(confirm('Are you sure you want to delete this book?'))) return false">
+    Delete
+</a>
+</html>

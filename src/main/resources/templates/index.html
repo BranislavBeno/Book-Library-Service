@@ -19,28 +19,29 @@
             <tr>
                 <th scope="col">Name</th>
                 <th scope="col">Author</th>
+                <th scope="col">Action</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="item : ${books.content}">
-                <td class="table-success" th:text="${item.name}" th:if="${!item.borrowed}" data-bs-toggle="tooltip"
+                <td class="table-success" th:if="${!item.borrowed}" th:text="${item.name}" data-bs-toggle="tooltip"
                     data-bs-placement="right" title="Available"></td>
-                <td class="table-danger" th:text="${item.name}" th:if="${item.borrowed}" data-bs-toggle="tooltip"
-                    data-bs-placement="right" title="Borrowed"></td>
-                <td class="table-success" th:text="${item.author}" th:if="${!item.borrowed}" data-bs-toggle="tooltip"
+                <td class="table-success" th:if="${!item.borrowed}" th:text="${item.author}" data-bs-toggle="tooltip"
                     data-bs-placement="right" title="Available"></td>
-                <td class="table-danger" th:text="${item.author}" th:if="${item.borrowed}" data-bs-toggle="tooltip"
+                <td class="table-success" th:if="${!item.borrowed}">
+                    <div th:replace="~{fragments/button-delete :: button-delete}"></div>
+                </td>
+                <td class="table-danger" th:if="${item.borrowed}" th:text="${item.name}" data-bs-toggle="tooltip"
                     data-bs-placement="right" title="Borrowed"></td>
+                <td class="table-danger" th:if="${item.borrowed}" th:text="${item.author}" data-bs-toggle="tooltip"
+                    data-bs-placement="right" title="Borrowed"></td>
+                <td class="table-danger" th:if="${item.borrowed}">
+                    <div th:replace="~{fragments/button-delete :: button-delete}"></div>
+                </td>
             </tr>
             </tbody>
         </table>
-        <nav aria-label="Page navigation" th:if="${pageNumbers.size() > 1}">
-            <ul class="pagination justify-content-center">
-                <li class="page-item" th:each="pageNumber : ${pageNumbers}">
-                    <a class="page-link" th:href="@{/(page=${pageNumber - 1})}" th:text=${pageNumber}></a>
-                </li>
-            </ul>
-        </nav>
+        <div th:replace="~{fragments/pagination-nav :: pagination-nav(pageLink='/')}"></div>
     </div>
 </section>
 </body>

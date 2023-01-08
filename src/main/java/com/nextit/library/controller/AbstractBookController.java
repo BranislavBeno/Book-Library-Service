@@ -13,16 +13,16 @@ abstract class AbstractBookController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractBookController.class);
 
-    private final BookService bookService;
+    private final BookService service;
     private final BookMapper mapper;
 
-    AbstractBookController(BookService bookService, BookMapper mapper) {
-        this.bookService = Objects.requireNonNull(bookService);
+    AbstractBookController(BookService service, BookMapper mapper) {
+        this.service = Objects.requireNonNull(service);
         this.mapper = Objects.requireNonNull(mapper);
     }
 
-    BookService getBookService() {
-        return bookService;
+    BookService getService() {
+        return service;
     }
 
     BookMapper getMapper() {
@@ -30,12 +30,19 @@ abstract class AbstractBookController {
     }
 
     Book addBook(AvailableBookDto dto) {
-        Book book = getMapper().toEntity(dto);
-        Book newBook = getBookService().save(book);
+        Book book = mapper.toEntity(dto);
+        Book newBook = service.save(book);
 
         String message = "\"%s\" added into repository.".formatted(newBook.toString());
         LOGGER.info(message);
 
         return newBook;
+    }
+
+    void deleteBook(int id) {
+        service.deleteById(id);
+
+        String message = "Book with id='%d' deleted successfully.".formatted(id);
+        LOGGER.info(message);
     }
 }

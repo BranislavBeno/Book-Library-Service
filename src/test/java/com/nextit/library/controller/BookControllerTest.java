@@ -3,8 +3,7 @@ package com.nextit.library.controller;
 import com.nextit.library.config.AppConfig;
 import com.nextit.library.dto.BookMapper;
 import com.nextit.library.service.BookService;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -31,6 +31,7 @@ class BookControllerTest {
     private BookMapper mapper;
 
     @Nested
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     class BookListTest {
 
         @Autowired
@@ -41,6 +42,7 @@ class BookControllerTest {
             registry.add("book.repository.path", () -> "src/test/resources/Library.xml");
         }
 
+        @Order(1)
         @WithMockUser(username = "user")
         @ParameterizedTest
         @CsvSource(value = {
@@ -59,6 +61,7 @@ class BookControllerTest {
                     .andExpect(MockMvcResultMatchers.model().attributeExists("books", "pageNumbers"));
         }
 
+        @Order(2)
         @WithMockUser(username = "user")
         @Test
         void testShowAddBookForm() throws Exception {
@@ -69,6 +72,7 @@ class BookControllerTest {
                     .andExpect(MockMvcResultMatchers.model().attributeExists("availableBookDto"));
         }
 
+        @Order(3)
         @WithMockUser(username = "user")
         @Test
         void testRejectingAddingNewBook() throws Exception {
@@ -83,6 +87,7 @@ class BookControllerTest {
                     .andExpect(model().attributeHasErrors("availableBookDto"));
         }
 
+        @Order(4)
         @WithMockUser(username = "user")
         @Test
         void testAddingNewBook() throws Exception {
@@ -90,6 +95,17 @@ class BookControllerTest {
                     .perform(post("/add")
                             .param("name", "Book name")
                             .param("author", "John Doe")
+                            .with(csrf()))
+                    .andExpect(status().is3xxRedirection())
+                    .andExpect(header().string("Location", "/"));
+        }
+
+        @Order(5)
+        @WithMockUser(username = "user")
+        @Test
+        void testDeletingBook() throws Exception {
+            this.mockMvc
+                    .perform(get("/delete/1")
                             .with(csrf()))
                     .andExpect(status().is3xxRedirection())
                     .andExpect(header().string("Location", "/"));

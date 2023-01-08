@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -36,7 +37,7 @@ public final class BookController extends AbstractBookController {
 
     @GetMapping("/")
     public String showAll(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-        Page<Book> bookPage = getBookService().findAll(page);
+        Page<Book> bookPage = getService().findAll(page);
         PageData pageData = providePageData(page, bookPage, b -> getMapper().toAnyBookDto(b));
 
         model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
@@ -48,7 +49,7 @@ public final class BookController extends AbstractBookController {
 
     @GetMapping("/available")
     public String showAvailable(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-        Page<Book> bookPage = getBookService().findAllAvailable(page);
+        Page<Book> bookPage = getService().findAllAvailable(page);
         PageData pageData = providePageData(page, bookPage, b -> getMapper().toAvailableBookDto(b));
 
         model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
@@ -60,7 +61,7 @@ public final class BookController extends AbstractBookController {
 
     @GetMapping("/borrowed")
     public String showBorrowed(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-        Page<Book> bookPage = getBookService().findAllBorrowed(page);
+        Page<Book> bookPage = getService().findAllBorrowed(page);
         PageData pageData = providePageData(page, bookPage, b -> getMapper().toBorrowedBookDto(b));
 
         model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
@@ -88,13 +89,20 @@ public final class BookController extends AbstractBookController {
         return "redirect:/";
     }
 
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable int id, Model model) {
+        deleteBook(id);
+
+        return "redirect:/";
+    }
+
     private Page<BookDto> provideDtoPage(int page, Page<Book> bookPage, Function<Book, BookDto> function) {
         List<BookDto> content = bookPage.getContent()
                 .stream()
                 .map(function)
                 .toList();
 
-        return new PageImpl<>(content, PageRequest.of(page, getBookService().pageSize()), bookPage.getTotalPages());
+        return new PageImpl<>(content, PageRequest.of(page, getService().pageSize()), bookPage.getTotalPages());
     }
 
     private List<Integer> providePageNumbers(int totalPages) {
