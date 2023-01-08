@@ -2,9 +2,7 @@ package com.nextit.library.controller;
 
 import com.nextit.library.domain.Book;
 import com.nextit.library.domain.Borrowed;
-import com.nextit.library.dto.AvailableBookDto;
-import com.nextit.library.dto.BookDto;
-import com.nextit.library.dto.BookMapper;
+import com.nextit.library.dto.*;
 import com.nextit.library.service.BookService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +66,13 @@ abstract class AbstractBookController {
         return bookDto;
     }
 
+    void deleteBook(int id) {
+        service.deleteById(id);
+
+        String message = "Book with id='%d' deleted successfully.".formatted(id);
+        LOGGER.info(message);
+    }
+
     AvailableBookDto availBook(int id) {
         Book book = service.findById(id);
         book.setBorrowed(new Borrowed());
@@ -80,10 +85,15 @@ abstract class AbstractBookController {
         return bookDto;
     }
 
-    void deleteBook(int id) {
-        service.deleteById(id);
+    BorrowedBookDto borrowBook(BorrowedDto dto) {
+        Book book = service.findById(dto.bookId());
+        book.setBorrowed(new Borrowed(dto.firstName(), dto.lastName(), dto.from()));
 
-        String message = "Book with id='%d' deleted successfully.".formatted(id);
+        BorrowedBookDto bookDto = mapper.toBorrowedBookDto(service.save(book));
+
+        String message = "\"%s\" borrowed successfully.".formatted(bookDto.toString());
         LOGGER.info(message);
+
+        return bookDto;
     }
 }

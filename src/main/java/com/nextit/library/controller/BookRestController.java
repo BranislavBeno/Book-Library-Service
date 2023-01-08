@@ -1,7 +1,5 @@
 package com.nextit.library.controller;
 
-import com.nextit.library.domain.Book;
-import com.nextit.library.domain.Borrowed;
 import com.nextit.library.dto.*;
 import com.nextit.library.service.BookService;
 import jakarta.validation.Valid;
@@ -61,9 +59,7 @@ public class BookRestController extends AbstractBookController {
 
             return ResponseEntity.ok(bookDto);
         } else {
-            String message = "Book '%s' not found.".formatted(dto.getName());
-            LOGGER.error(message);
-            return ResponseEntity.badRequest().build();
+            return createBadRequest(MESSAGE.formatted("updating", dto.getId()));
         }
     }
 
@@ -74,9 +70,7 @@ public class BookRestController extends AbstractBookController {
 
             return ResponseEntity.noContent().build();
         } else {
-            String message = MESSAGE.formatted("'deletion'", id);
-            LOGGER.error(message);
-            return ResponseEntity.badRequest().build();
+            return createBadRequest(MESSAGE.formatted("deletion", id));
         }
     }
 
@@ -87,9 +81,7 @@ public class BookRestController extends AbstractBookController {
 
             return ResponseEntity.ok(bookDto);
         } else {
-            String message = MESSAGE.formatted("'availing'", id);
-            LOGGER.error(message);
-            return ResponseEntity.badRequest().build();
+            return createBadRequest(MESSAGE.formatted("availing", id));
         }
     }
 
@@ -97,23 +89,16 @@ public class BookRestController extends AbstractBookController {
     public ResponseEntity<BorrowedBookDto> borrow(@Valid @RequestBody BorrowedDto dto) {
         int bookId = dto.bookId();
         if (getService().existsById(bookId)) {
-            Book updated = borrowBook(dto);
+            BorrowedBookDto bookDto = borrowBook(dto);
 
-            String message = "\"%s\" borrowed successfully.".formatted(updated.toString());
-            LOGGER.info(message);
-
-            return ResponseEntity.ok(getMapper().toBorrowedBookDto(updated));
+            return ResponseEntity.ok(bookDto);
         } else {
-            String message = MESSAGE.formatted("'borrowing'", bookId);
-            LOGGER.error(message);
-            return ResponseEntity.badRequest().build();
+            return createBadRequest(MESSAGE.formatted("borrowing", bookId));
         }
     }
 
-    private Book borrowBook(BorrowedDto dto) {
-        Book book = getService().findById(dto.bookId());
-        book.setBorrowed(new Borrowed(dto.firstName(), dto.lastName(), dto.from()));
-
-        return getService().save(book);
+    private static <T> ResponseEntity<T> createBadRequest(String message) {
+        LOGGER.error(message);
+        return ResponseEntity.badRequest().build();
     }
 }
