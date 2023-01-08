@@ -29,38 +29,29 @@ public class BookRestController extends AbstractBookController {
 
     @GetMapping("/all")
     public List<AnyBookDto> all(@RequestParam(name = "page", defaultValue = "0") int page) {
-        return getService().findAll(page)
-                .stream()
-                .map(b -> getMapper().toAnyBookDto(b))
-                .toList();
+        return provideDtoList(getService().findAll(page), b -> getMapper().toAnyBookDto(b));
     }
 
     @GetMapping("/available")
     public List<AvailableBookDto> available(@RequestParam(name = "page", defaultValue = "0") int page) {
-        return getService().findAllAvailable(page)
-                .stream()
-                .map(b -> getMapper().toAvailableBookDto(b))
-                .toList();
+        return provideDtoList(getService().findAllAvailable(page), b -> getMapper().toAvailableBookDto(b));
     }
 
     @GetMapping("/borrowed")
     public List<BorrowedBookDto> borrowed(@RequestParam(name = "page", defaultValue = "0") int page) {
-        return getService().findAllBorrowed(page)
-                .stream()
-                .map(b -> getMapper().toBorrowedBookDto(b))
-                .toList();
+        return provideDtoList(getService().findAllBorrowed(page), b -> getMapper().toBorrowedBookDto(b));
     }
 
     @PostMapping("/add")
     public ResponseEntity<AvailableBookDto> add(@Valid @RequestBody AvailableBookDto dto) {
-        Book newBook = addBook(dto);
+        AvailableBookDto bookDto = addBook(dto);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(newBook.getId())
+                .buildAndExpand(bookDto.getId())
                 .toUri();
 
-        return ResponseEntity.created(uri).body(getMapper().toAvailableBookDto(newBook));
+        return ResponseEntity.created(uri).body(bookDto);
     }
 
     @PutMapping("/update")

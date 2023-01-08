@@ -97,11 +97,7 @@ public final class BookController extends AbstractBookController {
     }
 
     private Page<BookDto> provideDtoPage(int page, Page<Book> bookPage, Function<Book, BookDto> function) {
-        List<BookDto> content = bookPage.getContent()
-                .stream()
-                .map(function)
-                .toList();
-
+        List<BookDto> content = provideDtoList(bookPage, function);
         return new PageImpl<>(content, PageRequest.of(page, getService().pageSize()), bookPage.getTotalPages());
     }
 

@@ -2,12 +2,16 @@ package com.nextit.library.controller;
 
 import com.nextit.library.domain.Book;
 import com.nextit.library.dto.AvailableBookDto;
+import com.nextit.library.dto.BookDto;
 import com.nextit.library.dto.BookMapper;
 import com.nextit.library.service.BookService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 
 abstract class AbstractBookController {
 
@@ -29,14 +33,21 @@ abstract class AbstractBookController {
         return mapper;
     }
 
-    Book addBook(AvailableBookDto dto) {
-        Book book = mapper.toEntity(dto);
-        Book newBook = service.save(book);
+    <T extends BookDto> List<T> provideDtoList(Page<Book> bookPage, Function<Book, T> function) {
+        return bookPage.getContent()
+                .stream()
+                .map(function)
+                .toList();
+    }
 
-        String message = "\"%s\" added into repository.".formatted(newBook.toString());
+    AvailableBookDto addBook(AvailableBookDto dto) {
+        Book book = mapper.toEntity(dto);
+        AvailableBookDto bookDto = mapper.toAvailableBookDto(service.save(book));
+
+        String message = "\"%s\" added into repository.".formatted(bookDto.toString());
         LOGGER.info(message);
 
-        return newBook;
+        return bookDto;
     }
 
     void deleteBook(int id) {
