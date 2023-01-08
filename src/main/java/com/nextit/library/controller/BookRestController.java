@@ -67,8 +67,8 @@ public class BookRestController extends AbstractBookController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> delete(@PathVariable int id) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<Object> delete(@RequestParam("bookId") int id) {
         if (getService().existsById(id)) {
             deleteBook(id);
 

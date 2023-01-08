@@ -223,17 +223,18 @@ class BookRestControllerTest {
         @WithMockUser(username = "user")
         @ParameterizedTest
         @MethodSource("deleteRequests")
-        void testDeletingBook(int id, ResultMatcher status) throws Exception {
+        void testDeletingBook(String id, ResultMatcher status) throws Exception {
             this.mockMvc
-                    .perform(delete("/api/v1/books/delete/" + id)
+                    .perform(delete("/api/v1/books/delete")
+                            .param("bookId", id)
                             .with(csrf()))
                     .andExpect(status);
         }
 
         private static Stream<Arguments> deleteRequests() {
             return Stream.of(
-                    Arguments.of(10, status().isBadRequest()),
-                    Arguments.of(1, status().isNoContent())
+                    Arguments.of("10", status().isBadRequest()),
+                    Arguments.of("1", status().isNoContent())
             );
         }
     }

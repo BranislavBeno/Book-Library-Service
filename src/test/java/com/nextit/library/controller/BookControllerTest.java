@@ -117,7 +117,8 @@ class BookControllerTest {
         @Test
         void testDeletingBook() throws Exception {
             this.mockMvc
-                    .perform(get("/delete/1")
+                    .perform(get("/delete")
+                            .param("bookId", "1")
                             .with(csrf()))
                     .andExpect(status().is3xxRedirection())
                     .andExpect(header().string("Location", "/"));
