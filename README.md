@@ -2,7 +2,6 @@
 [![coverage report](https://gitlab.com/brano.beno/library-for-nextit/badges/master/coverage.svg)](https://gitlab.com/brano.beno/library-for-nextit/-/commits/master) 
 
 # Simple web application for book library service
-It is a web server and REST API server at once.  
 This application allows to provide usual actions with book library, such as:
 - view paginated all books (highlighted whether are borrowed or available)
 - view paginated only available books
@@ -12,12 +11,29 @@ This application allows to provide usual actions with book library, such as:
 - remove book from library
 - borrow and return book
 
-> Application listens on port 8080
+> Application listens on port 8080.  
+> It offers web UI and REST API interface as well.
+
+### Configuration
+Following application settings are configurable over application.properties file:
+- book.repository.path - input file destination
+- book.service.page.size - page size for paginated outputs
+- book.authentication.user - username for authenticated access
+- book.authentication.password - password for authenticated access
+
+> Default credentials are:
+> - username=user
+> - password=passwd
+
+### Web UI usage
+After application start, click on http://localhost:8080/
+
+> Due to alignment with REST API is login provided over web browser default dialog and not over own HTML login page.
 
 ### REST API usage
 For sending requests and receiving responses use `Postman`, `curl` or web browser.
 
-> All endpoints are secured with basic authentication (see [Notes](#notes))
+> All endpoints are secured with basic authentication (see [Configuration](#configuration))
 
 #### API description
 Following endpoints are available for usage:
@@ -60,15 +76,3 @@ Following endpoints are available for usage:
      "from": "2023-01-05"
   }
   ```
-
-### Web UI usage
-After application start, click on http://localhost:8080/
-
-> Due to alignment with REST API is login provided over web browser default dialog and not over own login page.
-
-### Notes
-Following application settings are configurable over application.properties file:
-- book.repository.path - input file destination
-- book.service.page.size - page size for paginated outputs
-- book.authentication.user - username for authenticated access
-- book.authentication.password - password for authenticated access
