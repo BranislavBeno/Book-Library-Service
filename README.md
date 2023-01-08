@@ -28,6 +28,14 @@ Following application settings are configurable over application.properties file
 ### Web UI usage
 After application start, click on http://localhost:8080/
 
+After successful login, web UI offers three types of view:
+1. _*All books*_. Borrowed are highlighted red, available green. This view allows book data updating or book removal from library.  
+   Book data updating doesn't allow borrow or rent book.
+2. _*Available books*_. This view allows to borrow book.
+3. _*Borrowed books*_.  This view allows to return book.
+
+Main page offers also add book into library.
+
 > Due to alignment with REST API is login provided over web browser default dialog and not over own HTML login page.
 
 ### REST API usage
