@@ -87,7 +87,7 @@ public class BookRestController extends AbstractBookController {
 
     @PutMapping("/borrow")
     public ResponseEntity<BorrowedBookDto> borrow(@Valid @RequestBody BorrowedDto dto) {
-        int bookId = dto.bookId();
+        int bookId = dto.getBookId();
         if (getService().existsById(bookId)) {
             BorrowedBookDto bookDto = borrowBook(dto);
 

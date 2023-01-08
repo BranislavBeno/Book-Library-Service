@@ -60,7 +60,7 @@ abstract class AbstractBookController {
 
         AvailableBookDto bookDto = mapper.toAvailableBookDto(service.save(book));
 
-        String message = "\"%s\" saved into repository.".formatted(bookDto.toString());
+        String message = "%s saved into repository.".formatted(book.toString());
         LOGGER.info(message);
 
         return bookDto;
@@ -79,19 +79,19 @@ abstract class AbstractBookController {
 
         AvailableBookDto bookDto = mapper.toAvailableBookDto(service.save(book));
 
-        String message = "\"%s\" made available successfully.".formatted(bookDto.toString());
+        String message = "%s made available successfully.".formatted(book.toString());
         LOGGER.info(message);
 
         return bookDto;
     }
 
     BorrowedBookDto borrowBook(BorrowedDto dto) {
-        Book book = service.findById(dto.bookId());
-        book.setBorrowed(new Borrowed(dto.firstName(), dto.lastName(), dto.from()));
+        Book book = service.findById(dto.getBookId());
+        book.setBorrowed(new Borrowed(dto.getFirstName(), dto.getLastName(), dto.getFrom()));
 
         BorrowedBookDto bookDto = mapper.toBorrowedBookDto(service.save(book));
 
-        String message = "\"%s\" borrowed successfully.".formatted(bookDto.toString());
+        String message = "%s borrowed successfully.".formatted(book.toString());
         LOGGER.info(message);
 
         return bookDto;

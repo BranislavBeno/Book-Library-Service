@@ -4,6 +4,7 @@ import com.nextit.library.domain.Book;
 import com.nextit.library.dto.AvailableBookDto;
 import com.nextit.library.dto.BookDto;
 import com.nextit.library.dto.BookMapper;
+import com.nextit.library.dto.BorrowedDto;
 import com.nextit.library.service.BookService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,6 +108,24 @@ public final class BookController extends AbstractBookController {
         availBook(id);
 
         return "redirect:/borrowed";
+    }
+
+    @GetMapping("/borrowBook")
+    public String borrowBook(@RequestParam("bookId") int id, Model model) {
+        model.addAttribute("borrowedDto", new BorrowedDto());
+
+        return "borrow-book";
+    }
+
+    @PostMapping("/borrow")
+    public String borrow(@Valid BorrowedDto borrowedDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "borrow-book";
+        }
+
+        borrowBook(borrowedDto);
+
+        return "redirect:/available";
     }
 
     private Page<BookDto> provideDtoPage(int page, Page<Book> bookPage, Function<Book, BookDto> function) {

@@ -44,9 +44,4 @@ public final class AvailableBookDto implements BookDto {
     public void setAuthor(String author) {
         this.author = author;
     }
-
-    @Override
-    public String toString() {
-        return "Book[id=%d, name='%s', author='%s']".formatted(id, name, author);
-    }
 }

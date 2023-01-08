@@ -44,4 +44,9 @@ public class Book {
     public void setBorrowed(Borrowed borrowed) {
         this.borrowed = borrowed;
     }
+
+    @Override
+    public String toString() {
+        return "Book[id=%d, name='%s', author='%s']".formatted(id, name, author);
+    }
 }
