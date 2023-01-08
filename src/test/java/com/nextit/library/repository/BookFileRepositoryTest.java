@@ -4,28 +4,23 @@ import com.nextit.library.domain.Book;
 import com.nextit.library.domain.Borrowed;
 import com.nextit.library.util.BookUtils;
 import org.assertj.core.api.WithAssertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
-@SpringBootTest
 class BookFileRepositoryTest implements WithAssertions {
 
-    @Autowired
-    private BookFileRepository cut;
+    private static BookFileRepository cut;
 
-    @DynamicPropertySource
-    static void properties(DynamicPropertyRegistry registry) {
-        registry.add("book.repository.path", () -> "src/test/resources/Library.xml");
+    @BeforeAll
+    static void setUp() {
+        cut = new BookFileRepository("src/test/resources/Library.xml");
     }
 
     @Test
