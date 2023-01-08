@@ -20,7 +20,7 @@ import java.util.List;
 public class BookRestController extends AbstractBookController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookRestController.class);
-    private static final String MESSAGE = "Book with id='%d' not found.";
+    private static final String MESSAGE = "Book %s failed. Book with id='%d' not found.";
 
     public BookRestController(@Autowired BookService bookService,
                               @Autowired BookMapper mapper) {
@@ -74,23 +74,20 @@ public class BookRestController extends AbstractBookController {
 
             return ResponseEntity.noContent().build();
         } else {
-            String message = MESSAGE.formatted(id);
+            String message = MESSAGE.formatted("'deletion'", id);
             LOGGER.error(message);
             return ResponseEntity.badRequest().build();
         }
     }
 
-    @PutMapping("/avail/{id}")
-    public ResponseEntity<Object> avail(@PathVariable int id) {
+    @PutMapping("/avail")
+    public ResponseEntity<AvailableBookDto> avail(@RequestParam("bookId") int id) {
         if (getService().existsById(id)) {
-            Book updated = availBook(id);
+            AvailableBookDto bookDto = availBook(id);
 
-            String message = "\"%s\" made available successfully.".formatted(updated.toString());
-            LOGGER.info(message);
-
-            return ResponseEntity.ok(getMapper().toAvailableBookDto(updated));
+            return ResponseEntity.ok(bookDto);
         } else {
-            String message = MESSAGE.formatted(id);
+            String message = MESSAGE.formatted("'availing'", id);
             LOGGER.error(message);
             return ResponseEntity.badRequest().build();
         }
@@ -107,17 +104,10 @@ public class BookRestController extends AbstractBookController {
 
             return ResponseEntity.ok(getMapper().toBorrowedBookDto(updated));
         } else {
-            String message = MESSAGE.formatted(bookId);
+            String message = MESSAGE.formatted("'borrowing'", bookId);
             LOGGER.error(message);
             return ResponseEntity.badRequest().build();
         }
-    }
-
-    private Book availBook(int id) {
-        Book book = getService().findById(id);
-        book.setBorrowed(new Borrowed());
-
-        return getService().save(book);
     }
 
     private Book borrowBook(BorrowedDto dto) {

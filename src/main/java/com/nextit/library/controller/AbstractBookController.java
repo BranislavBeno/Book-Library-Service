@@ -1,6 +1,7 @@
 package com.nextit.library.controller;
 
 import com.nextit.library.domain.Book;
+import com.nextit.library.domain.Borrowed;
 import com.nextit.library.dto.AvailableBookDto;
 import com.nextit.library.dto.BookDto;
 import com.nextit.library.dto.BookMapper;
@@ -62,6 +63,18 @@ abstract class AbstractBookController {
         AvailableBookDto bookDto = mapper.toAvailableBookDto(service.save(book));
 
         String message = "\"%s\" saved into repository.".formatted(bookDto.toString());
+        LOGGER.info(message);
+
+        return bookDto;
+    }
+
+    AvailableBookDto availBook(int id) {
+        Book book = service.findById(id);
+        book.setBorrowed(new Borrowed());
+
+        AvailableBookDto bookDto = mapper.toAvailableBookDto(service.save(book));
+
+        String message = "\"%s\" made available successfully.".formatted(bookDto.toString());
         LOGGER.info(message);
 
         return bookDto;

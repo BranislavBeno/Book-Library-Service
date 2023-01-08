@@ -21,6 +21,7 @@
                 <th scope="col">Author</th>
                 <th scope="col">Borrowed to</th>
                 <th scope="col">Borrowed on</th>
+                <th scope="col">Action</th>
             </tr>
             </thead>
             <tbody>
@@ -29,6 +30,13 @@
                 <td th:text="${item.author}"></td>
                 <td th:text="${item.borrowedTo}"></td>
                 <td th:text="${item.borrowedOn}"></td>
+                <td>
+                    <a th:href="@{/avail(bookId=${item.id})}"
+                       class="btn btn-info btn-sm"
+                       onclick="if (!(confirm('Are you sure you want to return this book?'))) return false">
+                        Return
+                    </a>
+                </td>
             </tr>
             </tbody>
         </table>

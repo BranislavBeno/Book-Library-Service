@@ -205,17 +205,18 @@ class BookRestControllerTest {
         @WithMockUser(username = "user")
         @ParameterizedTest
         @MethodSource("availRequests")
-        void testAvailingBook(int id, ResultMatcher status) throws Exception {
+        void testAvailingBook(String id, ResultMatcher status) throws Exception {
             this.mockMvc
-                    .perform(put("/api/v1/books/avail/" + id)
+                    .perform(put("/api/v1/books/avail")
+                            .param("bookId", id)
                             .with(csrf()))
                     .andExpect(status);
         }
 
         private static Stream<Arguments> availRequests() {
             return Stream.of(
-                    Arguments.of(10, status().isBadRequest()),
-                    Arguments.of(1, status().isOk())
+                    Arguments.of("10", status().isBadRequest()),
+                    Arguments.of("1", status().isOk())
             );
         }
 

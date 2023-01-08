@@ -102,6 +102,13 @@ public final class BookController extends AbstractBookController {
         return "redirect:/";
     }
 
+    @GetMapping("/avail")
+    public String avail(@RequestParam("bookId") int id) {
+        availBook(id);
+
+        return "redirect:/borrowed";
+    }
+
     private Page<BookDto> provideDtoPage(int page, Page<Book> bookPage, Function<Book, BookDto> function) {
         List<BookDto> content = provideDtoList(bookPage, function);
         return new PageImpl<>(content, PageRequest.of(page, getService().pageSize()), bookPage.getTotalPages());

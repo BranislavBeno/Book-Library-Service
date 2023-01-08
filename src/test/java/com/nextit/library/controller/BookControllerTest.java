@@ -87,7 +87,7 @@ class BookControllerTest {
         @Order(4)
         @WithMockUser(username = "user")
         @Test
-        void testRejectingAddingNewBook() throws Exception {
+        void testRejectingSavingBook() throws Exception {
             this.mockMvc
                     .perform(post("/save")
                             .param("name", "Very long book name")
@@ -102,7 +102,7 @@ class BookControllerTest {
         @Order(5)
         @WithMockUser(username = "user")
         @Test
-        void testAddingNewBook() throws Exception {
+        void testSavingBook() throws Exception {
             this.mockMvc
                     .perform(post("/save")
                             .param("name", "Book name")
@@ -113,6 +113,18 @@ class BookControllerTest {
         }
 
         @Order(6)
+        @WithMockUser(username = "user")
+        @Test
+        void testAvailingBook() throws Exception {
+            this.mockMvc
+                    .perform(get("/avail")
+                            .param("bookId", "1")
+                            .with(csrf()))
+                    .andExpect(status().is3xxRedirection())
+                    .andExpect(header().string("Location", "/borrowed"));
+        }
+
+        @Order(7)
         @WithMockUser(username = "user")
         @Test
         void testDeletingBook() throws Exception {
