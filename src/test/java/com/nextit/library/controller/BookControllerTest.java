@@ -88,6 +88,18 @@ class BookControllerTest {
         @Order(4)
         @WithMockUser(username = "user")
         @Test
+        void testShowBorrowBookForm() throws Exception {
+            this.mockMvc
+                    .perform(MockMvcRequestBuilders.get("/borrowBook")
+                            .param("bookId", "1"))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.view().name("borrow-book"))
+                    .andExpect(MockMvcResultMatchers.model().attributeExists("borrowedDto"));
+        }
+
+        @Order(5)
+        @WithMockUser(username = "user")
+        @Test
         void testRejectingSavingBook() throws Exception {
             this.mockMvc
                     .perform(post("/save")
@@ -100,7 +112,7 @@ class BookControllerTest {
                     .andExpect(model().attributeHasErrors("availableBookDto"));
         }
 
-        @Order(5)
+        @Order(6)
         @WithMockUser(username = "user")
         @Test
         void testSavingBook() throws Exception {
@@ -113,7 +125,7 @@ class BookControllerTest {
                     .andExpect(header().string("Location", "/"));
         }
 
-        @Order(6)
+        @Order(7)
         @WithMockUser(username = "user")
         @Test
         void testAvailingBook() throws Exception {
@@ -125,7 +137,7 @@ class BookControllerTest {
                     .andExpect(header().string("Location", "/borrowed"));
         }
 
-        @Order(7)
+        @Order(8)
         @WithMockUser(username = "user")
         @Test
         void testRejectingBorrowingBook() throws Exception {
@@ -143,7 +155,7 @@ class BookControllerTest {
                     .andExpect(model().attributeHasErrors("borrowedDto"));
         }
 
-        @Order(8)
+        @Order(9)
         @WithMockUser(username = "user")
         @Test
         void testBorrowingBook() throws Exception {
@@ -158,7 +170,7 @@ class BookControllerTest {
                     .andExpect(header().string("Location", "/available"));
         }
 
-        @Order(9)
+        @Order(10)
         @WithMockUser(username = "user")
         @Test
         void testDeletingBook() throws Exception {
