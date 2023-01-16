@@ -4,6 +4,7 @@ import com.nextit.library.config.AppConfig;
 import com.nextit.library.dto.BookMapper;
 import com.nextit.library.service.BookService;
 import com.nextit.library.util.BookUtils;
+import io.micrometer.observation.tck.TestObservationRegistry;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
@@ -13,6 +14,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
@@ -33,62 +35,66 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(BookRestController.class)
 @Import(AppConfig.class)
+@EnableAutoConfiguration
+@EnableTestObservation
 class BookRestControllerTest {
 
     @Autowired
     private BookService service;
     @Autowired
     private BookMapper mapper;
+    @Autowired
+    private TestObservationRegistry registry;
 
     @Nested
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     class BookListTest {
 
-        private static final String BAD_REQUEST_1 = """
+        private static final String BAD_REQUEST_BODY_1 = """
                 {
                    "id": 1,
                     "name": "Very long book name",
                     "author": "John Doe"
                 }""";
-        private static final String BAD_REQUEST_2 = """
+        private static final String BAD_REQUEST_BODY_2 = """
                 {
                     "id": 1,
                     "name": "",
                     "author": "John Doe"
                 }""";
-        private static final String BAD_REQUEST_3 = """
+        private static final String BAD_REQUEST_BODY_3 = """
                 {
                     "id": 1,
                     "name": "Book name",
                     "author": ""
                 }""";
-        private static final String BAD_REQUEST_4 = """
+        private static final String BAD_REQUEST_BODY_4 = """
                 {
                     "id": 10,
                     "name": "Book name",
                     "author": "John Doe"
                 }""";
-        private static final String REQUEST_1 = """
+        private static final String REQUEST_BODY_1 = """
                 {
                     "id": 1,
                     "name": "Book name",
                     "author": "John Doe"
                 }""";
-        private static final String REQUEST_2 = """
+        private static final String REQUEST_BODY_2 = """
                 {
                     "bookId": 4,
                     "firstName": "John",
                     "lastName": "Doe",
                     "from": "2023-01-05"
                 }""";
-        private static final String BAD_REQUEST_5 = """
+        private static final String BAD_REQUEST_BODY_5 = """
                 {
                     "bookId": 10,
                     "firstName": "John",
                     "lastName": "Doe",
                     "from": "2023-01-05"
                 }""";
-        private static final String BAD_REQUEST_6 = BookUtils.createNonValidBorrowRequest();
+        private static final String BAD_REQUEST_BODY_6 = BookUtils.createNonValidBorrowRequest();
 
         @Autowired
         private MockMvc mockMvc;
@@ -134,10 +140,10 @@ class BookRestControllerTest {
 
         private static Stream<Arguments> creationRequests() {
             return Stream.of(
-                    Arguments.of(BAD_REQUEST_1, status().isBadRequest()),
-                    Arguments.of(BAD_REQUEST_2, status().isBadRequest()),
-                    Arguments.of(BAD_REQUEST_3, status().isBadRequest()),
-                    Arguments.of(REQUEST_1, status().isCreated())
+                    Arguments.of(BAD_REQUEST_BODY_1, status().isBadRequest()),
+                    Arguments.of(BAD_REQUEST_BODY_2, status().isBadRequest()),
+                    Arguments.of(BAD_REQUEST_BODY_3, status().isBadRequest()),
+                    Arguments.of(REQUEST_BODY_1, status().isOk())
             );
         }
 
@@ -156,11 +162,11 @@ class BookRestControllerTest {
 
         private static Stream<Arguments> updateRequests() {
             return Stream.of(
-                    Arguments.of(BAD_REQUEST_1, status().isBadRequest()),
-                    Arguments.of(BAD_REQUEST_2, status().isBadRequest()),
-                    Arguments.of(BAD_REQUEST_3, status().isBadRequest()),
-                    Arguments.of(BAD_REQUEST_4, status().isBadRequest()),
-                    Arguments.of(REQUEST_1, status().isOk())
+                    Arguments.of(BAD_REQUEST_BODY_1, status().isBadRequest()),
+                    Arguments.of(BAD_REQUEST_BODY_2, status().isBadRequest()),
+                    Arguments.of(BAD_REQUEST_BODY_3, status().isBadRequest()),
+                    Arguments.of(BAD_REQUEST_BODY_4, status().isNotFound()),
+                    Arguments.of(REQUEST_BODY_1, status().isOk())
             );
         }
 
@@ -179,9 +185,9 @@ class BookRestControllerTest {
 
         private static Stream<Arguments> borrowRequests() {
             return Stream.of(
-                    Arguments.of(REQUEST_2, status().isOk()),
-                    Arguments.of(BAD_REQUEST_5, status().isBadRequest()),
-                    Arguments.of(BAD_REQUEST_6, status().isBadRequest())
+                    Arguments.of(REQUEST_BODY_2, status().isOk()),
+                    Arguments.of(BAD_REQUEST_BODY_5, status().isNotFound()),
+                    Arguments.of(BAD_REQUEST_BODY_6, status().isBadRequest())
             );
         }
 
@@ -199,7 +205,7 @@ class BookRestControllerTest {
 
         private static Stream<Arguments> availRequests() {
             return Stream.of(
-                    Arguments.of("10", status().isBadRequest()),
+                    Arguments.of("10", status().isNotFound()),
                     Arguments.of("1", status().isOk())
             );
         }
@@ -218,8 +224,8 @@ class BookRestControllerTest {
 
         private static Stream<Arguments> deleteRequests() {
             return Stream.of(
-                    Arguments.of("10", status().isBadRequest()),
-                    Arguments.of("1", status().isNoContent())
+                    Arguments.of("10", status().isNotFound()),
+                    Arguments.of("1", status().isOk())
             );
         }
     }
