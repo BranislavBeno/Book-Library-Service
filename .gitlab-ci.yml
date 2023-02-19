@@ -1,5 +1,26 @@
 image: azul/zulu-openjdk:19
 
+scan-code:
+  stage: .pre
+  image:
+    name: "zricethezav/gitleaks:v8.15.3"
+    entrypoint: [""]
+  script:
+    - gitleaks detect --verbose --redact --no-git --source="$CI_PROJECT_DIR"
+  tags:
+    - docker
+
+scan-vulnerabilities:
+  stage: .pre
+  image:
+    name: "aquasec/trivy:0.37.3"
+    entrypoint: [""]
+  script:
+    - trivy fs --no-progress --ignore-unfixed --exit-code 0 $CI_PROJECT_DIR
+  allow_failure: true
+  tags:
+    - docker
+
 test-code:
   stage: test
   script:
