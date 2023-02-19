@@ -2,8 +2,9 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.0.2'
     id 'io.spring.dependency-management' version '1.1.0'
-    id 'jacoco'
     id 'com.gorylenko.gradle-git-properties' version '2.4.1'
+    id 'jacoco'
+    id 'org.sonarqube' version '4.0.0.2929'
 }
 
 group = 'com.book'
@@ -19,12 +20,13 @@ java {
     }
 }
 
-repositories {
-    mavenCentral()
+ext {
+    set('sonarProjectName', 'BookLibraryService') as Object
+    set('sonarProjectKey', 'com.book.library') as Object
 }
 
-ext {
-    set('testcontainersVersion', "1.17.6")
+repositories {
+    mavenCentral()
 }
 
 dependencies {
@@ -42,6 +44,10 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'io.micrometer:micrometer-observation-test'
+}
+
+springBoot {
+    buildInfo()
 }
 
 tasks.named('test') {
@@ -65,10 +71,12 @@ jacoco {
 jacocoTestReport {
     dependsOn test
     reports {
-        xml.required
+        xml.required = true
     }
 }
 
-springBoot {
-    buildInfo()
+sonarqube {
+    properties {
+        property "sonar.projectKey", "BranislavBeno_BookLibraryService"
+    }
 }
