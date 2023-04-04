@@ -1,10 +1,10 @@
 [![pipeline status](https://gitlab.websupport.sk/biea/book-library-service/badges/master/pipeline.svg)](https://gitlab.websupport.sk/biea/book-library-service/-/commits/master)
 [![coverage report](https://gitlab.websupport.sk/biea/book-library-service/badges/master/coverage.svg)](https://gitlab.websupport.sk/biea/book-library-service/-/commits/master)  
-[![](https://img.shields.io/badge/Java-19-blue)](/build.gradle)
-[![](https://img.shields.io/badge/Spring%20Boot-3.0.2-blue)](/build.gradle)
-[![](https://img.shields.io/badge/Testcontainers-1.17.6-blue)](/build.gradle)
-[![](https://img.shields.io/badge/Gradle-8.0.1-blue)](/gradle/wrapper/gradle-wrapper.properties)
-[![](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)  
+[![](https://img.shields.io/badge/Java-19-blue)](/app/build.gradle.kts)
+[![](https://img.shields.io/badge/Spring%20Boot-3.0.5-blue)](/app/build.gradle.kts)
+[![](https://img.shields.io/badge/Testcontainers-1.17.6-blue)](/app/build.gradle.kts)
+[![](https://img.shields.io/badge/Gradle-8.0.2-blue)](/gradle/wrapper/gradle-wrapper.properties)
+[![](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 # Simple web application for book library service
 This application allows to provide usual actions with book library, such as:
