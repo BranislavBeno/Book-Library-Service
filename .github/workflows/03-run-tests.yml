@@ -1,0 +1,35 @@
+# This workflow runs application tests
+name: 03 - Run application tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    name: Test the application
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '19'
+        distribution: 'temurin'
+        java-package: jdk
+
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2.4.0
+
+    - name: Run Tests
+      run: ./gradlew :app:jacocoTestReport
+      env:
+        PROJECT_ACCESS_TOKEN: ${{ secrets.PROJECT_ACCESS_TOKEN }}
+
+    - name: Run Code Analysis
+      run: ./gradlew :app:sonar
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
