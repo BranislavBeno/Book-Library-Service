@@ -57,10 +57,10 @@ dependencies {
 val versionMajor = 0
 val versionMinor = 1
 val versionPatch = 0
-version = "R${versionMajor}.${versionMinor}.${versionPatch}"
+version = "v${versionMajor}.${versionMinor}.${versionPatch}"
 
 tasks.getByName<BootJar>("bootJar") {
-    this.archiveFileName.set("gitlab-issue-importer.jar")
+    this.archiveFileName.set("book-library-service.jar")
 }
 
 tasks.test {
