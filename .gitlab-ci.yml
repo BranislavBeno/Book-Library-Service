@@ -1,4 +1,4 @@
-image: azul/zulu-openjdk:19
+image: azul/zulu-openjdk:20
 
 scan-code:
   stage: .pre
