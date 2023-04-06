@@ -45,7 +45,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-    implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0")
+    implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.2.1")
     implementation("org.webjars:webjars-locator-core")
     implementation("org.webjars:bootstrap:5.2.3")
     runtimeOnly("com.h2database:h2")
