@@ -3,9 +3,12 @@ name: 04 - Build and deploy the application to DockerHub and to AWS
 
 on:
   workflow_run:
-    workflows: [ 03 - Run application tests ]
-    types: [ completed ]
-    branches: [ main ]
+    workflows:
+      - '03 - Run application tests'
+    types:
+      - completed
+    branches:
+      - main
 
 jobs:
   changes:
