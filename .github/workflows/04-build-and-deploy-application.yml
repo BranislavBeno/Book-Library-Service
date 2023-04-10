@@ -5,11 +5,16 @@ on:
   workflow_run:
     workflows:
       - '03 - Run application tests'
+    types:
+      - completed
+    branches:
+      - master
 
 jobs:
   changes:
     name: Detect relevant source changes
     runs-on: ubuntu-22.04
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     outputs:
       app: ${{ steps.filter.outputs.app }}
       gradle-app: ${{ steps.filter.outputs.gradle-app }}
