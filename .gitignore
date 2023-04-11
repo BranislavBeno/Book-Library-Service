@@ -38,4 +38,4 @@ out/
 # CDK asset staging directory
 .cdk.staging
 cdk.out/
-cdk/src/cdk.context.json
+cdk/cdk.context.json
