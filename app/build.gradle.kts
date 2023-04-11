@@ -19,6 +19,7 @@ jacoco {
 sonarqube {
     properties {
         property("sonar.projectKey", "BranislavBeno_BookLibraryService")
+        property("sonar.projectName", "book-library-service")
     }
 }
 
