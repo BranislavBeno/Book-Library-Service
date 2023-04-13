@@ -9,7 +9,7 @@ RUN cd app/build/libs/ && cp book-library-service.jar /project/
 # extrect layered jar file
 RUN java -Djarmode=layertools -jar book-library-service.jar extract
 
-FROM azul/zulu-openjdk-alpine:19.0.2-19.32.13-jre
+FROM azul/zulu-openjdk-alpine:20-jre
 # install dumb-init
 RUN apk add --no-cache dumb-init=1.2.5-r1
 
