@@ -32,11 +32,11 @@
                     <div th:replace="~{fragments/button-update :: button-update}"></div>
                     <div th:replace="~{fragments/button-delete :: button-delete}"></div>
                 </td>
-                <td class="table-warning" th:if="${item.borrowed}" th:text="${item.name}" data-bs-toggle="tooltip"
+                <td class="table-danger" th:if="${item.borrowed}" th:text="${item.name}" data-bs-toggle="tooltip"
                     data-bs-placement="right" title="Borrowed"></td>
-                <td class="table-warning" th:if="${item.borrowed}" th:text="${item.author}" data-bs-toggle="tooltip"
+                <td class="table-danger" th:if="${item.borrowed}" th:text="${item.author}" data-bs-toggle="tooltip"
                     data-bs-placement="right" title="Borrowed"></td>
-                <td class="table-warning" th:if="${item.borrowed}">
+                <td class="table-danger" th:if="${item.borrowed}">
                     <div th:replace="~{fragments/button-update :: button-update}"></div>
                     <div th:replace="~{fragments/button-delete :: button-delete}"></div>
                 </td>

@@ -111,20 +111,20 @@
   border-color: #555;
 }
 
-[data-theme="dark"] .table-warning {
-  --bs-table-bg: #443812;
-  --bs-table-striped-bg: #403511;
+[data-theme="dark"] .table-danger {
+  --bs-table-bg: #4f4f4f;
+  --bs-table-striped-bg: #5f5f5f;
   --bs-table-striped-color: #fff;
   color: #fff;
-  border-color: #403511;
+  border-color: #4f4f4f;
 }
 
 [data-theme="dark"] .table-success {
-  --bs-table-bg: #273116;
-  --bs-table-striped-bg: #222b13;
+  --bs-table-bg: #28a745;
+  --bs-table-striped-bg: #5cb85c;
   --bs-table-striped-color: #fff;
   color: #fff;
-  border-color: #222b13;
+  border-color: #28a745;
 }
 
 [data-theme="dark"] .page-link {

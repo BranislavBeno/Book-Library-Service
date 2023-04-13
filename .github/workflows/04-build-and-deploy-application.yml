@@ -1,11 +1,19 @@
 # This workflow builds the Docker image for the book-library-service and then deploys the application.
 name: 04 - Build and deploy the application to DockerHub and to AWS
 
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+
 on:
   workflow_run:
-    workflows: [ 03 - Run application tests ]
-    types: [ completed ]
-    branches: [ main ]
+    workflows:
+      - '03 - Run application tests'
+    types:
+      - completed
+    branches:
+      - master
 
 jobs:
   changes:
@@ -14,7 +22,9 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     outputs:
       app: ${{ steps.filter.outputs.app }}
+      cdk: ${{ steps.filter.outputs.cdk }}
       gradle-app: ${{ steps.filter.outputs.gradle-app }}
+      gradle-cdk: ${{ steps.filter.outputs.gradle-cdk }}
       dockerfile: ${{ steps.filter.outputs.dockerfile }}
       workflow-deploy: ${{ steps.filter.outputs.workflow-deploy }}
     steps:
@@ -30,8 +40,12 @@ jobs:
           filters: |
             app:
               - 'app/src/main/**'
+            cdk:
+              - 'cdk/**/*Service*'
             gradle-app:
               - 'app/build.gradle.kts'
+            gradle-cdk:
+              - 'cdk/build.gradle.kts'
             dockerfile:
               - 'Dockerfile'
             workflow-deploy:
@@ -40,8 +54,10 @@ jobs:
   build-and-publish:
     name: Build and publish the application
     runs-on: ubuntu-22.04
+    outputs:
+      DOCKER_IMAGE_TAG: ${{ steps.create-docker-image-tag.outputs.DOCKER_IMAGE_TAG }}
     needs: changes
-    if: ${{ needs.changes.outputs.app == 'true' || needs.changes.outputs.gradle-app == 'true' || needs.changes.outputs.dockerfile == 'true' || needs.changes.outputs.workflow-deploy == 'true' }}
+    if: ${{ needs.changes.outputs.app == 'true' || needs.changes.outputs.cdk == 'true' || needs.changes.outputs.gradle-app == 'true' || needs.changes.outputs.gradle-cdk == 'true' || needs.changes.outputs.dockerfile == 'true' || needs.changes.outputs.workflow-deploy == 'true' }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -87,3 +103,60 @@ jobs:
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Create docker image tag
+        id: create-docker-image-tag
+        run: echo "DOCKER_IMAGE_TAG=$(date +'%Y%m%d%H%M%S')-${GITHUB_SHA}" >> $GITHUB_OUTPUT
+
+      - name: Push image to AWS ECR
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          DOCKER_IMAGE_TAG: ${{ steps.create-docker-image-tag.outputs.DOCKER_IMAGE_TAG }}
+        run: |
+          docker buildx imagetools create \
+            --tag ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/book-library-service:${DOCKER_IMAGE_TAG} \
+            --tag ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/book-library-service:latest \
+            beo1975/book-library-service:latest
+
+  deploy:
+    runs-on: ubuntu-22.04
+    name: Deploy the application to AWS
+    needs: build-and-publish
+    timeout-minutes: 15
+    concurrency: book-library-service-deployment
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '19'
+          distribution: 'temurin'
+          java-package: jdk
+          cache: 'gradle'
+
+      - name: NPM install
+        working-directory: cdk
+        run: |
+          npm i -D aws-cdk@latest
+          rm -fr node_modules package-lock.json cdk.out
+          npm i
+
+      - name: Deploy service stack to staging
+        env:
+          DOCKER_IMAGE_TAG: ${{ needs.build-and-publish.outputs.DOCKER_IMAGE_TAG }}
+        working-directory: cdk
+        run: npm run service:deploy -- -c dockerImageTag=${DOCKER_IMAGE_TAG} -c environmentName=staging

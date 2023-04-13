@@ -1,5 +1,12 @@
 image: azul/zulu-openjdk:20
 
+variables:
+  CONTAINER_IMAGE: beo1975/book-library-service:latest
+
+stages:
+  - test
+  - scan
+
 scan-code:
   stage: .pre
   image:
@@ -34,5 +41,17 @@ test-code:
   coverage: "/Total.*?([0-9]{1,3})%/"
   rules:
     - if: ($CI_PIPELINE_SOURCE != "schedule")
+  tags:
+    - docker
+
+scan-image:
+  stage: scan
+  image:
+    name: "aquasec/trivy:latest"
+    entrypoint: [""]
+  script:
+    - trivy i --no-progress --ignore-unfixed --clear-cache --exit-code 1 $CONTAINER_IMAGE
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "schedule") && ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
   tags:
     - docker

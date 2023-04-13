@@ -3,4 +3,6 @@ plugins {
 }
 
 rootProject.name = "book-library-service"
+
 include("app")
+include("cdk")
