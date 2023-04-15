@@ -47,6 +47,7 @@ public class ServiceApp {
                 applicationEnvironment,
                 new Service.ServiceInputParameters(
                         new Service.DockerImageSource(dockerRepositoryName, dockerImageTag),
+                        "/actuator",
                         new HashMap<>()),
                 networkOutputParameters
         );

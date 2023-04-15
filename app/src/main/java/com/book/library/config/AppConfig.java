@@ -41,6 +41,7 @@ public class AppConfig {
                         authorize ->
                                 authorize
                                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                                        .requestMatchers("/actuator/**").permitAll()
                                         .anyRequest().authenticated()
                 )
                 .httpBasic()
