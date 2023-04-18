@@ -1,5 +1,6 @@
 package com.book.library.cdk;
 
+import com.book.library.cdk.construct.ApplicationEnvironment;
 import com.book.library.cdk.construct.Network;
 import com.book.library.cdk.util.CdkUtil;
 import com.book.library.cdk.util.Validations;
@@ -20,7 +21,12 @@ public class NetworkApp {
 
         Environment awsEnvironment = CdkUtil.makeEnv(accountId, region);
 
-        String stackName = "%s-network-%s".formatted(applicationName, environmentName);
+        var appEnvironment = new ApplicationEnvironment(
+                applicationName,
+                environmentName
+        );
+
+        String stackName = "%s-network-%s".formatted(appEnvironment.applicationName(), appEnvironment.environmentName());
         var networkStack = new Stack(app, "NetworkStack", StackProps.builder()
                 .stackName(stackName)
                 .env(awsEnvironment)
@@ -29,7 +35,7 @@ public class NetworkApp {
         new Network(
                 networkStack,
                 "Network",
-                environmentName,
+                appEnvironment,
                 new Network.NetworkInputParameters());
 
         app.synth();

@@ -15,7 +15,7 @@
   "context": {
     "region": "eu-central-1",
     "accountId": "576475760950",
-    "applicationName": "book-library-service",
+    "applicationName": "b-l-s",
     "dockerRepositoryName": "book-library-service",
     "dockerImageTag": "DYNAMICALLY_OVERRIDDEN_BY_WORKFLOW",
     "environmentName": "staging",
