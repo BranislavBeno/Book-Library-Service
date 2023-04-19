@@ -1,12 +1,11 @@
 package com.book.library.controller;
 
 import io.micrometer.observation.tck.TestObservationRegistry;
+import java.lang.annotation.*;
 import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-
-import java.lang.annotation.*;
 
 @Documented
 @Inherited

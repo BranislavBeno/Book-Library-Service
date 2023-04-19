@@ -4,10 +4,13 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 public final class AvailableBookDto implements BookDto {
+
     private int id;
+
     @NotEmpty
     @Size(max = 15, message = "Book name too long.")
     private String name;
+
     @NotEmpty
     private String author;
 

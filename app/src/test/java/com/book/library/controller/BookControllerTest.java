@@ -1,5 +1,11 @@
 package com.book.library.controller;
 
+import static com.book.library.util.BookUtils.getTomorrowsDate;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.book.library.config.AppConfig;
 import com.book.library.dto.BookMapper;
 import com.book.library.service.BookService;
@@ -16,18 +22,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static com.book.library.util.BookUtils.getTomorrowsDate;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 @WebMvcTest(BookController.class)
 @Import(AppConfig.class)
 class BookControllerTest {
 
     @Autowired
     private BookService service;
+
     @Autowired
     private BookMapper mapper;
 
@@ -46,16 +47,16 @@ class BookControllerTest {
         @Order(1)
         @WithMockUser(username = "user")
         @ParameterizedTest
-        @CsvSource(value = {
-                "/,index,1,true",
-                "/,index,2,false",
-                "/available,available-books,0,true",
-                "/borrowed,borrowed-books,0,true"
-        })
+        @CsvSource(
+                value = {
+                    "/,index,1,true",
+                    "/,index,2,false",
+                    "/available,available-books,0,true",
+                    "/borrowed,borrowed-books,0,true"
+                })
         void testShowingBookList(String url, String viewName, String page, boolean found) throws Exception {
             this.mockMvc
-                    .perform(MockMvcRequestBuilders.get(url)
-                            .param("page", page))
+                    .perform(MockMvcRequestBuilders.get(url).param("page", page))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.view().name(viewName))
                     .andExpect(MockMvcResultMatchers.model().attribute("found", found))
@@ -78,8 +79,7 @@ class BookControllerTest {
         @Test
         void testShowUpdateBookForm() throws Exception {
             this.mockMvc
-                    .perform(MockMvcRequestBuilders.get("/updateBook")
-                            .param("bookId", "1"))
+                    .perform(MockMvcRequestBuilders.get("/updateBook").param("bookId", "1"))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.view().name("save-book"))
                     .andExpect(MockMvcResultMatchers.model().attributeExists("availableBookDto"));
@@ -90,8 +90,7 @@ class BookControllerTest {
         @Test
         void testShowBorrowBookForm() throws Exception {
             this.mockMvc
-                    .perform(MockMvcRequestBuilders.get("/borrowBook")
-                            .param("bookId", "1"))
+                    .perform(MockMvcRequestBuilders.get("/borrowBook").param("bookId", "1"))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.view().name("borrow-book"))
                     .andExpect(MockMvcResultMatchers.model().attributeExists("borrowedDto"));
@@ -130,9 +129,7 @@ class BookControllerTest {
         @Test
         void testAvailingBook() throws Exception {
             this.mockMvc
-                    .perform(get("/avail")
-                            .param("bookId", "1")
-                            .with(csrf()))
+                    .perform(get("/avail").param("bookId", "1").with(csrf()))
                     .andExpect(status().is3xxRedirection())
                     .andExpect(header().string("Location", "/borrowed"));
         }
@@ -175,9 +172,7 @@ class BookControllerTest {
         @Test
         void testDeletingBook() throws Exception {
             this.mockMvc
-                    .perform(get("/delete")
-                            .param("bookId", "1")
-                            .with(csrf()))
+                    .perform(get("/delete").param("bookId", "1").with(csrf()))
                     .andExpect(status().is3xxRedirection())
                     .andExpect(header().string("Location", "/"));
         }

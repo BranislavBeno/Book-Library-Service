@@ -8,8 +8,10 @@ public class Book {
 
     @JsonProperty("Name")
     private String name;
+
     @JsonProperty("Author")
     private String author;
+
     @JsonProperty("Borrowed")
     private Borrowed borrowed;
 

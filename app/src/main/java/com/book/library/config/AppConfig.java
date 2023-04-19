@@ -25,8 +25,8 @@ public class AppConfig {
     }
 
     @Bean
-    public BookService bookService(@Autowired BookRepository repository,
-                                   @Value("${book.service.page.size:20}") int pageSize) {
+    public BookService bookService(
+            @Autowired BookRepository repository, @Value("${book.service.page.size:20}") int pageSize) {
         return new BookService(repository, pageSize);
     }
 
@@ -37,23 +37,26 @@ public class AppConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(
-                        authorize ->
-                                authorize
-                                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                                        .requestMatchers("/actuator/**").permitAll()
-                                        .anyRequest().authenticated()
-                )
+        httpSecurity
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                        .permitAll()
+                        .requestMatchers("/actuator/**")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
                 .httpBasic()
                 .and()
-                .csrf().disable();
+                .csrf()
+                .disable();
 
         return httpSecurity.build();
     }
 
     @Bean
-    public UserDetailsService userDetailsService(@Value("${book.authentication.user}") String userName,
-                                                 @Value("${book.authentication.password}") String password) {
+    public UserDetailsService userDetailsService(
+            @Value("${book.authentication.user}") String userName,
+            @Value("${book.authentication.password}") String password) {
 
         UserDetails user = User.withDefaultPasswordEncoder()
                 .username(userName)

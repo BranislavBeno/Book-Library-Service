@@ -1,4 +1,3 @@
 package com.book.library.dto;
 
-public sealed interface BookDto permits AnyBookDto, AvailableBookDto, BorrowedBookDto {
-}
+public sealed interface BookDto permits AnyBookDto, AvailableBookDto, BorrowedBookDto {}

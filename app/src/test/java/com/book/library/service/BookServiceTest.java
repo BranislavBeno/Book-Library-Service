@@ -1,7 +1,10 @@
 package com.book.library.service;
 
+import static org.mockito.ArgumentMatchers.any;
+
 import com.book.library.domain.Book;
 import com.book.library.repository.BookRepository;
+import java.util.Optional;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,19 +17,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import java.util.Optional;
-
-import static org.mockito.ArgumentMatchers.any;
-
 @ExtendWith(MockitoExtension.class)
 class BookServiceTest implements WithAssertions {
 
     @Mock
     private BookRepository repository;
+
     @Mock
     private Page<Book> page;
+
     @Mock
     private Book book;
+
     private BookService cut;
 
     @BeforeEach
