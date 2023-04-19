@@ -22,5 +22,5 @@ assertj-core = { module = "org.assertj:assertj-core", version = "3.24.2" }
 mockito-bom = { module = "org.mockito:mockito-bom", version = "5.3.0" }
 mockito-junit = { module = "org.mockito:mockito-junit-jupiter" }
 # code quality
-palantir-javaformat = { module = "com.palantir.javaformat:palantir-java-format", version = "2.28.0" }
+palantir-javaformat = { module = "com.palantir.javaformat:palantir-java-format", version = "2.29.0" }
 pinterest-ktlint = { module = "com.pinterest:ktlint", version = "0.48.2" }
