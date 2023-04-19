@@ -1,0 +1,26 @@
+[libraries]
+spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
+spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
+spring-boot-starter-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
+spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
+spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security" }
+spring-boot-starter-thymeleaf = { module = "org.springframework.boot:spring-boot-starter-thymeleaf" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+spring-security-test = { module = "org.springframework.security:spring-security-test" }
+micrometer-observation-test = { module = "io.micrometer:micrometer-observation-test" }
+database-h2 = { module = "com.h2database:h2" }
+jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version = "2.14.2" }
+jackson-dataformat-xml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml" }
+thymeleaf-layout-dialect = { module = "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect", version = "3.2.1" }
+webjars-locator-core = { module = "org.webjars:webjars-locator-core" }
+webjars-bootstrap = { module = "org.webjars:bootstrap", version = "5.2.3" }
+aws-cdk = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.75.1" }
+# testing
+junit-bom = { module = "org.junit:junit-bom", version = "5.9.2" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+assertj-core = { module = "org.assertj:assertj-core", version = "3.24.2" }
+mockito-bom = { module = "org.mockito:mockito-bom", version = "5.3.0" }
+mockito-junit = { module = "org.mockito:mockito-junit-jupiter" }
+# code quality
+palantir-javaformat = { module = "com.palantir.javaformat:palantir-java-format", version = "2.28.0" }
+pinterest-ktlint = { module = "com.pinterest:ktlint", version = "0.48.2" }

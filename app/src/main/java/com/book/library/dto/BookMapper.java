@@ -1,7 +1,6 @@
 package com.book.library.dto;
 
 import com.book.library.domain.Book;
-
 import java.time.format.DateTimeFormatter;
 
 public final class BookMapper {
@@ -36,7 +35,8 @@ public final class BookMapper {
         int id = book.getId();
         String name = book.getName();
         String author = book.getAuthor();
-        String borrowedTo = String.join(" ", book.getBorrowed().firstName(), book.getBorrowed().lastName());
+        String borrowedTo = String.join(
+                " ", book.getBorrowed().firstName(), book.getBorrowed().lastName());
         String borrowedOn = book.getBorrowed().from().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
         return new BorrowedBookDto(id, name, author, borrowedTo, borrowedOn);

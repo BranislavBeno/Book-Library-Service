@@ -7,13 +7,11 @@ import com.book.library.dto.BorrowedDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import java.time.LocalDate;
 
 public final class BookUtils {
 
-    private BookUtils() {
-    }
+    private BookUtils() {}
 
     public static Book createBook() {
         Book book = new Book();
@@ -40,9 +38,8 @@ public final class BookUtils {
 
     private static String createNonValidRequest(BorrowedDto dto) {
         try {
-            JsonMapper jsonMapper = JsonMapper.builder()
-                    .addModule(new JavaTimeModule())
-                    .build();
+            JsonMapper jsonMapper =
+                    JsonMapper.builder().addModule(new JavaTimeModule()).build();
             return jsonMapper.writeValueAsString(dto);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

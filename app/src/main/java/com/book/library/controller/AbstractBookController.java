@@ -4,13 +4,12 @@ import com.book.library.domain.Book;
 import com.book.library.domain.Borrowed;
 import com.book.library.dto.*;
 import com.book.library.service.BookService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 
 abstract class AbstractBookController {
 
@@ -33,10 +32,7 @@ abstract class AbstractBookController {
     }
 
     <T extends BookDto> List<T> provideDtoList(Page<Book> bookPage, Function<Book, T> function) {
-        return bookPage.getContent()
-                .stream()
-                .map(function)
-                .toList();
+        return bookPage.getContent().stream().map(function).toList();
     }
 
     AvailableBookDto findBook(int id) {

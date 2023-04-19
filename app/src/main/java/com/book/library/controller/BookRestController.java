@@ -5,13 +5,12 @@ import com.book.library.service.BookService;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
 import jakarta.validation.Valid;
+import java.util.List;
+import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.function.Supplier;
 
 @RestController
 @RequestMapping("/api/v1/books")
@@ -22,9 +21,8 @@ public class BookRestController extends AbstractBookController {
 
     private final ObservationRegistry registry;
 
-    public BookRestController(@Autowired BookService bookService,
-                              @Autowired BookMapper mapper,
-                              @Autowired ObservationRegistry registry) {
+    public BookRestController(
+            @Autowired BookService bookService, @Autowired BookMapper mapper, @Autowired ObservationRegistry registry) {
         super(bookService, mapper);
         this.registry = registry;
     }
@@ -36,18 +34,19 @@ public class BookRestController extends AbstractBookController {
 
     @GetMapping("/available")
     public List<AvailableBookDto> available(@RequestParam(name = "page", defaultValue = "0") int page) {
-        return provideDtoList(getService().findAllAvailable(page), b -> getMapper().toAvailableBookDto(b));
+        return provideDtoList(
+                getService().findAllAvailable(page), b -> getMapper().toAvailableBookDto(b));
     }
 
     @GetMapping("/borrowed")
     public List<BorrowedBookDto> borrowed(@RequestParam(name = "page", defaultValue = "0") int page) {
-        return provideDtoList(getService().findAllBorrowed(page), b -> getMapper().toBorrowedBookDto(b));
+        return provideDtoList(
+                getService().findAllBorrowed(page), b -> getMapper().toBorrowedBookDto(b));
     }
 
     @PostMapping("/add")
     public AvailableBookDto add(@Valid @RequestBody AvailableBookDto dto) {
-        return Observation.createNotStarted("addition.book", this.registry)
-                .observe(() -> updateBook(dto));
+        return Observation.createNotStarted("addition.book", this.registry).observe(() -> updateBook(dto));
     }
 
     @PutMapping("/update")
@@ -66,8 +65,7 @@ public class BookRestController extends AbstractBookController {
             handleBookNotFound("deletion", id);
         }
 
-        Observation.createNotStarted("deletion.book.id", this.registry)
-                .observe(() -> deleteBook(id));
+        Observation.createNotStarted("deletion.book.id", this.registry).observe(() -> deleteBook(id));
     }
 
     @PutMapping("/avail")
@@ -96,7 +94,6 @@ public class BookRestController extends AbstractBookController {
     }
 
     private <T> T observe(String registryName, Supplier<T> supplier) {
-        return Observation.createNotStarted(registryName, this.registry)
-                .observe(supplier);
+        return Observation.createNotStarted(registryName, this.registry).observe(supplier);
     }
 }

@@ -7,6 +7,10 @@ import com.book.library.dto.BookMapper;
 import com.book.library.dto.BorrowedDto;
 import com.book.library.service.BookService;
 import jakarta.validation.Valid;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,11 +22,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.IntStream;
-
 @Controller
 public final class BookController extends AbstractBookController {
 
@@ -30,8 +29,7 @@ public final class BookController extends AbstractBookController {
     private static final String BOOKS_ATTR = "books";
     private static final String PAGE_NUMBERS_ATTR = "pageNumbers";
 
-    public BookController(@Autowired BookService service,
-                          @Autowired BookMapper mapper) {
+    public BookController(@Autowired BookService service, @Autowired BookMapper mapper) {
         super(service, mapper);
     }
 
@@ -137,9 +135,7 @@ public final class BookController extends AbstractBookController {
 
     private List<Integer> providePageNumbers(int totalPages) {
         if (totalPages > 0) {
-            return IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .toList();
+            return IntStream.rangeClosed(1, totalPages).boxed().toList();
         }
 
         return Collections.emptyList();
@@ -152,6 +148,5 @@ public final class BookController extends AbstractBookController {
         return new PageData(dtoPage, pageNumbers);
     }
 
-    private record PageData(Page<BookDto> dtoPage, List<Integer> pageNumbers) {
-    }
+    private record PageData(Page<BookDto> dtoPage, List<Integer> pageNumbers) {}
 }
