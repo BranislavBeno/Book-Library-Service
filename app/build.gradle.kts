@@ -19,13 +19,12 @@ spotless {
         importOrder()
         removeUnusedImports()
         target("app/**/*.java")
-        target("cdk/**/*.java")
-        targetExclude("*/build/**/*.*")
+        targetExclude("app/build/**/*.*")
     }
     kotlinGradle {
         ktlint(libs.pinterest.ktlint.get().versionConstraint.requiredVersion)
         target("*.gradle.kts")
-        targetExclude("*/build/**/*.*")
+        targetExclude("app/build/**/*.*")
     }
 }
 
