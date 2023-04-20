@@ -6,7 +6,7 @@ plugins {
     id("spotless-conventions")
     id("sonarqube-conventions")
     id("cyclonedx-sbom-conventions")
-    id("org.springframework.boot") version "3.0.5"
+    id("org.springframework.boot") version "3.0.6"
     id("com.gorylenko.gradle-git-properties") version "2.4.1"
 }
 
