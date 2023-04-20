@@ -22,9 +22,7 @@ public class BootstrapApp {
 
         Environment awsEnvironment = CdkUtil.makeEnv(accountId, region);
 
-        new Stack(app, "Bootstrap", StackProps.builder()
-                .env(awsEnvironment)
-                .build());
+        new Stack(app, "Bootstrap", StackProps.builder().env(awsEnvironment).build());
 
         app.synth();
     }

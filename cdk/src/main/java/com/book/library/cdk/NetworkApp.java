@@ -21,22 +21,16 @@ public class NetworkApp {
 
         Environment awsEnvironment = CdkUtil.makeEnv(accountId, region);
 
-        var appEnvironment = new ApplicationEnvironment(
-                applicationName,
-                environmentName
-        );
+        var appEnvironment = new ApplicationEnvironment(applicationName, environmentName);
 
-        String stackName = "%s-network-%s".formatted(appEnvironment.applicationName(), appEnvironment.environmentName());
-        var networkStack = new Stack(app, "NetworkStack", StackProps.builder()
-                .stackName(stackName)
-                .env(awsEnvironment)
-                .build());
+        String stackName =
+                "%s-network-%s".formatted(appEnvironment.applicationName(), appEnvironment.environmentName());
+        var networkStack = new Stack(
+                app,
+                "NetworkStack",
+                StackProps.builder().stackName(stackName).env(awsEnvironment).build());
 
-        new Network(
-                networkStack,
-                "Network",
-                appEnvironment,
-                new Network.NetworkInputParameters());
+        new Network(networkStack, "Network", appEnvironment, new Network.NetworkInputParameters());
 
         app.synth();
     }

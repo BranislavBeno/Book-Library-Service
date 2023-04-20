@@ -1,14 +1,13 @@
 package com.book.library.cdk.construct;
 
+import java.util.Collections;
+import java.util.Objects;
 import software.amazon.awscdk.RemovalPolicy;
 import software.amazon.awscdk.services.ecr.IRepository;
 import software.amazon.awscdk.services.ecr.LifecycleRule;
 import software.amazon.awscdk.services.ecr.Repository;
 import software.amazon.awscdk.services.iam.AccountPrincipal;
 import software.constructs.Construct;
-
-import java.util.Collections;
-import java.util.Objects;
 
 /**
  * Provisions an ECR repository for Docker images. Every user in the given account will have access
@@ -24,7 +23,10 @@ public class DockerRepository extends Construct {
 
         IRepository ecrRepository = Repository.Builder.create(this, "ecrRepository")
                 .repositoryName(dockerRepositoryInputParameters.dockerRepositoryName)
-                .removalPolicy(dockerRepositoryInputParameters.retainRegistryOnDelete ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY)
+                .removalPolicy(
+                        dockerRepositoryInputParameters.retainRegistryOnDelete
+                                ? RemovalPolicy.RETAIN
+                                : RemovalPolicy.DESTROY)
                 .lifecycleRules(Collections.singletonList(LifecycleRule.builder()
                         .rulePriority(1)
                         .description("limit to " + dockerRepositoryInputParameters.maxImageCount + " images")
@@ -65,9 +67,11 @@ public class DockerRepository extends Construct {
          * @param maxImageCount          the maximum number of images to be held in the repository before old images get deleted.
          * @param retainRegistryOnDelete indicating whether the container registry should be destroyed or retained on deletion.
          */
-        public DockerRepositoryInputParameters(String dockerRepositoryName, String accountId, int maxImageCount, boolean retainRegistryOnDelete) {
+        public DockerRepositoryInputParameters(
+                String dockerRepositoryName, String accountId, int maxImageCount, boolean retainRegistryOnDelete) {
             this.accountId = Objects.requireNonNull(accountId, "accountId must not be null");
-            this.dockerRepositoryName = Objects.requireNonNull(dockerRepositoryName, "dockerRepositoryName must not be null");
+            this.dockerRepositoryName =
+                    Objects.requireNonNull(dockerRepositoryName, "dockerRepositoryName must not be null");
             this.maxImageCount = maxImageCount;
             this.retainRegistryOnDelete = retainRegistryOnDelete;
         }

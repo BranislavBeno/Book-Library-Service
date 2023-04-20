@@ -5,12 +5,11 @@ import com.book.library.cdk.construct.Network;
 import com.book.library.cdk.construct.Service;
 import com.book.library.cdk.util.CdkUtil;
 import com.book.library.cdk.util.Validations;
+import java.util.HashMap;
 import software.amazon.awscdk.App;
 import software.amazon.awscdk.Environment;
 import software.amazon.awscdk.Stack;
 import software.amazon.awscdk.StackProps;
-
-import java.util.HashMap;
 
 public class ServiceApp {
 
@@ -26,16 +25,14 @@ public class ServiceApp {
 
         Environment awsEnvironment = CdkUtil.makeEnv(accountId, region);
 
-        var appEnvironment = new ApplicationEnvironment(
-                applicationName,
-                environmentName
-        );
+        var appEnvironment = new ApplicationEnvironment(applicationName, environmentName);
 
-        String stackName = "%s-service-%s".formatted(appEnvironment.applicationName(), appEnvironment.environmentName());
-        Stack serviceStack = new Stack(app, "ServiceStack", StackProps.builder()
-                .stackName(stackName)
-                .env(awsEnvironment)
-                .build());
+        String stackName =
+                "%s-service-%s".formatted(appEnvironment.applicationName(), appEnvironment.environmentName());
+        Stack serviceStack = new Stack(
+                app,
+                "ServiceStack",
+                StackProps.builder().stackName(stackName).env(awsEnvironment).build());
 
         Network.NetworkOutputParameters networkOutputParameters =
                 Network.getOutputParametersFromParameterStore(serviceStack, appEnvironment);
@@ -49,8 +46,7 @@ public class ServiceApp {
                         new Service.DockerImageSource(dockerRepositoryName, dockerImageTag),
                         "/actuator",
                         new HashMap<>()),
-                networkOutputParameters
-        );
+                networkOutputParameters);
 
         app.synth();
     }
