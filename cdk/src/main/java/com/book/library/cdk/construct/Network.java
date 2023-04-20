@@ -1,5 +1,11 @@
 package com.book.library.cdk.construct;
 
+import static java.util.Arrays.asList;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import software.amazon.awscdk.Duration;
 import software.amazon.awscdk.Tags;
@@ -9,13 +15,6 @@ import software.amazon.awscdk.services.ecs.ICluster;
 import software.amazon.awscdk.services.elasticloadbalancingv2.*;
 import software.amazon.awscdk.services.ssm.StringParameter;
 import software.constructs.Construct;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static java.util.Arrays.asList;
 
 /**
  * Creates a base network for an application served by ECS. The network stack contains a VPC,
@@ -90,7 +89,8 @@ public class Network extends Construct {
      * @param appEnvironment the name of the application and its environment for which to load the output parameters. The deployed {@link Network}
      *                       construct must have been deployed into this environment.
      */
-    public static NetworkOutputParameters getOutputParametersFromParameterStore(Construct scope, ApplicationEnvironment appEnvironment) {
+    public static NetworkOutputParameters getOutputParametersFromParameterStore(
+            Construct scope, ApplicationEnvironment appEnvironment) {
         return new NetworkOutputParameters(
                 getVpcIdFromParameterStore(scope, appEnvironment),
                 getHttpListenerArnFromParameterStore(scope, appEnvironment),
@@ -102,27 +102,35 @@ public class Network extends Construct {
                 getAvailabilityZonesFromParameterStore(scope, appEnvironment),
                 getLoadBalancerArnFromParameterStore(scope, appEnvironment),
                 getLoadBalancerDnsNameFromParameterStore(scope, appEnvironment),
-                getLoadBalancerCanonicalHostedZoneIdFromParameterStore(scope, appEnvironment)
-        );
+                getLoadBalancerCanonicalHostedZoneIdFromParameterStore(scope, appEnvironment));
     }
 
     @NotNull
     private static String createParameterName(ApplicationEnvironment appEnvironment, String parameterName) {
-        return "%s-%s-Network-%s".formatted(appEnvironment.environmentName(), appEnvironment.applicationName(), parameterName);
+        return "%s-%s-Network-%s"
+                .formatted(appEnvironment.environmentName(), appEnvironment.applicationName(), parameterName);
     }
 
     private static String getVpcIdFromParameterStore(Construct scope, ApplicationEnvironment appEnvironment) {
-        return StringParameter.fromStringParameterName(scope, PARAMETER_VPC_ID, createParameterName(appEnvironment, PARAMETER_VPC_ID))
+        return StringParameter.fromStringParameterName(
+                        scope, PARAMETER_VPC_ID, createParameterName(appEnvironment, PARAMETER_VPC_ID))
                 .getStringValue();
     }
 
     private static String getHttpListenerArnFromParameterStore(Construct scope, ApplicationEnvironment appEnvironment) {
-        return StringParameter.fromStringParameterName(scope, PARAMETER_HTTP_LISTENER_ARN, createParameterName(appEnvironment, PARAMETER_HTTP_LISTENER_ARN))
+        return StringParameter.fromStringParameterName(
+                        scope,
+                        PARAMETER_HTTP_LISTENER_ARN,
+                        createParameterName(appEnvironment, PARAMETER_HTTP_LISTENER_ARN))
                 .getStringValue();
     }
 
-    private static String getHttpsListenerArnFromParameterStore(Construct scope, ApplicationEnvironment appEnvironment) {
-        String value = StringParameter.fromStringParameterName(scope, PARAMETER_HTTPS_LISTENER_ARN, createParameterName(appEnvironment, PARAMETER_HTTPS_LISTENER_ARN))
+    private static String getHttpsListenerArnFromParameterStore(
+            Construct scope, ApplicationEnvironment appEnvironment) {
+        String value = StringParameter.fromStringParameterName(
+                        scope,
+                        PARAMETER_HTTPS_LISTENER_ARN,
+                        createParameterName(appEnvironment, PARAMETER_HTTPS_LISTENER_ARN))
                 .getStringValue();
         if ("null".equals(value)) {
             return null;
@@ -131,61 +139,100 @@ public class Network extends Construct {
         }
     }
 
-    private static String getLoadBalancerSecurityGroupIdFromParameterStore(Construct scope, ApplicationEnvironment appEnvironment) {
-        return StringParameter.fromStringParameterName(scope, PARAMETER_LOAD_BALANCER_SECURITY_GROUP_ID, createParameterName(appEnvironment, PARAMETER_LOAD_BALANCER_SECURITY_GROUP_ID))
+    private static String getLoadBalancerSecurityGroupIdFromParameterStore(
+            Construct scope, ApplicationEnvironment appEnvironment) {
+        return StringParameter.fromStringParameterName(
+                        scope,
+                        PARAMETER_LOAD_BALANCER_SECURITY_GROUP_ID,
+                        createParameterName(appEnvironment, PARAMETER_LOAD_BALANCER_SECURITY_GROUP_ID))
                 .getStringValue();
     }
 
     private static String getEcsClusterNameFromParameterStore(Construct scope, ApplicationEnvironment appEnvironment) {
-        return StringParameter.fromStringParameterName(scope, PARAMETER_ECS_CLUSTER_NAME, createParameterName(appEnvironment, PARAMETER_ECS_CLUSTER_NAME))
+        return StringParameter.fromStringParameterName(
+                        scope,
+                        PARAMETER_ECS_CLUSTER_NAME,
+                        createParameterName(appEnvironment, PARAMETER_ECS_CLUSTER_NAME))
                 .getStringValue();
     }
 
-    private static List<String> getIsolatedSubnetsFromParameterStore(Construct scope, ApplicationEnvironment appEnvironment) {
+    private static List<String> getIsolatedSubnetsFromParameterStore(
+            Construct scope, ApplicationEnvironment appEnvironment) {
 
-        String subnetOneId = StringParameter.fromStringParameterName(scope, PARAMETER_ISOLATED_SUBNET_ONE, createParameterName(appEnvironment, PARAMETER_ISOLATED_SUBNET_ONE))
+        String subnetOneId = StringParameter.fromStringParameterName(
+                        scope,
+                        PARAMETER_ISOLATED_SUBNET_ONE,
+                        createParameterName(appEnvironment, PARAMETER_ISOLATED_SUBNET_ONE))
                 .getStringValue();
 
-        String subnetTwoId = StringParameter.fromStringParameterName(scope, PARAMETER_ISOLATED_SUBNET_TWO, createParameterName(appEnvironment, PARAMETER_ISOLATED_SUBNET_TWO))
+        String subnetTwoId = StringParameter.fromStringParameterName(
+                        scope,
+                        PARAMETER_ISOLATED_SUBNET_TWO,
+                        createParameterName(appEnvironment, PARAMETER_ISOLATED_SUBNET_TWO))
                 .getStringValue();
 
         return asList(subnetOneId, subnetTwoId);
     }
 
-    private static List<String> getPublicSubnetsFromParameterStore(Construct scope, ApplicationEnvironment appEnvironment) {
+    private static List<String> getPublicSubnetsFromParameterStore(
+            Construct scope, ApplicationEnvironment appEnvironment) {
 
-        String subnetOneId = StringParameter.fromStringParameterName(scope, PARAMETER_PUBLIC_SUBNET_ONE, createParameterName(appEnvironment, PARAMETER_PUBLIC_SUBNET_ONE))
+        String subnetOneId = StringParameter.fromStringParameterName(
+                        scope,
+                        PARAMETER_PUBLIC_SUBNET_ONE,
+                        createParameterName(appEnvironment, PARAMETER_PUBLIC_SUBNET_ONE))
                 .getStringValue();
 
-        String subnetTwoId = StringParameter.fromStringParameterName(scope, PARAMETER_PUBLIC_SUBNET_TWO, createParameterName(appEnvironment, PARAMETER_PUBLIC_SUBNET_TWO))
+        String subnetTwoId = StringParameter.fromStringParameterName(
+                        scope,
+                        PARAMETER_PUBLIC_SUBNET_TWO,
+                        createParameterName(appEnvironment, PARAMETER_PUBLIC_SUBNET_TWO))
                 .getStringValue();
 
         return asList(subnetOneId, subnetTwoId);
     }
 
-    private static List<String> getAvailabilityZonesFromParameterStore(Construct scope, ApplicationEnvironment appEnvironment) {
+    private static List<String> getAvailabilityZonesFromParameterStore(
+            Construct scope, ApplicationEnvironment appEnvironment) {
 
-        String availabilityZoneOne = StringParameter.fromStringParameterName(scope, PARAMETER_AVAILABILITY_ZONE_ONE, createParameterName(appEnvironment, PARAMETER_AVAILABILITY_ZONE_ONE))
+        String availabilityZoneOne = StringParameter.fromStringParameterName(
+                        scope,
+                        PARAMETER_AVAILABILITY_ZONE_ONE,
+                        createParameterName(appEnvironment, PARAMETER_AVAILABILITY_ZONE_ONE))
                 .getStringValue();
 
-        String availabilityZoneTwo = StringParameter.fromStringParameterName(scope, PARAMETER_AVAILABILITY_ZONE_TWO, createParameterName(appEnvironment, PARAMETER_AVAILABILITY_ZONE_TWO))
+        String availabilityZoneTwo = StringParameter.fromStringParameterName(
+                        scope,
+                        PARAMETER_AVAILABILITY_ZONE_TWO,
+                        createParameterName(appEnvironment, PARAMETER_AVAILABILITY_ZONE_TWO))
                 .getStringValue();
 
         return asList(availabilityZoneOne, availabilityZoneTwo);
     }
 
     private static String getLoadBalancerArnFromParameterStore(Construct scope, ApplicationEnvironment appEnvironment) {
-        return StringParameter.fromStringParameterName(scope, PARAMETER_LOAD_BALANCER_ARN, createParameterName(appEnvironment, PARAMETER_LOAD_BALANCER_ARN))
+        return StringParameter.fromStringParameterName(
+                        scope,
+                        PARAMETER_LOAD_BALANCER_ARN,
+                        createParameterName(appEnvironment, PARAMETER_LOAD_BALANCER_ARN))
                 .getStringValue();
     }
 
-    private static String getLoadBalancerDnsNameFromParameterStore(Construct scope, ApplicationEnvironment appEnvironment) {
-        return StringParameter.fromStringParameterName(scope, PARAMETER_LOAD_BALANCER_DNS_NAME, createParameterName(appEnvironment, PARAMETER_LOAD_BALANCER_DNS_NAME))
+    private static String getLoadBalancerDnsNameFromParameterStore(
+            Construct scope, ApplicationEnvironment appEnvironment) {
+        return StringParameter.fromStringParameterName(
+                        scope,
+                        PARAMETER_LOAD_BALANCER_DNS_NAME,
+                        createParameterName(appEnvironment, PARAMETER_LOAD_BALANCER_DNS_NAME))
                 .getStringValue();
     }
 
-    private static String getLoadBalancerCanonicalHostedZoneIdFromParameterStore(Construct scope, ApplicationEnvironment appEnvironment) {
-        return StringParameter.fromStringParameterName(scope, PARAMETER_LOAD_BALANCER_HOSTED_ZONE_ID, createParameterName(appEnvironment, PARAMETER_LOAD_BALANCER_HOSTED_ZONE_ID))
+    private static String getLoadBalancerCanonicalHostedZoneIdFromParameterStore(
+            Construct scope, ApplicationEnvironment appEnvironment) {
+        return StringParameter.fromStringParameterName(
+                        scope,
+                        PARAMETER_LOAD_BALANCER_HOSTED_ZONE_ID,
+                        createParameterName(appEnvironment, PARAMETER_LOAD_BALANCER_HOSTED_ZONE_ID))
                 .getStringValue();
     }
 
@@ -208,10 +255,7 @@ public class Network extends Construct {
         return Vpc.Builder.create(this, "vpc")
                 .natGateways(0)
                 .maxAzs(2)
-                .subnetConfiguration(asList(
-                        publicSubnets,
-                        isolatedSubnets
-                ))
+                .subnetConfiguration(asList(publicSubnets, isolatedSubnets))
                 .build();
     }
 
@@ -223,9 +267,7 @@ public class Network extends Construct {
      * Creates a load balancer that accepts HTTP and HTTPS requests from the internet and puts it into
      * the VPC's public subnets.
      */
-    private void createLoadBalancer(
-            final IVpc vpc,
-            final String sslCertificateArn) {
+    private void createLoadBalancer(final IVpc vpc, final String sslCertificateArn) {
 
         loadBalancerSecurityGroup = SecurityGroup.Builder.create(this, "loadBalancerSecurityGroup")
                 .securityGroupName(prefixWithUniqueName("loadBalancerSecurityGroup"))
@@ -253,45 +295,46 @@ public class Network extends Construct {
                 .targetGroupName(prefixWithUniqueName("no-op-targetGroup"))
                 .targetType(TargetType.IP)
                 .deregistrationDelay(Duration.seconds(5))
-                .healthCheck(
-                        HealthCheck
-                                .builder()
-                                .healthyThresholdCount(2)
-                                .interval(Duration.seconds(10))
-                                .timeout(Duration.seconds(5))
-                                .build()
-                )
+                .healthCheck(HealthCheck.builder()
+                        .healthyThresholdCount(2)
+                        .interval(Duration.seconds(10))
+                        .timeout(Duration.seconds(5))
+                        .build())
                 .build();
 
-        httpListener = loadBalancer.addListener(PARAMETER_HTTP_LISTENER, BaseApplicationListenerProps.builder()
-                .port(80)
-                .protocol(ApplicationProtocol.HTTP)
-                .open(true)
-                .build());
+        httpListener = loadBalancer.addListener(
+                PARAMETER_HTTP_LISTENER,
+                BaseApplicationListenerProps.builder()
+                        .port(80)
+                        .protocol(ApplicationProtocol.HTTP)
+                        .open(true)
+                        .build());
 
-        httpListener.addTargetGroups("http-defaultTargetGroup", AddApplicationTargetGroupsProps.builder()
-                .targetGroups(Collections.singletonList(dummyTargetGroup))
-                .build());
+        httpListener.addTargetGroups(
+                "http-defaultTargetGroup",
+                AddApplicationTargetGroupsProps.builder()
+                        .targetGroups(Collections.singletonList(dummyTargetGroup))
+                        .build());
 
         if (sslCertificateArn != null) {
             IListenerCertificate certificate = ListenerCertificate.fromArn(sslCertificateArn);
-            httpsListener = loadBalancer.addListener(PARAMETER_HTTPS_LISTENER, BaseApplicationListenerProps.builder()
-                    .port(443)
-                    .protocol(ApplicationProtocol.HTTPS)
-                    .certificates(Collections.singletonList(certificate))
-                    .open(true)
-                    .build());
+            httpsListener = loadBalancer.addListener(
+                    PARAMETER_HTTPS_LISTENER,
+                    BaseApplicationListenerProps.builder()
+                            .port(443)
+                            .protocol(ApplicationProtocol.HTTPS)
+                            .certificates(Collections.singletonList(certificate))
+                            .open(true)
+                            .build());
 
-            httpsListener.addTargetGroups("https-defaultTargetGroup", AddApplicationTargetGroupsProps.builder()
-                    .targetGroups(Collections.singletonList(dummyTargetGroup))
-                    .build());
+            httpsListener.addTargetGroups(
+                    "https-defaultTargetGroup",
+                    AddApplicationTargetGroupsProps.builder()
+                            .targetGroups(Collections.singletonList(dummyTargetGroup))
+                            .build());
 
             ListenerAction redirectAction = ListenerAction.redirect(
-                    RedirectOptions.builder()
-                            .protocol("HTTPS")
-                            .port("443")
-                            .build()
-            );
+                    RedirectOptions.builder().protocol("HTTPS").port("443").build());
 
             new ApplicationListenerRule(
                     this,
@@ -301,8 +344,7 @@ public class Network extends Construct {
                             .priority(1)
                             .conditions(List.of(ListenerCondition.pathPatterns(List.of("*"))))
                             .action(redirectAction)
-                            .build()
-            );
+                            .build());
         }
 
         createOutputParameters();
@@ -346,7 +388,8 @@ public class Network extends Construct {
                 .stringValue(this.ecsCluster.getClusterName())
                 .build();
 
-        // I would have liked to use StringListParameter to store a list of AZs, but it's currently broken (https://github.com/aws/aws-cdk/issues/3586).
+        // I would have liked to use StringListParameter to store a list of AZs, but it's currently broken
+        // (https://github.com/aws/aws-cdk/issues/3586).
         StringParameter.Builder.create(this, PARAMETER_AVAILABILITY_ZONE_ONE)
                 .parameterName(createParameterName(appEnvironment, PARAMETER_AVAILABILITY_ZONE_ONE))
                 .stringValue(vpc.getAvailabilityZones().get(0))
@@ -357,7 +400,8 @@ public class Network extends Construct {
                 .stringValue(vpc.getAvailabilityZones().get(1))
                 .build();
 
-        // I would have liked to use StringListParameter to store a list of AZs, but it's currently broken (https://github.com/aws/aws-cdk/issues/3586).
+        // I would have liked to use StringListParameter to store a list of AZs, but it's currently broken
+        // (https://github.com/aws/aws-cdk/issues/3586).
         StringParameter.Builder.create(this, "isolatedSubnetOne")
                 .parameterName(createParameterName(appEnvironment, PARAMETER_ISOLATED_SUBNET_ONE))
                 .stringValue(this.vpc.getIsolatedSubnets().get(0).getSubnetId())
@@ -368,7 +412,8 @@ public class Network extends Construct {
                 .stringValue(this.vpc.getIsolatedSubnets().get(1).getSubnetId())
                 .build();
 
-        // I would have liked to use StringListParameter to store a list of AZs, but it's currently broken (https://github.com/aws/aws-cdk/issues/3586).
+        // I would have liked to use StringListParameter to store a list of AZs, but it's currently broken
+        // (https://github.com/aws/aws-cdk/issues/3586).
         StringParameter.Builder.create(this, "publicSubnetOne")
                 .parameterName(createParameterName(appEnvironment, PARAMETER_PUBLIC_SUBNET_ONE))
                 .stringValue(this.vpc.getPublicSubnets().get(0).getSubnetId())
@@ -410,8 +455,7 @@ public class Network extends Construct {
                 this.vpc.getAvailabilityZones(),
                 this.loadBalancer.getLoadBalancerArn(),
                 this.loadBalancer.getLoadBalancerDnsName(),
-                this.loadBalancer.getLoadBalancerCanonicalHostedZoneId()
-        );
+                this.loadBalancer.getLoadBalancerCanonicalHostedZoneId());
     }
 
     public static class NetworkInputParameters {
@@ -451,8 +495,7 @@ public class Network extends Construct {
                 List<String> availabilityZones,
                 String loadBalancerArn,
                 String loadBalancerDnsName,
-                String loadBalancerCanonicalHostedZoneId
-        ) {
+                String loadBalancerCanonicalHostedZoneId) {
             this.vpcId = vpcId;
             this.httpListenerArn = httpListenerArn;
             this.httpsListenerArn = httpsListenerArn;

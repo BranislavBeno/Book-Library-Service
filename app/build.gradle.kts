@@ -1,50 +1,16 @@
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
-    java
     application
-    jacoco
+    id("java-library-conventions")
+    id("spotless-conventions")
+    id("sonarqube-conventions")
+    id("cyclonedx-sbom-conventions")
     id("org.springframework.boot") version "3.0.5"
-    id("org.sonarqube") version "4.0.0.2929"
     id("com.gorylenko.gradle-git-properties") version "2.4.1"
-    id("org.cyclonedx.bom") version "1.7.4"
-    id("com.diffplug.spotless") version "6.18.0"
 }
 
 apply(plugin = "io.spring.dependency-management")
-
-spotless {
-    java {
-        palantirJavaFormat(libs.palantir.javaformat.get().versionConstraint.requiredVersion)
-        importOrder()
-        removeUnusedImports()
-        target("app/**/*.java")
-        targetExclude("app/build/**/*.*")
-    }
-    kotlinGradle {
-        ktlint(libs.pinterest.ktlint.get().versionConstraint.requiredVersion)
-        target("*.gradle.kts")
-        targetExclude("app/build/**/*.*")
-    }
-}
-
-jacoco {
-    toolVersion = "0.8.9"
-}
-
-sonarqube {
-    properties {
-        property("sonar.projectKey", "BranislavBeno_BookLibraryService")
-        property("sonar.projectName", "book-library-service")
-    }
-}
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(19))
-        vendor.set(JvmVendorSpec.AZUL)
-    }
-}
 
 springBoot {
     buildInfo()
@@ -79,44 +45,4 @@ version = "v$versionMajor.$versionMinor.$versionPatch"
 
 tasks.getByName<BootJar>("bootJar") {
     this.archiveFileName.set("book-library-service.jar")
-}
-
-tasks.test {
-    useJUnitPlatform()
-    finalizedBy(tasks.jacocoTestReport)
-    afterSuite(
-        KotlinClosure2<TestDescriptor, TestResult, Unit>({ descriptor, result ->
-            if (descriptor.parent == null) {
-                logger.lifecycle(
-                    "\nTest result: ${result.resultType}",
-                )
-                logger.lifecycle(
-                    "Test summary: " +
-                        "${result.testCount} tests, " +
-                        "${result.successfulTestCount} succeeded, " +
-                        "${result.failedTestCount} failed, " +
-                        "${result.skippedTestCount} skipped",
-                )
-            }
-        }),
-    )
-}
-
-tasks.jacocoTestReport {
-    dependsOn(tasks.test)
-    reports {
-        xml.required.set(true)
-    }
-}
-
-tasks.cyclonedxBom {
-    setIncludeConfigs(listOf("runtimeClasspath"))
-    setSkipConfigs(listOf("compileClasspath", "testCompileClasspath"))
-    setProjectType("application")
-    setDestination(project.file("build/reports/sbom"))
-    setOutputName("CycloneDX-SBOM")
-    setOutputFormat("all")
-    setIncludeBomSerialNumber(false)
-    setIncludeLicenseText(true)
-    setComponentVersion("2.0.0")
 }

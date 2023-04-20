@@ -1,5 +1,8 @@
 package com.book.library.cdk.construct;
 
+import static java.util.Collections.singletonList;
+
+import java.util.*;
 import software.amazon.awscdk.CfnCondition;
 import software.amazon.awscdk.Environment;
 import software.amazon.awscdk.Fn;
@@ -16,10 +19,6 @@ import software.amazon.awscdk.services.iam.*;
 import software.amazon.awscdk.services.logs.LogGroup;
 import software.amazon.awscdk.services.logs.RetentionDays;
 import software.constructs.Construct;
-
-import java.util.*;
-
-import static java.util.Collections.singletonList;
 
 /**
  * Creates an ECS service on top of a {@link Network}. Loads Docker images from a {@link DockerImageSource}
@@ -38,14 +37,25 @@ public class Service extends Construct {
         super(scope, id);
 
         List<CfnTargetGroup.TargetGroupAttributeProperty> stickySessionConfiguration = Arrays.asList(
-                CfnTargetGroup.TargetGroupAttributeProperty.builder().key("stickiness.enabled").value("true").build(),
-                CfnTargetGroup.TargetGroupAttributeProperty.builder().key("stickiness.type").value("lb_cookie").build(),
-                CfnTargetGroup.TargetGroupAttributeProperty.builder().key("stickiness.lb_cookie.duration_seconds").value("3600").build()
-        );
-        List<CfnTargetGroup.TargetGroupAttributeProperty> deregistrationDelayConfiguration = List.of(
-                CfnTargetGroup.TargetGroupAttributeProperty.builder().key("deregistration_delay.timeout_seconds").value("5").build()
-        );
-        List<CfnTargetGroup.TargetGroupAttributeProperty> targetGroupAttributes = new ArrayList<>(deregistrationDelayConfiguration);
+                CfnTargetGroup.TargetGroupAttributeProperty.builder()
+                        .key("stickiness.enabled")
+                        .value("true")
+                        .build(),
+                CfnTargetGroup.TargetGroupAttributeProperty.builder()
+                        .key("stickiness.type")
+                        .value("lb_cookie")
+                        .build(),
+                CfnTargetGroup.TargetGroupAttributeProperty.builder()
+                        .key("stickiness.lb_cookie.duration_seconds")
+                        .value("3600")
+                        .build());
+        List<CfnTargetGroup.TargetGroupAttributeProperty> deregistrationDelayConfiguration =
+                List.of(CfnTargetGroup.TargetGroupAttributeProperty.builder()
+                        .key("deregistration_delay.timeout_seconds")
+                        .value("5")
+                        .build());
+        List<CfnTargetGroup.TargetGroupAttributeProperty> targetGroupAttributes =
+                new ArrayList<>(deregistrationDelayConfiguration);
         if (ServiceInputParameters.PARAMETER_STICKY_SESSIONS_ENABLED) {
             targetGroupAttributes.addAll(stickySessionConfiguration);
         }
@@ -107,7 +117,8 @@ public class Service extends Construct {
                 .build();
 
         Role ecsTaskExecutionRole = Role.Builder.create(this, "ecsTaskExecutionRole")
-                .assumedBy(ServicePrincipal.Builder.create("ecs-tasks.amazonaws.com").build())
+                .assumedBy(ServicePrincipal.Builder.create("ecs-tasks.amazonaws.com")
+                        .build())
                 .path("/")
                 .inlinePolicies(Map.of(
                         applicationEnvironment.prefix("ecsTaskExecutionRolePolicy"),
@@ -127,7 +138,8 @@ public class Service extends Construct {
                 .build();
 
         Role.Builder roleBuilder = Role.Builder.create(this, "ecsTaskRole")
-                .assumedBy(ServicePrincipal.Builder.create("ecs-tasks.amazonaws.com").build())
+                .assumedBy(ServicePrincipal.Builder.create("ecs-tasks.amazonaws.com")
+                        .build())
                 .path("/");
 
         if (!serviceInputParameters.taskRolePolicyStatements.isEmpty()) {
@@ -141,29 +153,33 @@ public class Service extends Construct {
         Role ecsTaskRole = roleBuilder.build();
 
         String dockerRepositoryUrl;
-        IRepository dockerRepository = Repository.fromRepositoryName(this, "ecrRepository", serviceInputParameters.dockerImageSource.getDockerRepositoryName());
+        IRepository dockerRepository = Repository.fromRepositoryName(
+                this, "ecrRepository", serviceInputParameters.dockerImageSource.getDockerRepositoryName());
         dockerRepository.grantPull(ecsTaskExecutionRole);
-        dockerRepositoryUrl = dockerRepository.repositoryUriForTag(serviceInputParameters.dockerImageSource.getDockerImageTag());
+        dockerRepositoryUrl =
+                dockerRepository.repositoryUriForTag(serviceInputParameters.dockerImageSource.getDockerImageTag());
 
-        CfnTaskDefinition.ContainerDefinitionProperty container = CfnTaskDefinition.ContainerDefinitionProperty.builder()
-                .name(containerName(applicationEnvironment))
-                .cpu(ServiceInputParameters.PARAMETER_CPU)
-                .memory(ServiceInputParameters.PARAMETER_MEMORY)
-                .image(dockerRepositoryUrl)
-                .logConfiguration(CfnTaskDefinition.LogConfigurationProperty.builder()
-                        .logDriver("awslogs")
-                        .options(Map.of(
-                                "awslogs-group", logGroup.getLogGroupName(),
-                                "awslogs-region", Objects.requireNonNull(awsEnvironment.getRegion()),
-                                "awslogs-stream-prefix", applicationEnvironment.prefix("stream"),
-                                "awslogs-datetime-format", ServiceInputParameters.PARAMETER_AWSLOGS_DATE_TIME_FORMAT))
-                        .build())
-                .portMappings(singletonList(CfnTaskDefinition.PortMappingProperty.builder()
-                        .containerPort(ServiceInputParameters.PARAMETER_CONTAINER_PORT)
-                        .build()))
-                .environment(toKeyValuePairs(serviceInputParameters.environmentVariables))
-                .stopTimeout(2)
-                .build();
+        CfnTaskDefinition.ContainerDefinitionProperty container =
+                CfnTaskDefinition.ContainerDefinitionProperty.builder()
+                        .name(containerName(applicationEnvironment))
+                        .cpu(ServiceInputParameters.PARAMETER_CPU)
+                        .memory(ServiceInputParameters.PARAMETER_MEMORY)
+                        .image(dockerRepositoryUrl)
+                        .logConfiguration(CfnTaskDefinition.LogConfigurationProperty.builder()
+                                .logDriver("awslogs")
+                                .options(Map.of(
+                                        "awslogs-group", logGroup.getLogGroupName(),
+                                        "awslogs-region", Objects.requireNonNull(awsEnvironment.getRegion()),
+                                        "awslogs-stream-prefix", applicationEnvironment.prefix("stream"),
+                                        "awslogs-datetime-format",
+                                                ServiceInputParameters.PARAMETER_AWSLOGS_DATE_TIME_FORMAT))
+                                .build())
+                        .portMappings(singletonList(CfnTaskDefinition.PortMappingProperty.builder()
+                                .containerPort(ServiceInputParameters.PARAMETER_CONTAINER_PORT)
+                                .build()))
+                        .environment(toKeyValuePairs(serviceInputParameters.environmentVariables))
+                        .stopTimeout(2)
+                        .build();
 
         CfnTaskDefinition taskDefinition = CfnTaskDefinition.Builder.create(this, "taskDefinition")
                 // skipped family
@@ -220,8 +236,10 @@ public class Service extends Construct {
                         .build())
                 .build();
 
-        // Adding an explicit dependency from the service to the listeners to avoid "has no load balancer associated" error
-        // (see https://stackoverflow.com/questions/61250772/how-can-i-create-a-dependson-relation-between-ec2-and-rds-using-aws-cdk).
+        // Adding an explicit dependency from the service to the listeners to avoid "has no load balancer associated"
+        // error
+        // (see
+        // https://stackoverflow.com/questions/61250772/how-can-i-create-a-dependson-relation-between-ec2-and-rds-using-aws-cdk).
         service.addDependency(httpListenerRule);
 
         applicationEnvironment.tag(this);
@@ -310,7 +328,8 @@ public class Service extends Construct {
          */
         public ServiceInputParameters(
                 DockerImageSource dockerImageSource,
-                String parameterHealthCheckPath, Map<String, String> environmentVariables) {
+                String parameterHealthCheckPath,
+                Map<String, String> environmentVariables) {
             this.dockerImageSource = dockerImageSource;
             this.parameterHealthCheckPath = parameterHealthCheckPath;
             this.environmentVariables = environmentVariables;

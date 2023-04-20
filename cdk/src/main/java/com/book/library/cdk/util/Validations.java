@@ -4,8 +4,7 @@ import software.amazon.awscdk.App;
 
 public class Validations {
 
-    private Validations() {
-    }
+    private Validations() {}
 
     public static String requireNonEmpty(App app, String parameterName) {
         String parameter = (String) app.getNode().tryGetContext(parameterName);
