@@ -9,6 +9,8 @@ repositories {
 
 dependencies {
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
+    implementation(libs.spring.boot)
+    implementation(libs.git.properties)
     implementation(libs.diffplug.spotless)
     implementation(libs.sonarqube)
     implementation(libs.cyclonedx.sbom)

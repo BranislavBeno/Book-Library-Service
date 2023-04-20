@@ -4,6 +4,8 @@ import org.gradle.jvm.toolchain.JvmVendorSpec
 plugins {
     `java-library`
     jacoco
+    id("org.springframework.boot")
+    id("com.gorylenko.gradle-git-properties")
 }
 
 java {
