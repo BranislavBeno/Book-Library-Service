@@ -1,4 +1,4 @@
-image: azul/zulu-openjdk:20
+image: eclipse-temurin:20-jdk-jammy
 
 variables:
   CONTAINER_IMAGE: beo1975/book-library-service:latest
