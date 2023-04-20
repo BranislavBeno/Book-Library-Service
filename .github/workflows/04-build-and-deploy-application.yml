@@ -24,7 +24,7 @@ jobs:
       app: ${{ steps.filter.outputs.app }}
       cdk: ${{ steps.filter.outputs.cdk }}
       gradle-app: ${{ steps.filter.outputs.gradle-app }}
-      gradle-cdk: ${{ steps.filter.outputs.gradle-cdk }}
+      libs-versions: ${{ steps.filter.outputs.libs-versions }}
       dockerfile: ${{ steps.filter.outputs.dockerfile }}
       workflow-deploy: ${{ steps.filter.outputs.workflow-deploy }}
     steps:
@@ -44,8 +44,8 @@ jobs:
               - 'cdk/**/*Service*'
             gradle-app:
               - 'app/build.gradle.kts'
-            gradle-cdk:
-              - 'cdk/build.gradle.kts'
+            libs-versions:
+              - 'gradle/libs.versions.toml'
             dockerfile:
               - 'Dockerfile'
             workflow-deploy:
@@ -57,7 +57,7 @@ jobs:
     outputs:
       DOCKER_IMAGE_TAG: ${{ steps.create-docker-image-tag.outputs.DOCKER_IMAGE_TAG }}
     needs: changes
-    if: ${{ needs.changes.outputs.app == 'true' || needs.changes.outputs.cdk == 'true' || needs.changes.outputs.gradle-app == 'true' || needs.changes.outputs.gradle-cdk == 'true' || needs.changes.outputs.dockerfile == 'true' || needs.changes.outputs.workflow-deploy == 'true' }}
+    if: ${{ needs.changes.outputs.app == 'true' || needs.changes.outputs.cdk == 'true' || needs.changes.outputs.gradle-app == 'true' || needs.changes.outputs.libs-versions == 'true' || needs.changes.outputs.dockerfile == 'true' || needs.changes.outputs.workflow-deploy == 'true' }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
