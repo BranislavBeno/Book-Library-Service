@@ -3,7 +3,7 @@ RUN mkdir /project
 COPY . /project
 WORKDIR /project
 # create fat jar
-RUN gradle app:build -x app:test
+RUN gradle app:build -x app:test -x app:spotlessCheck
 # move the jar file
 RUN cd app/build/libs/ && cp book-library-service.jar /project/
 # extrect layered jar file
