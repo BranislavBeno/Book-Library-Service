@@ -4,8 +4,8 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=BranislavBeno_BookLibraryService&metric=coverage)](https://sonarcloud.io/summary/new_code?id=BranislavBeno_BookLibraryService)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=BranislavBeno_BookLibraryService&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=BranislavBeno_BookLibraryService)  
 [![](https://img.shields.io/badge/Java-19-blue)](/app/build.gradle.kts)
-[![](https://img.shields.io/badge/Spring%20Boot-3.0.5-blue)](/app/build.gradle.kts)
-[![](https://img.shields.io/badge/Gradle-8.1-blue)](/gradle/wrapper/gradle-wrapper.properties)
+[![](https://img.shields.io/badge/Spring%20Boot-3.0.6-blue)](/app/build.gradle.kts)
+[![](https://img.shields.io/badge/Gradle-8.1.1-blue)](/gradle/wrapper/gradle-wrapper.properties)
 [![](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 # Simple web application for book library service
