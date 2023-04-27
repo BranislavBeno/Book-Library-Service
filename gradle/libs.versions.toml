@@ -14,7 +14,7 @@ jackson-dataformat-xml = { module = "com.fasterxml.jackson.dataformat:jackson-da
 thymeleaf-layout-dialect = { module = "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect", version = "3.2.1" }
 webjars-locator-core = { module = "org.webjars:webjars-locator-core" }
 webjars-bootstrap = { module = "org.webjars:bootstrap", version = "5.2.3" }
-aws-cdk = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.76.0" }
+aws-cdk = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.77.0" }
 # code quality
 palantir-javaformat = { module = "com.palantir.javaformat:palantir-java-format", version = "2.30.0" }
 pinterest-ktlint = { module = "com.pinterest:ktlint", version = "0.49.0" }
