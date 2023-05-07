@@ -1,0 +1,34 @@
+book:
+  repository:
+    path: ../database/Library.xml
+  service:
+    page:
+      size: 5
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: info,health,metrics
+
+server:
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  mvc:
+    problemdetails:
+      enabled: true
+
+auth:
+  users:
+    bookadmin:
+      role: admin
+      password: adminpass
+    bookuser:
+      role: user
+      password: userpass

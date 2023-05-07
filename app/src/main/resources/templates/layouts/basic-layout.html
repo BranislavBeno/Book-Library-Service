@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Book library service</title>
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link th:rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css} "/>
+    <link rel="stylesheet" href="/css/basic.css"/>
     <link rel="stylesheet" href="/css/dark-mode.css"/>
 </head>
 <body>
@@ -26,40 +29,28 @@
                 </label>
             </div>
         </div>
-        <div class="col-sm-10">
+        <div class="col-md-5" sec:authorize="isAuthenticated()">
+            <div class="d-flex flex-row">
+                <div class="me-2" sec:authentication="name"></div>
+                <form name="logoutForm" th:hidden="true" th:method="POST" th:action="@{/logout}">
+                    <input type="submit" value="Logout"/>
+                </form>
+                <a href="javascript: logoutForm.submit();">Sign Out</a>
+            </div>
+        </div>
+        <div class="col-sm-5" sec:authorize="isAnonymous()">
+            <p class="display-5 text-end"></p>
+        </div>
+        <div class="col-sm-5">
             <p class="display-5 text-end">Book library service</p>
         </div>
     </div>
 </div>
 <div class="container pt-5">
-    <div class="row">
-        <div class="col-md-2">
-            <div class="card">
-                <div class="list-group list-group-flush">
-                    <a id="allBooksButton" class="list-group-item list-group-item-action" th:href="@{/}">Show all
-                        books</a>
-                    <a id="availableBooksButton" class="list-group-item list-group-item-action"
-                       th:href="@{/available}">Show available books</a>
-                    <a id="borrowedBooksButton" class="list-group-item list-group-item-action"
-                       th:href="@{/borrowed}">Show borrowed books</a>
-                    <a id="addBookButton" class="list-group-item list-group-item-action"
-                       th:href="@{/addBook}">Add new book</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-10">
-            <div class="card">
-                <div class="card-header">
-                    <h5 th:text="${cardHeader}"></h5>
-                </div>
-                <div class="card-body">
-                    <section layout:fragment="dynamic-content"></section>
-                </div>
-            </div>
-        </div>
-    </div>
+    <section layout:fragment="basic-content"></section>
 </div>
 <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <script src="/js/dark-mode-switch.js"></script>
+<script src="/js/password-button.js"></script>
 </body>
 </html>

@@ -22,15 +22,18 @@ This application allows to provide usual actions with book library, such as:
 > It offers web UI and REST API interface as well.
 
 ### Configuration
-Following application settings are configurable over application.properties file:
+Following application settings are configurable over application.yml file:
 - book.repository.path - input file destination
 - book.service.page.size - page size for paginated outputs
-- book.authentication.user - username for authenticated access
-- book.authentication.password - password for authenticated access
+- auth.users - list of users defined by its usernames
 
-> Default credentials are:
-> - username=user
-> - password=passwd
+Every username definition requires setting password and role.
+Only users with `admin` role are allowed to make changes in repository.
+Users with different roles are allowed only to watch/fetch listed data.
+
+> By default, are available following users:
+> - username=bookadmin (password=adminpass, role=admin)
+> - username=bookuser (password=userpass, role=user)
 
 ### Web UI usage
 After application start, click on http://localhost:8080/
@@ -41,9 +44,7 @@ After successful login, web UI offers three types of view:
 2. _*Available books*_. This view allows to borrow book.
 3. _*Borrowed books*_.  This view allows to return book.
 
-Main page offers also add book into library.
-
-> Due to alignment with REST API is login provided over web browser default dialog and not over own HTML login page.
+Main page offers also adding book into library.
 
 ### REST API usage
 For sending requests and receiving responses use `Postman`, `curl` or web browser.

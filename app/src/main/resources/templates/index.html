@@ -2,48 +2,67 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/static-layout}"
-      th:with="cardHeader='All books'" xmlns="http://www.w3.org/1999/html">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/basic-layout}"
+      xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Library service</title>
 </head>
 <body>
-<section layout:fragment="dynamic-content">
-    <div class="alert alert-warning" role="alert" th:if="${!found}">
-        <strong>Warning:</strong>
-        <span>No books have been found.</span>
-    </div>
-    <div th:if="${found}">
-        <table aria-label="All books" class="table table-striped">
-            <thead>
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Author</th>
-                <th scope="col">Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="item : ${books.content}">
-                <td class="table-success" th:if="${!item.borrowed}" th:text="${item.name}" data-bs-toggle="tooltip"
-                    data-bs-placement="right" title="Available"></td>
-                <td class="table-success" th:if="${!item.borrowed}" th:text="${item.author}" data-bs-toggle="tooltip"
-                    data-bs-placement="right" title="Available"></td>
-                <td class="table-success" th:if="${!item.borrowed}">
-                    <div th:replace="~{fragments/button-update :: button-update}"></div>
-                    <div th:replace="~{fragments/button-delete :: button-delete}"></div>
-                </td>
-                <td class="table-danger" th:if="${item.borrowed}" th:text="${item.name}" data-bs-toggle="tooltip"
-                    data-bs-placement="right" title="Borrowed"></td>
-                <td class="table-danger" th:if="${item.borrowed}" th:text="${item.author}" data-bs-toggle="tooltip"
-                    data-bs-placement="right" title="Borrowed"></td>
-                <td class="table-danger" th:if="${item.borrowed}">
-                    <div th:replace="~{fragments/button-update :: button-update}"></div>
-                    <div th:replace="~{fragments/button-delete :: button-delete}"></div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <div th:replace="~{fragments/pagination-nav :: pagination-nav(pageLink='/')}"></div>
+<section layout:fragment="basic-content">
+    <div class="row">
+        <div th:replace="~{fragments/navigation :: toggle-pane}"></div>
+        <div class="col-sm-10">
+            <div class="card">
+                <div class="card-header">
+                    <h5>All books</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning" role="alert" th:if="${!found}">
+                        <strong>Warning:</strong>
+                        <span>No books have been found.</span>
+                    </div>
+                    <div th:if="${found}">
+                        <table aria-label="All books" class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Author</th>
+                                <th scope="col" sec:authorize="hasRole('ROLE_ADMIN')">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="item : ${books.content}">
+                                <td class="table-success" th:if="${!item.borrowed}" th:text="${item.name}"
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="right" title="Available"></td>
+                                <td class="table-success" th:if="${!item.borrowed}" th:text="${item.author}"
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="right" title="Available"></td>
+                                <td class="table-success" th:if="${!item.borrowed}"
+                                    sec:authorize="hasRole('ROLE_ADMIN')">
+                                    <div th:replace="~{fragments/button :: button-update}"></div>
+                                    <div th:replace="~{fragments/button :: button-delete}"></div>
+                                </td>
+                                <td class="table-danger" th:if="${item.borrowed}" th:text="${item.name}"
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="right" title="Borrowed"></td>
+                                <td class="table-danger" th:if="${item.borrowed}" th:text="${item.author}"
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="right" title="Borrowed"></td>
+                                <td class="table-danger" th:if="${item.borrowed}"
+                                    sec:authorize="hasRole('ROLE_ADMIN')">
+                                    <div th:replace="~{fragments/button :: button-update}"></div>
+                                    <div th:replace="~{fragments/button :: button-delete}"></div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div th:replace="~{fragments/navigation :: pagination-nav(pageLink='/')}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 </body>

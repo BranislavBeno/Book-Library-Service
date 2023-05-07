@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/basic-layout}"
+      xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Library service</title>
+</head>
+<body>
+<section layout:fragment="basic-content">
+    <div class="row d-flex justify-content-center">
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Sign In</h5>
+                </div>
+                <div class="card-body">
+                    <div th:if="${param.error}">
+                        <p class="text-danger">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p></div>
+                    <div th:if="${param.logout}">
+                        <p class="text-warning">You have been signed out.</p>
+                    </div>
+                    <form class="row g-2" th:method="POST" th:action="@{/login}">
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="username"><i class="fa fa-user"></i></span>
+                            </div>
+                            <input name="username" type="text" class="form-control" id="username-input"
+                                   placeholder="Username" aria-label="Username" aria-describedby="username" required
+                                   autofocus>
+                        </div>
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="password"><i class="fa fa-lock"></i></span>
+                            </div>
+                            <input name="password" type="password" class="form-control" id="password-input"
+                                   placeholder="Password" aria-label="Password" aria-describedby="password" required>
+                            <div class="input-group-append">
+                                <button class="btn btn-light" id="password-btn" type="button"
+                                        onclick="password_show_hide();">
+                                    <i class="fa fa-eye-slash" id="password-icon"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-outline">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

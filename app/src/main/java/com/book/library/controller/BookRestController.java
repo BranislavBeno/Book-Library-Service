@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -44,11 +45,13 @@ public class BookRestController extends AbstractBookController {
                 getService().findAllBorrowed(page), b -> getMapper().toBorrowedBookDto(b));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/add")
     public AvailableBookDto add(@Valid @RequestBody AvailableBookDto dto) {
         return Observation.createNotStarted("addition.book", this.registry).observe(() -> updateBook(dto));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/update")
     public AvailableBookDto update(@Valid @RequestBody AvailableBookDto dto) {
         int id = dto.getId();
@@ -59,6 +62,7 @@ public class BookRestController extends AbstractBookController {
         return observe("updating.book.id", () -> updateBook(dto));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/delete")
     public void delete(@RequestParam("bookId") int id) {
         if (!getService().existsById(id)) {
@@ -68,6 +72,7 @@ public class BookRestController extends AbstractBookController {
         Observation.createNotStarted("deletion.book.id", this.registry).observe(() -> deleteBook(id));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/avail")
     public AvailableBookDto avail(@RequestParam("bookId") int id) {
         if (!getService().existsById(id)) {
@@ -77,6 +82,7 @@ public class BookRestController extends AbstractBookController {
         return observe("availing.book.id", () -> availBook(id));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/borrow")
     public BorrowedBookDto borrow(@Valid @RequestBody BorrowedDto dto) {
         int bookId = dto.getBookId();

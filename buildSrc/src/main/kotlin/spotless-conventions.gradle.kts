@@ -15,7 +15,7 @@ spotless {
         targetExclude("*/build/**/*.*")
     }
     kotlinGradle {
-        ktlint(libs.pinterest.ktlint.get().versionConstraint.requiredVersion)
+        ktlint()
         target("*.gradle.kts")
         targetExclude("*/build/**/*.*")
     }

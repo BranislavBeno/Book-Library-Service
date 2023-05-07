@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public final class BookController extends AbstractBookController {
+public class BookController extends AbstractBookController {
 
     private static final String FOUND_ATTR = "found";
     private static final String BOOKS_ATTR = "books";
@@ -83,6 +84,7 @@ public final class BookController extends AbstractBookController {
         return "save-book";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/save")
     public String save(@Valid AvailableBookDto availableBookDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -94,6 +96,7 @@ public final class BookController extends AbstractBookController {
         return "redirect:/";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/delete")
     public String delete(@RequestParam("bookId") int id) {
         deleteBook(id);
@@ -101,6 +104,7 @@ public final class BookController extends AbstractBookController {
         return "redirect:/";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/avail")
     public String avail(@RequestParam("bookId") int id) {
         availBook(id);
@@ -108,6 +112,7 @@ public final class BookController extends AbstractBookController {
         return "redirect:/borrowed";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/borrowBook")
     public String borrowBook(@RequestParam("bookId") int id, Model model) {
         BorrowedDto borrowedDto = new BorrowedDto();
@@ -117,6 +122,7 @@ public final class BookController extends AbstractBookController {
         return "borrow-book";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/borrow")
     public String borrow(@Valid BorrowedDto borrowedDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

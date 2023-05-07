@@ -12,12 +12,14 @@ database-h2 = { module = "com.h2database:h2" }
 jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version = "2.15.0" }
 jackson-dataformat-xml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml" }
 thymeleaf-layout-dialect = { module = "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect", version = "3.2.1" }
+thymeleaf-spring-security = { module = "org.thymeleaf.extras:thymeleaf-extras-springsecurity6", version="3.1.1.RELEASE" }
 webjars-locator-core = { module = "org.webjars:webjars-locator-core" }
 webjars-bootstrap = { module = "org.webjars:bootstrap", version = "5.2.3" }
+webjars-font-awesome = { module = "org.webjars:font-awesome", version = "6.4.0" }
+problem-spring-web = { module = "org.zalando:problem-spring-web", version = "0.27.0" }
 aws-cdk = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.78.0" }
 # code quality
 palantir-javaformat = { module = "com.palantir.javaformat:palantir-java-format", version = "2.30.0" }
-pinterest-ktlint = { module = "com.pinterest:ktlint", version = "0.49.0" }
 # gradle plugins
 spring-boot = { module = "org.springframework.boot:spring-boot-gradle-plugin", version = "3.0.6" }
 git-properties = { module = "com.gorylenko.gradle-git-properties:gradle-git-properties", version = "2.4.1" }

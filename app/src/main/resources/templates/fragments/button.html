@@ -6,4 +6,5 @@
    onclick="if (!(confirm('Are you sure you want to delete this book?'))) return false">
     Delete
 </a>
+<a th:fragment="button-update" th:href="@{/updateBook(bookId=${item.id})}" class="btn btn-info btn-sm">Update</a>
 </html>
