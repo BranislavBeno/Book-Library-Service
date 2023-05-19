@@ -25,3 +25,7 @@ tasks
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions.jvmTarget = JavaVersion.VERSION_19.toString()
 }
+
+tasks.withType<JavaCompile> {
+    java.targetCompatibility = JavaVersion.VERSION_19
+}
