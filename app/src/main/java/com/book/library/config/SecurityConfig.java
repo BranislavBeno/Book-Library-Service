@@ -51,17 +51,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                         .permitAll()
-                        .requestMatchers(LOGIN_URL)
+                        .requestMatchers(LOGIN_URL, "/actuator/info")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
-                .formLogin(form -> form.loginPage(LOGIN_URL).defaultSuccessUrl("/"))
+                .formLogin(form -> form.loginPage(LOGIN_URL).defaultSuccessUrl("/?page=0"))
                 .logout(logout -> logout.invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .logoutSuccessUrl(LOGIN_URL + "?logout"))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-                        .maximumSessions(1)
-                        .maxSessionsPreventsLogin(true));
+                        .maximumSessions(1));
 
         return httpSecurity.build();
     }
