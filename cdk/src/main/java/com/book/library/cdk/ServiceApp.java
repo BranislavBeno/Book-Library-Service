@@ -43,7 +43,9 @@ public class ServiceApp {
                 awsEnvironment,
                 appEnvironment,
                 new Service.ServiceInputParameters(
-                        new Service.DockerImageSource(dockerRepositoryName, dockerImageTag), "/login", new HashMap<>()),
+                        new Service.DockerImageSource(dockerRepositoryName, dockerImageTag),
+                        "/actuator/info",
+                        new HashMap<>()),
                 networkOutputParameters);
 
         app.synth();
