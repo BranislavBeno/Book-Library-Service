@@ -1,5 +1,5 @@
-# This workflow runs application tests
-name: 03 - Run application tests
+# This workflow runs application tests.
+name: 04 - Run application tests
 
 on:
   push:

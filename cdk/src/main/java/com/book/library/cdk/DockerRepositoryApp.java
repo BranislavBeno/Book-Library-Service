@@ -25,10 +25,8 @@ public class DockerRepositoryApp {
                 "DockerRepositoryStack",
                 StackProps.builder().stackName(stackName).env(awsEnvironment).build());
 
-        new DockerRepository(
-                dockerRepositoryStack,
-                "DockerRepository",
-                new DockerRepository.DockerRepositoryInputParameters(dockerRepositoryName, accountId));
+        var inputParameters = new DockerRepository.DockerRepositoryInputParameters(dockerRepositoryName, accountId);
+        new DockerRepository(dockerRepositoryStack, "DockerRepository", inputParameters);
 
         app.synth();
     }

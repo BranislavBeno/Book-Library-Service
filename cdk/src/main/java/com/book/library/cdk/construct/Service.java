@@ -61,8 +61,8 @@ public class Service extends Construct {
         }
 
         CfnTargetGroup targetGroup = CfnTargetGroup.Builder.create(this, "targetGroup")
-                .healthCheckIntervalSeconds(ServiceInputParameters.PARAMETER_HEALTH_CHECK_INTERVAL_SECONDS)
-                .healthCheckPath(serviceInputParameters.parameterHealthCheckPath)
+                .healthCheckIntervalSeconds(serviceInputParameters.healthCheckIntervalSeconds)
+                .healthCheckPath(serviceInputParameters.healthCheckPath)
                 .healthCheckPort(String.valueOf(ServiceInputParameters.PARAMETER_CONTAINER_PORT))
                 .healthCheckProtocol(ServiceInputParameters.PARAMETER_CONTAINER_PROTOCOL)
                 .healthCheckTimeoutSeconds(ServiceInputParameters.PARAMETER_HEALTH_CHECK_TIMEOUT_SECONDS)
@@ -298,7 +298,6 @@ public class Service extends Construct {
     }
 
     public static class ServiceInputParameters {
-        private static final int PARAMETER_HEALTH_CHECK_INTERVAL_SECONDS = 10;
         private static final int PARAMETER_CONTAINER_PORT = 8080;
         private static final String PARAMETER_CONTAINER_PROTOCOL = "HTTP";
         private static final int PARAMETER_HEALTH_CHECK_TIMEOUT_SECONDS = 5;
@@ -312,28 +311,52 @@ public class Service extends Construct {
         private static final int PARAMETER_MINIMUM_HEALTHY_INSTANCES_PERCENT = 50;
         private static final boolean PARAMETER_STICKY_SESSIONS_ENABLED = false;
         private static final String PARAMETER_AWSLOGS_DATE_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%f%z";
+        private String healthCheckPath = "/";
+        private int healthCheckIntervalSeconds = 10;
+        private List<PolicyStatement> taskRolePolicyStatements = Collections.emptyList();
         private final DockerImageSource dockerImageSource;
-        private final String parameterHealthCheckPath;
         private final Map<String, String> environmentVariables;
         private final List<String> securityGroupIdsToGrantIngressFromEcs;
-        private final List<PolicyStatement> taskRolePolicyStatements = new ArrayList<>();
 
         /**
          * Knobs and dials you can configure to run a Docker image in an ECS service. The default values are set in a way
          * to work out of the box with a Spring Boot application.
          *
          * @param dockerImageSource        the source from where to load the Docker image that we want to deploy.
-         * @param parameterHealthCheckPath the application's health check path
          * @param environmentVariables     the environment variables provided to the Java runtime within the Docker containers.
          */
-        public ServiceInputParameters(
-                DockerImageSource dockerImageSource,
-                String parameterHealthCheckPath,
-                Map<String, String> environmentVariables) {
+        public ServiceInputParameters(DockerImageSource dockerImageSource, Map<String, String> environmentVariables) {
             this.dockerImageSource = dockerImageSource;
-            this.parameterHealthCheckPath = parameterHealthCheckPath;
             this.environmentVariables = environmentVariables;
             this.securityGroupIdsToGrantIngressFromEcs = Collections.emptyList();
+        }
+
+        /**
+         * The path of the health check URL.
+         * Default: "/".
+         */
+        public ServiceInputParameters withHealthCheckPath(String value) {
+            this.healthCheckPath = value;
+            return this;
+        }
+
+        /**
+         * The interval to wait between two health checks.
+         * Default: 10.
+         */
+        public ServiceInputParameters withHealthCheckIntervalSeconds(int value) {
+            this.healthCheckIntervalSeconds = value;
+            return this;
+        }
+
+        /**
+         * The list of PolicyStatement objects that define which operations this service can perform on other
+         * AWS resources (for example ALLOW sqs:GetQueueUrl for all SQS queues).
+         * Default: none (empty list).
+         */
+        public ServiceInputParameters withTaskRolePolicyStatements(List<PolicyStatement> taskRolePolicyStatements) {
+            this.taskRolePolicyStatements = taskRolePolicyStatements;
+            return this;
         }
     }
 }

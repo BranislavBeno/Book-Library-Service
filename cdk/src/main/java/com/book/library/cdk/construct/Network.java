@@ -75,7 +75,7 @@ public class Network extends Construct {
                 .clusterName(prefixWithUniqueName("ecsCluster"))
                 .build();
 
-        createLoadBalancer(vpc, networkInputParameters.getSslCertificateArn());
+        createLoadBalancer(vpc, networkInputParameters.sslCertificateArn());
 
         Tags.of(this).add("environment", appEnvironment.environmentName());
     }
@@ -458,17 +458,7 @@ public class Network extends Construct {
                 this.loadBalancer.getLoadBalancerCanonicalHostedZoneId());
     }
 
-    public static class NetworkInputParameters {
-        private final String sslCertificateArn;
-
-        public NetworkInputParameters() {
-            this.sslCertificateArn = null;
-        }
-
-        public String getSslCertificateArn() {
-            return sslCertificateArn;
-        }
-    }
+    public record NetworkInputParameters(String sslCertificateArn) {}
 
     public static class NetworkOutputParameters {
 

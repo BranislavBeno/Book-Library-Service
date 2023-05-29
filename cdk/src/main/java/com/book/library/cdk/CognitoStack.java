@@ -39,25 +39,23 @@ public class CognitoStack extends Stack {
 
     private final UserPool userPool;
     private final UserPoolClient userPoolClient;
-    private final UserPoolDomain userPoolDomain;
-    private String userPoolClientSecret;
     private final String logoutUrl;
 
     public CognitoStack(
             final Construct scope,
             final String id,
             final Environment awsEnvironment,
-            final ApplicationEnvironment applicationEnvironment,
+            final ApplicationEnvironment appEnvironment,
             final CognitoInputParameters inputParameters) {
         super(
                 scope,
                 id,
                 StackProps.builder()
-                        .stackName(applicationEnvironment.prefix("Cognito"))
+                        .stackName(appEnvironment.prefix("Cognito"))
                         .env(awsEnvironment)
                         .build());
 
-        this.applicationEnvironment = applicationEnvironment;
+        this.applicationEnvironment = appEnvironment;
 
         this.userPool = UserPool.Builder.create(this, "userPool")
                 .userPoolName(inputParameters.applicationName + "-user-pool")
@@ -99,7 +97,7 @@ public class CognitoStack extends Stack {
                 .supportedIdentityProviders(Collections.singletonList(UserPoolClientIdentityProvider.COGNITO))
                 .build();
 
-        this.userPoolDomain = UserPoolDomain.Builder.create(this, "userPoolDomain")
+        UserPoolDomain.Builder.create(this, "userPoolDomain")
                 .userPool(this.userPool)
                 .cognitoDomain(CognitoDomainOptions.builder()
                         .domainPrefix(inputParameters.loginPageDomainPrefix)
@@ -112,7 +110,7 @@ public class CognitoStack extends Stack {
 
         createOutputParameters(awsEnvironment);
 
-        applicationEnvironment.tag(this);
+        appEnvironment.tag(this);
     }
 
     private static final String PARAMETER_USER_POOL_ID = "userPoolId";
@@ -162,26 +160,17 @@ public class CognitoStack extends Stack {
                         SdkCallsPolicyOptions.builder().resources(ANY_RESOURCE).build()))
                 .build();
 
-        this.userPoolClientSecret = describeUserPoolResource.getResponseField("UserPoolClient.ClientSecret");
+        String userPoolClientSecret = describeUserPoolResource.getResponseField("UserPoolClient.ClientSecret");
 
         StringParameter.Builder.create(this, PARAMETER_USER_POOL_CLIENT_SECRET)
                 .parameterName(createParameterName(applicationEnvironment, PARAMETER_USER_POOL_CLIENT_SECRET))
-                .stringValue(this.userPoolClientSecret)
+                .stringValue(userPoolClientSecret)
                 .build();
     }
 
     private static String createParameterName(ApplicationEnvironment applicationEnvironment, String parameterName) {
         return applicationEnvironment.environmentName() + "-" + applicationEnvironment.applicationName() + "-Cognito-"
                 + parameterName;
-    }
-
-    public CognitoOutputParameters getOutputParameters() {
-        return new CognitoOutputParameters(
-                this.userPool.getUserPoolId(),
-                this.userPoolClient.getUserPoolClientId(),
-                this.userPoolClientSecret,
-                this.logoutUrl,
-                this.userPool.getUserPoolProviderUrl());
     }
 
     public static CognitoOutputParameters getOutputParametersFromParameterStore(

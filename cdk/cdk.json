@@ -13,13 +13,16 @@
     ]
   },
   "context": {
-    "region": "eu-central-1",
     "accountId": "576475760950",
     "applicationName": "b-l-s",
+    "environmentName": "staging",
+    "region": "eu-central-1",
     "dockerRepositoryName": "book-library-service",
     "dockerImageTag": "DYNAMICALLY_OVERRIDDEN_BY_WORKFLOW",
-    "environmentName": "staging",
     "githubToken": "SECRET_OVERRIDDEN_BY_WORKFLOW",
+    "springProfile": "aws",
+    "applicationUrl": "",
+    "loginPageDomainPrefix": "staging-b-l-s",
     "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
     "@aws-cdk/core:checkSecretUsage": true,
     "@aws-cdk/core:target-partitions": [

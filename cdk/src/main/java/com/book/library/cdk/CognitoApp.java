@@ -18,15 +18,11 @@ class CognitoApp {
         String loginPageDomainPrefix = Validations.requireNonEmpty(app, "loginPageDomainPrefix");
 
         Environment awsEnvironment = CdkUtil.makeEnv(accountId, region);
+        var appEnvironment = new ApplicationEnvironment(applicationName, environmentName);
+        var inputParameters =
+                new CognitoStack.CognitoInputParameters(applicationName, applicationUrl, loginPageDomainPrefix);
 
-        var applicationEnvironment = new ApplicationEnvironment(applicationName, environmentName);
-
-        new CognitoStack(
-                app,
-                "Cognito",
-                awsEnvironment,
-                applicationEnvironment,
-                new CognitoStack.CognitoInputParameters(applicationName, applicationUrl, loginPageDomainPrefix));
+        new CognitoStack(app, "Cognito", awsEnvironment, appEnvironment, inputParameters);
 
         app.synth();
     }
