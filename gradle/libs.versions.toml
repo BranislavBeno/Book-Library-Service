@@ -9,7 +9,7 @@ spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-star
 spring-security-test = { module = "org.springframework.security:spring-security-test" }
 micrometer-observation-test = { module = "io.micrometer:micrometer-observation-test" }
 database-h2 = { module = "com.h2database:h2" }
-jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version = "2.15.1" }
+jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version = "2.15.2" }
 jackson-dataformat-xml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml" }
 thymeleaf-layout-dialect = { module = "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect", version = "3.2.1" }
 thymeleaf-spring-security = { module = "org.thymeleaf.extras:thymeleaf-extras-springsecurity6", version="3.1.1.RELEASE" }
