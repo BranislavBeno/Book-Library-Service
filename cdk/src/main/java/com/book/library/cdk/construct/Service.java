@@ -172,7 +172,7 @@ public class Service extends Construct {
                                         "awslogs-region", Objects.requireNonNull(awsEnvironment.getRegion()),
                                         "awslogs-stream-prefix", applicationEnvironment.prefix("stream"),
                                         "awslogs-datetime-format",
-                                                ServiceInputParameters.PARAMETER_AWSLOGS_DATE_TIME_FORMAT))
+                                                ServiceInputParameters.PARAMETER_AWS_LOGS_DATE_TIME_FORMAT))
                                 .build())
                         .portMappings(singletonList(CfnTaskDefinition.PortMappingProperty.builder()
                                 .containerPort(ServiceInputParameters.PARAMETER_CONTAINER_PORT)
@@ -310,7 +310,7 @@ public class Service extends Construct {
         private static final int PARAMETER_MAXIMUM_INSTANCES_PERCENT = 200;
         private static final int PARAMETER_MINIMUM_HEALTHY_INSTANCES_PERCENT = 50;
         private static final boolean PARAMETER_STICKY_SESSIONS_ENABLED = false;
-        private static final String PARAMETER_AWSLOGS_DATE_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%f%z";
+        private static final String PARAMETER_AWS_LOGS_DATE_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%f%z";
         private String healthCheckPath = "/";
         private int healthCheckIntervalSeconds = 10;
         private List<PolicyStatement> taskRolePolicyStatements = Collections.emptyList();

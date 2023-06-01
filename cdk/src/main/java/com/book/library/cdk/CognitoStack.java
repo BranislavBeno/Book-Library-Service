@@ -35,8 +35,13 @@ import software.constructs.Construct;
 
 public class CognitoStack extends Stack {
 
-    private final ApplicationEnvironment applicationEnvironment;
+    private static final String PARAMETER_USER_POOL_ID = "userPoolId";
+    private static final String PARAMETER_USER_POOL_CLIENT_ID = "userPoolClientId";
+    private static final String PARAMETER_USER_POOL_CLIENT_SECRET = "userPoolClientSecret";
+    private static final String PARAMETER_USER_POOL_LOGOUT_URL = "userPoolLogoutUrl";
+    private static final String PARAMETER_USER_POOL_PROVIDER_URL = "userPoolProviderUrl";
 
+    private final ApplicationEnvironment applicationEnvironment;
     private final UserPool userPool;
     private final UserPoolClient userPoolClient;
     private final String logoutUrl;
@@ -112,12 +117,6 @@ public class CognitoStack extends Stack {
 
         appEnvironment.tag(this);
     }
-
-    private static final String PARAMETER_USER_POOL_ID = "userPoolId";
-    private static final String PARAMETER_USER_POOL_CLIENT_ID = "userPoolClientId";
-    private static final String PARAMETER_USER_POOL_CLIENT_SECRET = "userPoolClientSecret";
-    private static final String PARAMETER_USER_POOL_LOGOUT_URL = "userPoolLogoutUrl";
-    private static final String PARAMETER_USER_POOL_PROVIDER_URL = "userPoolProviderUrl";
 
     private void createOutputParameters(Environment awsEnvironment) {
 
