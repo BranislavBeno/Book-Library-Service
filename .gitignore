@@ -37,5 +37,7 @@ out/
 
 # CDK asset staging directory
 .cdk.staging
+cdk/node_modules
 cdk.out/
 cdk/cdk.context.json
+cdk/package-lock.json
