@@ -20,6 +20,7 @@
     "dockerImageTag": "DYNAMICALLY_OVERRIDDEN_BY_WORKFLOW",
     "environmentName": "staging",
     "applicationDomain": "app.b-l-s.click",
+    "sslCertificateArn": "arn:aws:acm:eu-central-1:576475760950:certificate/5fe7fe3d-e416-4f06-8613-21312aa4da59",
     "hostedZoneDomain": "b-l-s.click",
     "githubToken": "SECRET_OVERRIDDEN_BY_WORKFLOW",
     "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
