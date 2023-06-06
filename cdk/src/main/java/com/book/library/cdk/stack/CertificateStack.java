@@ -2,10 +2,10 @@ package com.book.library.cdk.stack;
 
 import com.book.library.cdk.construct.ApplicationEnvironment;
 import software.amazon.awscdk.*;
-import software.amazon.awscdk.services.certificatemanager.DnsValidatedCertificate;
+import software.amazon.awscdk.services.certificatemanager.Certificate;
+import software.amazon.awscdk.services.certificatemanager.ICertificate;
 import software.amazon.awscdk.services.route53.HostedZone;
 import software.amazon.awscdk.services.route53.HostedZoneProviderProps;
-import software.amazon.awscdk.services.route53.IHostedZone;
 import software.constructs.Construct;
 
 public class CertificateStack extends Stack {
@@ -25,14 +25,12 @@ public class CertificateStack extends Stack {
                         .env(awsEnvironment)
                         .build());
 
-        IHostedZone hostedZone = HostedZone.fromLookup(
+        HostedZone.fromLookup(
                 this,
                 "HostedZone",
                 HostedZoneProviderProps.builder().domainName(hostedZoneDomain).build());
 
-        DnsValidatedCertificate websiteCertificate = DnsValidatedCertificate.Builder.create(this, "WebsiteCertificate")
-                .hostedZone(hostedZone)
-                .region(awsEnvironment.getRegion())
+        ICertificate websiteCertificate = Certificate.Builder.create(this, "WebsiteCertificate")
                 .domainName(applicationDomain)
                 .build();
 

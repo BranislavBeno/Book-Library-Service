@@ -19,6 +19,8 @@
     "dockerRepositoryName": "book-library-service",
     "dockerImageTag": "DYNAMICALLY_OVERRIDDEN_BY_WORKFLOW",
     "environmentName": "staging",
+    "applicationDomain": "app.b-l-s.click",
+    "hostedZoneDomain": "b-l-s.click",
     "githubToken": "SECRET_OVERRIDDEN_BY_WORKFLOW",
     "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
     "@aws-cdk/core:checkSecretUsage": true,
