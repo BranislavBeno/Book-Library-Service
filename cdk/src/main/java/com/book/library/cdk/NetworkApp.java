@@ -18,6 +18,7 @@ public class NetworkApp {
         String region = Validations.requireNonEmpty(app, "region");
         String environmentName = Validations.requireNonEmpty(app, "environmentName");
         String applicationName = Validations.requireNonEmpty(app, "applicationName");
+        String sslCertificateArn = (String) app.getNode().tryGetContext("sslCertificateArn");
 
         Environment awsEnvironment = CdkUtil.makeEnv(accountId, region);
 
@@ -30,7 +31,11 @@ public class NetworkApp {
                 "NetworkStack",
                 StackProps.builder().stackName(stackName).env(awsEnvironment).build());
 
-        new Network(networkStack, "Network", appEnvironment, new Network.NetworkInputParameters());
+        var inputParameters = sslCertificateArn.isEmpty()
+                ? new Network.NetworkInputParameters()
+                : new Network.NetworkInputParameters(sslCertificateArn);
+
+        new Network(networkStack, "Network", appEnvironment, inputParameters);
 
         app.synth();
     }

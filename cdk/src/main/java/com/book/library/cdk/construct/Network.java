@@ -462,7 +462,11 @@ public class Network extends Construct {
         private final String sslCertificateArn;
 
         public NetworkInputParameters() {
-            this.sslCertificateArn = null;
+            this(null);
+        }
+
+        public NetworkInputParameters(String sslCertificateArn) {
+            this.sslCertificateArn = sslCertificateArn;
         }
 
         public String getSslCertificateArn() {
