@@ -5,12 +5,16 @@
   "scripts": {
     "info": "IMPORTANT NOTE: Please make sure to replace the values inside the cdk.json with your configuration",
     "bootstrap": "cdk bootstrap --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.BootstrapApp\"",
-    "repository:deploy": "cdk deploy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.DockerRepositoryApp\" --require-approval never",
-    "repository:destroy": "cdk destroy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.DockerRepositoryApp\" --force --require-approval never",
+    "certificate:deploy": "cdk deploy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.CertificateApp\" --require-approval never",
+    "certificate:destroy": "cdk destroy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.CertificateApp\" --force --require-approval never",
     "cognito:deploy": "cdk deploy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.CognitoApp\" --require-approval never",
     "cognito:destroy": "cdk destroy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.CognitoApp\" --force --require-approval never",
+    "domain:deploy": "cdk deploy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.DomainApp\" --require-approval never",
+    "domain:destroy": "cdk destroy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.DomainApp\" --force --require-approval never",
     "network:deploy": "cdk deploy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.NetworkApp\" --require-approval never",
     "network:destroy": "cdk destroy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.NetworkApp\" --force --require-approval never",
+    "repository:deploy": "cdk deploy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.DockerRepositoryApp\" --require-approval never",
+    "repository:destroy": "cdk destroy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.DockerRepositoryApp\" --force --require-approval never",
     "service:deploy": "cdk deploy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.ServiceApp\" --require-approval never",
     "service:destroy": "cdk destroy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.ServiceApp\" --force --require-approval never"
   },
