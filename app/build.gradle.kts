@@ -34,6 +34,7 @@ dependencies {
     implementation(libs.webjars.bootstrap)
     implementation(libs.webjars.font.awesome)
     implementation(libs.problem.spring.web)
+    implementation(libs.aws.sdk.cognito.idp)
     testImplementation(libs.spring.boot.starter.test)
     testImplementation(libs.spring.security.test)
     testImplementation(libs.micrometer.observation.test)

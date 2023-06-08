@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    implementation(libs.aws.cdk)
+    implementation(libs.aws.cdk.lib)
 }
 
 version = "0.1.0-SNAPSHOT"

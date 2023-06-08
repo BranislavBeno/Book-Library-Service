@@ -1,3 +1,6 @@
+[versions]
+aws-sdk = "1.12.484"
+
 [libraries]
 spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
 spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
@@ -18,7 +21,8 @@ webjars-locator-core = { module = "org.webjars:webjars-locator-core" }
 webjars-bootstrap = { module = "org.webjars:bootstrap", version = "5.3.0" }
 webjars-font-awesome = { module = "org.webjars:font-awesome", version = "6.4.0" }
 problem-spring-web = { module = "org.zalando:problem-spring-web", version = "0.29.1" }
-aws-cdk = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.83.0" }
+aws-cdk-lib = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.83.0" }
+aws-sdk-cognito-idp = { module = "com.amazonaws:aws-java-sdk-cognitoidp", version.ref = "aws-sdk" }
 # code quality
 palantir-javaformat = { module = "com.palantir.javaformat:palantir-java-format", version = "2.32.0" }
 # gradle plugins
