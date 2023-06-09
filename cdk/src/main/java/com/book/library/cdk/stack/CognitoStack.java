@@ -1,4 +1,4 @@
-package com.book.library.cdk;
+package com.book.library.cdk.stack;
 
 import static software.amazon.awscdk.customresources.AwsCustomResourcePolicy.ANY_RESOURCE;
 

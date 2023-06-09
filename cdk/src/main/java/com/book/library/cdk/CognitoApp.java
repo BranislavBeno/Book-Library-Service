@@ -1,6 +1,7 @@
 package com.book.library.cdk;
 
 import com.book.library.cdk.construct.ApplicationEnvironment;
+import com.book.library.cdk.stack.CognitoStack;
 import com.book.library.cdk.util.CdkUtil;
 import com.book.library.cdk.util.Validations;
 import software.amazon.awscdk.App;
