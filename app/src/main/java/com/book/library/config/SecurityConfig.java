@@ -51,11 +51,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                         .permitAll()
-                        .requestMatchers(LOGIN_URL, "/actuator/info")
+                        .requestMatchers(LOGIN_URL, "/actuator/info", "/register")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
-                .formLogin(form -> form.loginPage(LOGIN_URL).defaultSuccessUrl("/?page=0"))
+                .oauth2Login(oauth2 -> oauth2.loginPage(LOGIN_URL).defaultSuccessUrl("/?page=0"))
                 .logout(logout -> logout.invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .logoutSuccessUrl(LOGIN_URL + "?logout"))

@@ -1,6 +1,6 @@
 package com.book.library.registration;
 
-interface RegistrationService {
+public interface RegistrationService {
 
     void registerUser(Registration registration);
 }
