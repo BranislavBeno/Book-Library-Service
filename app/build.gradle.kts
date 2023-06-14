@@ -1,4 +1,5 @@
 import org.springframework.boot.gradle.tasks.bundling.BootJar
+import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
     application
@@ -34,7 +35,10 @@ dependencies {
     implementation(libs.webjars.bootstrap)
     implementation(libs.webjars.font.awesome)
     implementation(libs.problem.spring.web)
+    implementation(platform(libs.aws.sdk.bom))
     implementation(libs.aws.sdk.cognito.idp)
+    implementation(platform(libs.spring.cloud.aws.bom))
+    implementation(libs.spring.cloud.aws.starter)
     testImplementation(libs.spring.boot.starter.test)
     testImplementation(libs.spring.security.test)
     testImplementation(libs.micrometer.observation.test)
@@ -48,4 +52,8 @@ version = "v$versionMajor.$versionMinor.$versionPatch"
 
 tasks.getByName<BootJar>("bootJar") {
     this.archiveFileName.set("book-library-service.jar")
+}
+
+tasks.getByName<BootRun>("bootRun") {
+    this.jvmArgs = listOf("-Dspring.profiles.active=aws")
 }
