@@ -44,9 +44,16 @@
                             </div>
                         </div>
                         <div class="form-outline">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary" th:href="@{/oauth2/authorization/cognito}">
+                                Sign in
+                            </button>
                         </div>
                     </form>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/register}">Sign up</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
