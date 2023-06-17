@@ -17,7 +17,7 @@ public class CognitoRegistrationService implements RegistrationService {
 
     public CognitoRegistrationService(
             CognitoIdentityProviderClient cognitoIdentityProvider,
-            @Value("${COGNITO_USER_POOL_ID}") String userPoolId) {
+            @Value("${spring.security.oauth2.client.registration.cognito.poolId}") String userPoolId) {
         this.cognitoIdentityProvider = cognitoIdentityProvider;
         this.userPoolId = userPoolId;
     }

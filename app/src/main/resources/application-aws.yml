@@ -4,6 +4,7 @@ spring:
       client:
         registration:
           cognito:
+            poolId: ${COGNITO_USER_POOL_ID}
             clientId: ${COGNITO_CLIENT_ID}
             clientSecret: ${COGNITO_CLIENT_SECRET}
             scope: openid, profile, email
