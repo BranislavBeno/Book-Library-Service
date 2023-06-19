@@ -17,37 +17,52 @@
                 </div>
                 <div class="card-body">
                     <form th:action="@{/register}" th:object="${registration}" method="post">
-                        <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="text" th:field="*{username}" class="form-control" id="username" required>
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="username-icon"><i class="fa fa-user"></i></span>
+                            </div>
+                            <input name="username" type="text" th:field="*{username}" class="form-control" id="username"
+                                   placeholder="Username" aria-label="Username" aria-describedby="username" required
+                                   autofocus>
                         </div>
-                        <div class="form-group">
-                            <label for="email">Email address</label>
-                            <input type="email" th:field="*{email}" class="form-control" id="email" required
-                                   aria-describedby="emailHelp">
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="email-icon"><i class="fa fa-envelope"></i></span>
+                            </div>
+                            <input name="email" type="email" th:field="*{email}" class="form-control" id="email"
+                                   placeholder="Email address" aria-label="Email" aria-describedby="emailHelp" required>
+                        </div>
+                        <div>
                             <small id="emailHelp" class="form-text text-muted">
                                 We'll never share your email with anyone else.
                             </small>
                         </div>
-                        <div class="form-group">
-                            <label for="invitationCode">Invitation code</label>
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="invitation-code-icon"><i class="fa fa-bars"></i></span>
+                            </div>
                             <input
+                                    name="invitation-code"
+                                    type="text"
                                     th:field="*{invitationCode}"
                                     th:classappend="${#fields.hasErrors('invitationCode')}? 'is-invalid'"
-                                    type="text"
                                     class="form-control"
                                     id="invitationCode"
+                                    placeholder="Invitation code"
+                                    aria-label="Invitation code"
                                     aria-describedby="invitationCodeHelp"
                                     required>
                             <div th:if="${#fields.hasErrors('invitationCode')}"
                                  th:text="${#strings.listJoin(#fields.errors('invitationCode'), ', ')}"
                                  class="invalid-feedback">
                             </div>
+                        </div>
+                        <div>
                             <small id="invitationCodeHelp" class="form-text text-muted">
                                 Enter the invitation code you received to register.
                             </small>
                         </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Register</button>
                     </form>
                 </div>
             </div>
