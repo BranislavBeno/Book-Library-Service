@@ -16,20 +16,21 @@
                     <h5>Sign up</h5>
                 </div>
                 <div class="card-body">
-                    <form th:action="@{/register}" th:object="${registration}" method="post">
+                    <form class="row g-2" th:action="@{/register}" th:object="${registration}" method="post">
                         <div class="input-group mb-2">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="username-icon"><i class="fa fa-user"></i></span>
                             </div>
-                            <input name="username" type="text" th:field="*{username}" class="form-control" id="username"
+                            <input name="username" type="text" th:field="*{username}" class="form-control"
+                                   id="username-input"
                                    placeholder="Username" aria-label="Username" aria-describedby="username" required
                                    autofocus>
                         </div>
-                        <div class="input-group mb-2">
+                        <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="email-icon"><i class="fa fa-envelope"></i></span>
                             </div>
-                            <input name="email" type="email" th:field="*{email}" class="form-control" id="email"
+                            <input name="email" type="email" th:field="*{email}" class="form-control" id="email-input"
                                    placeholder="Email address" aria-label="Email" aria-describedby="emailHelp" required>
                         </div>
                         <div>
@@ -37,9 +38,10 @@
                                 We'll never share your email with anyone else.
                             </small>
                         </div>
-                        <div class="input-group mb-2">
+                        <div class="input-group mt-2">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" id="invitation-code-icon"><i class="fa fa-bars"></i></span>
+                                <span class="input-group-text" id="invitation-code-icon"><i
+                                        class="fa fa-bars"></i></span>
                             </div>
                             <input
                                     name="invitation-code"
@@ -47,7 +49,7 @@
                                     th:field="*{invitationCode}"
                                     th:classappend="${#fields.hasErrors('invitationCode')}? 'is-invalid'"
                                     class="form-control"
-                                    id="invitationCode"
+                                    id="invitation-code-input"
                                     placeholder="Invitation code"
                                     aria-label="Invitation code"
                                     aria-describedby="invitationCodeHelp"
@@ -62,7 +64,9 @@
                                 Enter the invitation code you received to register.
                             </small>
                         </div>
-                        <button type="submit" class="btn btn-primary">Register</button>
+                        <div class="form-outline">
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
                     </form>
                 </div>
             </div>
