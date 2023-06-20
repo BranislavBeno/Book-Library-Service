@@ -16,6 +16,7 @@
                     <h5>Sign up</h5>
                 </div>
                 <div class="card-body">
+                    <div th:if="${message}" th:text="${message}" th:class="${'alert alert-' + messageType}" role="alert"></div>
                     <form class="row g-2" th:action="@{/register}" th:object="${registration}" method="post">
                         <div class="input-group mb-2">
                             <div class="input-group-prepend">
@@ -65,7 +66,7 @@
                             </small>
                         </div>
                         <div class="form-outline">
-                            <button type="submit" class="btn btn-primary">Register</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
                         </div>
                     </form>
                 </div>

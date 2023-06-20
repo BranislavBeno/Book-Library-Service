@@ -17,10 +17,12 @@
                 </div>
                 <div class="card-body">
                     <div th:if="${param.error}">
-                        <p class="text-danger">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p></div>
+                        <p class="text-danger">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p>
+                    </div>
                     <div th:if="${param.logout}">
                         <p class="text-warning">You have been signed out.</p>
                     </div>
+                    <div th:if="${message}" th:text="${message}" th:class="${'alert alert-' + messageType}" role="alert"></div>
                     <form class="row g-2" th:method="POST" th:action="@{/login}">
                         <div class="input-group mb-2">
                             <div class="input-group-prepend">
