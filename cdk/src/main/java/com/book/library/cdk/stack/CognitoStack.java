@@ -93,7 +93,7 @@ public class CognitoStack extends Stack {
                 .userPool(this.userPool)
                 .oAuth(OAuthSettings.builder()
                         .callbackUrls(Arrays.asList(
-                                String.format("%s/login/oauth2/code/cognito", inputParameters.applicationUrl),
+                                "%s/login/oauth2/code/cognito".formatted(inputParameters.applicationUrl),
                                 "http://localhost:8080/login/oauth2/code/cognito"))
                         .logoutUrls(Arrays.asList(inputParameters.applicationUrl, "http://localhost:8080"))
                         .flows(OAuthFlows.builder().authorizationCodeGrant(true).build())

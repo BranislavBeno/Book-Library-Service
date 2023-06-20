@@ -49,7 +49,7 @@ public class RegistrationController {
                             + "Please check your email inbox for further instructions.");
             redirectAttributes.addFlashAttribute("messageType", "success");
 
-            return "redirect:/";
+            return "redirect:/login";
 
         } catch (CognitoIdentityProviderException exception) {
 
