@@ -20,20 +20,18 @@
                     <form class="row g-2" th:method="POST" th:object="${availableBookDto}" th:action="@{/save}">
                         <input type="hidden" th:field="*{id}"/>
                         <div class="col-12">
-                            <label class="form-label" for="bookName">Book name</label>
-                            <input id="bookName" class="form-control" type="text" aria-describedby="bookNameHelp"
-                                   th:field="*{name}"
+                            <input id="bookName" class="form-control" type="text" placeholder="Book name"
+                                   aria-label="Book name" aria-describedby="bookNameHelp" th:field="*{name}"
                                    th:classappend="${#fields.hasErrors('name')}? 'is-invalid'">
-                            <div id="bookNameHelp" class="form-text">Book name can't be empty, or longer than 15
+                            <div id="bookNameHelp" class="form-text text-muted">Book name can't be empty, or longer than 15
                                 signs.
                             </div>
                         </div>
                         <div class="col-12">
-                            <label class="form-label" for="bookAuthor">Book author</label>
-                            <input id="bookAuthor" class="form-control" type="text" aria-describedby="bookAuthorHelp"
-                                   th:field="*{author}"
+                            <input id="bookAuthor" class="form-control" type="text" placeholder="Book author"
+                                   aria-label="Book author" aria-describedby="bookAuthorHelp" th:field="*{author}"
                                    th:classappend="${#fields.hasErrors('author')}? 'is-invalid'">
-                            <div id="bookAuthorHelp" class="form-text">Book author can't be empty.</div>
+                            <div id="bookAuthorHelp" class="form-text text-muted">Book author can't be empty.</div>
                         </div>
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary">Submit</button>
