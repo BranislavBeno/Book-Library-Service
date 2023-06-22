@@ -20,23 +20,21 @@
                     <form class="row g-2" th:method="POST" th:object="${borrowedDto}" th:action="@{/borrow}">
                         <input type="hidden" th:field="*{bookId}"/>
                         <div class="col-12">
-                            <label class="form-label" for="firstName">First name</label>
-                            <input id="firstName" class="form-control" type="text" aria-describedby="firstNameHelp"
+                            <input id="firstName" class="form-control" type="text" placeholder="First name"
+                                   aria-label="First name" aria-describedby="firstNameHelp"
                                    th:field="*{firstName}"
                                    th:classappend="${#fields.hasErrors('firstName')}? 'is-invalid'">
                             <div id="firstNameHelp" class="form-text">Client's first name.</div>
                         </div>
                         <div class="col-12">
-                            <label class="form-label" for="lastName">Last name</label>
-                            <input id="lastName" class="form-control" type="text" aria-describedby="lastNameHelp"
-                                   th:field="*{lastName}"
+                            <input id="lastName" class="form-control" type="text" placeholder="Last name"
+                                   aria-label="Last name" aria-describedby="lastNameHelp" th:field="*{lastName}"
                                    th:classappend="${#fields.hasErrors('lastName')}? 'is-invalid'">
                             <div id="lastNameHelp" class="form-text">Client's last name.</div>
                         </div>
                         <div>
-                            <label for="fromDate">Date of borrow</label>
-                            <input id="fromDate" class="form-control" type="date" aria-describedby="fromDateHelp"
-                                   th:field="*{from}"
+                            <input id="fromDate" class="form-control" type="date"
+                                   aria-label="Date of borrow" aria-describedby="fromDateHelp" th:field="*{from}"
                                    th:classappend="${#fields.hasErrors('from')}? 'is-invalid'">
                             <script>fromDate.value = new Date().toJSON().split('T')[0]</script>
                             <div id="fromDateHelp" class="form-text">Date of borrow can't be later than today.</div>
