@@ -1,4 +1,4 @@
-package com.book.library.registration;
+package com.book.library.user;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
