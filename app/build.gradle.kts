@@ -11,13 +11,9 @@ plugins {
 
 apply(plugin = "io.spring.dependency-management")
 
-springBoot {
-    buildInfo()
-}
+springBoot { buildInfo() }
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
 dependencies {
     implementation(libs.spring.boot.starter.web)
@@ -47,12 +43,9 @@ dependencies {
 val versionMajor = 0
 val versionMinor = 1
 val versionPatch = 0
+
 version = "v$versionMajor.$versionMinor.$versionPatch"
 
-tasks.getByName<BootJar>("bootJar") {
-    this.archiveFileName.set("book-library-service.jar")
-}
+tasks.getByName<BootJar>("bootJar") { this.archiveFileName.set("book-library-service.jar") }
 
-tasks.getByName<BootRun>("bootRun") {
-    this.jvmArgs = listOf("-Dspring.profiles.active=aws")
-}
+tasks.getByName<BootRun>("bootRun") { this.jvmArgs = listOf("-Dspring.profiles.active=aws") }
