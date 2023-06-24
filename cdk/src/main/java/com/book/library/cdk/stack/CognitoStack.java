@@ -15,21 +15,7 @@ import software.amazon.awscdk.customresources.AwsCustomResourcePolicy;
 import software.amazon.awscdk.customresources.AwsSdkCall;
 import software.amazon.awscdk.customresources.PhysicalResourceId;
 import software.amazon.awscdk.customresources.SdkCallsPolicyOptions;
-import software.amazon.awscdk.services.cognito.AccountRecovery;
-import software.amazon.awscdk.services.cognito.AutoVerifiedAttrs;
-import software.amazon.awscdk.services.cognito.CognitoDomainOptions;
-import software.amazon.awscdk.services.cognito.Mfa;
-import software.amazon.awscdk.services.cognito.OAuthFlows;
-import software.amazon.awscdk.services.cognito.OAuthScope;
-import software.amazon.awscdk.services.cognito.OAuthSettings;
-import software.amazon.awscdk.services.cognito.PasswordPolicy;
-import software.amazon.awscdk.services.cognito.SignInAliases;
-import software.amazon.awscdk.services.cognito.StandardAttribute;
-import software.amazon.awscdk.services.cognito.StandardAttributes;
-import software.amazon.awscdk.services.cognito.UserPool;
-import software.amazon.awscdk.services.cognito.UserPoolClient;
-import software.amazon.awscdk.services.cognito.UserPoolClientIdentityProvider;
-import software.amazon.awscdk.services.cognito.UserPoolDomain;
+import software.amazon.awscdk.services.cognito.*;
 import software.amazon.awscdk.services.ssm.StringParameter;
 import software.constructs.Construct;
 
@@ -90,6 +76,7 @@ public class CognitoStack extends Stack {
         this.userPoolClient = UserPoolClient.Builder.create(this, "userPoolClient")
                 .userPoolClientName(inputParameters.applicationName + "-client")
                 .generateSecret(true)
+                .authFlows(AuthFlow.builder().adminUserPassword(true).build())
                 .userPool(this.userPool)
                 .oAuth(OAuthSettings.builder()
                         .callbackUrls(Arrays.asList(

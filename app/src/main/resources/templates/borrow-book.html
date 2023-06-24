@@ -24,20 +24,32 @@
                                    aria-label="First name" aria-describedby="firstNameHelp"
                                    th:field="*{firstName}"
                                    th:classappend="${#fields.hasErrors('firstName')}? 'is-invalid'">
-                            <div id="firstNameHelp" class="form-text">Client's first name.</div>
+                            <div>
+                                <small id="firstNameHelp" class="form-text text-muted">
+                                    Client's first name.
+                                </small>
+                            </div>
                         </div>
                         <div class="col-12">
                             <input id="lastName" class="form-control" type="text" placeholder="Last name"
                                    aria-label="Last name" aria-describedby="lastNameHelp" th:field="*{lastName}"
                                    th:classappend="${#fields.hasErrors('lastName')}? 'is-invalid'">
-                            <div id="lastNameHelp" class="form-text">Client's last name.</div>
+                            <div>
+                                <small id="lastNameHelp" class="form-text text-muted">
+                                    Client's last name.
+                                </small>
+                            </div>
                         </div>
                         <div>
                             <input id="fromDate" class="form-control" type="date"
                                    aria-label="Date of borrow" aria-describedby="fromDateHelp" th:field="*{from}"
                                    th:classappend="${#fields.hasErrors('from')}? 'is-invalid'">
                             <script>fromDate.value = new Date().toJSON().split('T')[0]</script>
-                            <div id="fromDateHelp" class="form-text">Date of borrow can't be later than today.</div>
+                            <div>
+                                <small id="fromDateHelp" class="form-text text-muted">
+                                    Date of borrow can't be later than today.
+                                </small>
+                            </div>
                         </div>
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary">Submit</button>

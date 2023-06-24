@@ -23,21 +23,22 @@
                         <p class="text-warning">You have been signed out.</p>
                     </div>
                     <div th:if="${message}" th:text="${message}" th:class="${'alert alert-' + messageType}" role="alert"></div>
-                    <form class="row g-2" th:method="POST" th:action="@{/login}">
+                    <form class="row g-2" th:action="@{/login}" th:object="${user}" th:method="post">
                         <div class="input-group mb-2">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="username"><i class="fa fa-user"></i></span>
                             </div>
                             <input name="username" type="text" class="form-control" id="username-input"
-                                   placeholder="Username" aria-label="Username" aria-describedby="username" required
-                                   autofocus>
+                                   placeholder="Username" aria-label="Username" aria-describedby="username"
+                                   th:field="*{username}" required autofocus>
                         </div>
                         <div class="input-group mb-2">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="password"><i class="fa fa-lock"></i></span>
                             </div>
                             <input name="password" type="password" class="form-control" id="password-input"
-                                   placeholder="Password" aria-label="Password" aria-describedby="password" required>
+                                   placeholder="Password" aria-label="Password" aria-describedby="password"
+                                   th:field="*{password}" required>
                             <div class="input-group-append">
                                 <button class="btn btn-light" id="password-btn" type="button"
                                         onclick="password_show_hide();">
