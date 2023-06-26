@@ -19,4 +19,9 @@ public class LocalUserService implements UserService {
         // This implementation serves only for testing purpose.
         return null;
     }
+
+    @Override
+    public void changePassword(ChangePassword changePassword, String accessToken) {
+        // This implementation serves only for testing purpose.
+    }
 }

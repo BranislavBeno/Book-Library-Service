@@ -7,4 +7,6 @@ public interface UserService {
     void registerUser(Registration registration);
 
     AdminInitiateAuthResponse loginUser(User user);
+
+    void changePassword(ChangePassword changePassword, String accessToken);
 }

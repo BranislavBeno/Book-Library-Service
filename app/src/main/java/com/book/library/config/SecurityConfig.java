@@ -51,7 +51,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                         .permitAll()
-                        .requestMatchers(LOGIN_URL, "/actuator/info", "/register")
+                        .requestMatchers(LOGIN_URL, "/actuator/info", "/register", "/change-password")
                         .permitAll()
                         .anyRequest()
                         .authenticated())

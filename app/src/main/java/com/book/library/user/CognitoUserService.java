@@ -73,6 +73,17 @@ public class CognitoUserService implements UserService {
         return cognitoIdentityProvider.adminInitiateAuth(authRequest);
     }
 
+    @Override
+    public void changePassword(ChangePassword changePassword, String accessToken) {
+        ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.builder()
+                .previousPassword(changePassword.getPreviousPassword())
+                .proposedPassword(changePassword.getProposedPassword1())
+                .accessToken(accessToken)
+                .build();
+
+        cognitoIdentityProvider.changePassword(changePasswordRequest);
+    }
+
     private String calculateSecretHash(String userName) {
         String hMacSha256Algorithm = "HmacSHA256";
         SecretKeySpec signingKey =
