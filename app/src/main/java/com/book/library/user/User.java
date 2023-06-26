@@ -7,7 +7,7 @@ public class User {
     @NotBlank
     private String username;
 
-    @NotBlank
+    @ValidPassword
     private String password;
 
     public String getUsername() {

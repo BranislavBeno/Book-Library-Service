@@ -14,12 +14,13 @@ public @interface ValidPassword {
 
     String message() default
             """
-            Invalid password. Please recheck the password, whether it contains:"
-            - at least 12 characters
-            - at least 1 number
-            - at least 1 special character
-            - at least 1 uppercase letter
-            - at least 1 lowercase letter""";
+            Invalid password. Please recheck the password, whether it contains
+            - at least 12 characters,
+            - at least 1 number,
+            - at least 1 special character,
+            - at least 1 uppercase letter,
+            - at least 1 lowercase letter,
+            - no blanks""";
 
     Class<?>[] groups() default {};
 

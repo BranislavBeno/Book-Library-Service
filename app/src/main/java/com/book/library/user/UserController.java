@@ -62,7 +62,7 @@ public class UserController {
 
             return "redirect:/login";
 
-        } catch (CognitoIdentityProviderException exception) {
+        } catch (Exception exception) {
 
             model.addAttribute(REGISTRATION_ATTR, registration);
             model.addAttribute(MESSAGE_ATTR, exception.getMessage());
@@ -162,7 +162,7 @@ public class UserController {
 
             return "redirect:/login";
 
-        } catch (CognitoIdentityProviderException exception) {
+        } catch (Exception exception) {
 
             model.addAttribute(CHANGE_PASSWD_ATTR, changePassword);
             model.addAttribute(MESSAGE_ATTR, exception.getMessage());

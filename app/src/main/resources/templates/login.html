@@ -30,7 +30,9 @@
                             </div>
                             <input name="username" type="text" class="form-control" id="username-input"
                                    placeholder="Username" aria-label="Username" aria-describedby="username"
-                                   th:field="*{username}" required autofocus>
+                                   th:field="*{username}"
+                                   th:classappend="${#fields.hasErrors('username')}? 'is-invalid'"
+                                   required autofocus>
                         </div>
                         <div class="input-group mb-2">
                             <div class="input-group-prepend">
@@ -38,12 +40,17 @@
                             </div>
                             <input name="password" type="password" class="form-control" id="password-input"
                                    placeholder="Password" aria-label="Password" aria-describedby="password"
-                                   th:field="*{password}" required>
+                                   th:field="*{password}"
+                                   th:classappend="${#fields.hasErrors('password')}? 'is-invalid'"
+                                   required>
                             <div class="input-group-append">
                                 <button class="btn btn-light password-btn" type="button"
                                         onclick="login_show_hide();">
                                     <i class="fa fa-eye-slash" id="password-icon"></i>
                                 </button>
+                            </div>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}"
+                                 th:text="${#strings.listJoin(#fields.errors('password'), ', ')}">
                             </div>
                         </div>
                         <div class="form-outline">

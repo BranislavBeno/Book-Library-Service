@@ -16,14 +16,16 @@
                     <h5>Sign up</h5>
                 </div>
                 <div class="card-body">
-                    <div th:if="${message}" th:text="${message}" th:class="${'alert alert-' + messageType}" role="alert"></div>
+                    <div th:if="${message}" th:text="${message}" th:class="${'alert alert-' + messageType}"
+                         role="alert"></div>
                     <form class="row g-2" th:action="@{/register}" th:object="${registration}" method="post">
                         <div class="input-group mb-2">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="username-icon"><i class="fa fa-user"></i></span>
                             </div>
-                            <input name="username" type="text" th:field="*{username}" class="form-control"
-                                   id="username-input"
+                            <input name="username" type="text" class="form-control" id="username-input"
+                                   th:field="*{username}"
+                                   th:classappend="${#fields.hasErrors('username')}? 'is-invalid'"
                                    placeholder="Username" aria-label="Username" aria-describedby="username" required
                                    autofocus>
                         </div>
@@ -31,7 +33,9 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="email-icon"><i class="fa fa-envelope"></i></span>
                             </div>
-                            <input name="email" type="email" th:field="*{email}" class="form-control" id="email-input"
+                            <input name="email" type="email" class="form-control" id="email-input"
+                                   th:field="*{email}"
+                                   th:classappend="${#fields.hasErrors('email')}? 'is-invalid'"
                                    placeholder="Email address" aria-label="Email" aria-describedby="emailHelp" required>
                         </div>
                         <div>
