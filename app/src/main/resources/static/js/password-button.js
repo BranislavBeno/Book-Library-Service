@@ -4,21 +4,9 @@ function login_show_hide() {
   show_hide(passwd_input, passwd_icon);
 }
 
-function previous_show_hide() {
-  var passwd_input = document.getElementById("previous-password-input");
-  var passwd_icon = document.getElementById("previous-password-icon");
-  show_hide(passwd_input, passwd_icon);
-}
-
-function proposed1_show_hide() {
-  var passwd_input = document.getElementById("proposed-password-1-input");
-  var passwd_icon = document.getElementById("proposed-password-1-icon");
-  show_hide(passwd_input, passwd_icon);
-}
-
-function proposed2_show_hide() {
-  var passwd_input = document.getElementById("proposed-password-2-input");
-  var passwd_icon = document.getElementById("proposed-password-2-icon");
+function repeat_password_show_hide() {
+  var passwd_input = document.getElementById("repeat-password-input");
+  var passwd_icon = document.getElementById("repeat-password-icon");
   show_hide(passwd_input, passwd_icon);
 }
 

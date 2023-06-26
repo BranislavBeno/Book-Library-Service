@@ -6,8 +6,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminInitiateAuthResponse;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminSetUserPasswordResponse;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.ChallengeNameType;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.CognitoIdentityProviderException;
 
@@ -90,6 +92,13 @@ public class UserController {
             AdminInitiateAuthResponse response = userService.loginUser(user);
             ChallengeNameType challengeNameType = response.challengeName();
 
+            if (challengeNameType == null) {
+                redirectAttributes.addFlashAttribute(MESSAGE_ATTR, "Login has failed!");
+                redirectAttributes.addFlashAttribute(MESSAGE_TYPE_ATTR, DANGER_ATTR);
+
+                return "redirect:/login";
+            }
+
             if (challengeNameType.equals(ChallengeNameType.NEW_PASSWORD_REQUIRED)) {
                 redirectAttributes.addFlashAttribute(
                         MESSAGE_ATTR,
@@ -101,6 +110,7 @@ public class UserController {
                                 - at least 1 uppercase letter
                                 - at least 1 lowercase letter""");
                 redirectAttributes.addFlashAttribute(MESSAGE_TYPE_ATTR, "warning");
+                redirectAttributes.addAttribute("user", user.getUsername());
 
                 return "redirect:/change-password";
             }
@@ -118,8 +128,8 @@ public class UserController {
     }
 
     @GetMapping("/change-password")
-    public String getChangePasswordView(Model model) {
-        model.addAttribute(CHANGE_PASSWD_ATTR, new ChangePassword());
+    public String getChangePasswordView(@RequestParam(name = "user", defaultValue = "") String user, Model model) {
+        model.addAttribute(CHANGE_PASSWD_ATTR, new ChangePassword(user));
 
         return CHANGE_PASSWD_PAGE;
     }
@@ -136,18 +146,18 @@ public class UserController {
             return CHANGE_PASSWD_PAGE;
         }
 
-        if (changePassword.proposedAreNotEqual()) {
+        if (changePassword.passwordsAreNotEqual()) {
             model.addAttribute(CHANGE_PASSWD_ATTR, changePassword);
-            model.addAttribute(MESSAGE_ATTR, "Proposed passwords are not equal.");
+            model.addAttribute(MESSAGE_ATTR, "Passwords are not equal.");
             model.addAttribute(MESSAGE_TYPE_ATTR, DANGER_ATTR);
 
             return CHANGE_PASSWD_PAGE;
         }
 
         try {
-            userService.changePassword(changePassword, "");
+            AdminSetUserPasswordResponse response = userService.changePassword(changePassword);
 
-            redirectAttributes.addFlashAttribute(MESSAGE_ATTR, "You successfully changed password.");
+            redirectAttributes.addFlashAttribute(MESSAGE_ATTR, "Password was changed successfully.");
             redirectAttributes.addFlashAttribute(MESSAGE_TYPE_ATTR, "success");
 
             return "redirect:/login";

@@ -1,6 +1,7 @@
 package com.book.library.user;
 
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminInitiateAuthResponse;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminSetUserPasswordResponse;
 
 public interface UserService {
 
@@ -8,5 +9,5 @@ public interface UserService {
 
     AdminInitiateAuthResponse loginUser(User user);
 
-    void changePassword(ChangePassword changePassword, String accessToken);
+    AdminSetUserPasswordResponse changePassword(ChangePassword changePassword);
 }

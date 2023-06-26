@@ -63,7 +63,7 @@ public class CognitoUserService implements UserService {
         AdminInitiateAuthRequest authRequest = AdminInitiateAuthRequest.builder()
                 .userPoolId(userPoolId)
                 .clientId(clientId)
-                .authFlow(AuthFlowType.ADMIN_USER_PASSWORD_AUTH)
+                .authFlow(AuthFlowType.ADMIN_NO_SRP_AUTH)
                 .authParameters(Map.of(
                         "USERNAME", user.getUsername(),
                         "PASSWORD", user.getPassword(),
@@ -74,14 +74,15 @@ public class CognitoUserService implements UserService {
     }
 
     @Override
-    public void changePassword(ChangePassword changePassword, String accessToken) {
-        ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.builder()
-                .previousPassword(changePassword.getPreviousPassword())
-                .proposedPassword(changePassword.getProposedPassword1())
-                .accessToken(accessToken)
+    public AdminSetUserPasswordResponse changePassword(ChangePassword changePassword) {
+        AdminSetUserPasswordRequest setUserPasswordRequest = AdminSetUserPasswordRequest.builder()
+                .userPoolId(userPoolId)
+                .username(changePassword.getUserName())
+                .password(changePassword.getPassword())
+                .permanent(true)
                 .build();
 
-        cognitoIdentityProvider.changePassword(changePasswordRequest);
+        return cognitoIdentityProvider.adminSetUserPassword(setUserPasswordRequest);
     }
 
     private String calculateSecretHash(String userName) {

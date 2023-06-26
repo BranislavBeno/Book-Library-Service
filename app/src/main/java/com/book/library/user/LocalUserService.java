@@ -3,6 +3,7 @@ package com.book.library.user;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminInitiateAuthResponse;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminSetUserPasswordResponse;
 
 @Service
 @ConditionalOnProperty(prefix = "custom", name = "use-cognito-as-identity-provider", havingValue = "false")
@@ -21,7 +22,8 @@ public class LocalUserService implements UserService {
     }
 
     @Override
-    public void changePassword(ChangePassword changePassword, String accessToken) {
+    public AdminSetUserPasswordResponse changePassword(ChangePassword changePassword) {
         // This implementation serves only for testing purpose.
+        return null;
     }
 }

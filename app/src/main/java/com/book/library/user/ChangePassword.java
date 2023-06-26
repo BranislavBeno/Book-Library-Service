@@ -1,43 +1,40 @@
 package com.book.library.user;
 
-import jakarta.validation.constraints.NotBlank;
-
 public class ChangePassword {
 
-    @NotBlank
-    private String previousPassword;
+    private final String userName;
 
-    @NotBlank
-    private String proposedPassword1;
+    @ValidPassword
+    private String password;
 
-    @NotBlank
-    private String proposedPassword2;
+    @ValidPassword
+    private String repeatPassword;
 
-    public boolean proposedAreNotEqual() {
-        return !proposedPassword1.equals(proposedPassword2);
+    public ChangePassword(String userName) {
+        this.userName = userName;
     }
 
-    public String getPreviousPassword() {
-        return previousPassword;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setPreviousPassword(String previousPassword) {
-        this.previousPassword = previousPassword;
+    public boolean passwordsAreNotEqual() {
+        return !password.equals(repeatPassword);
     }
 
-    public String getProposedPassword1() {
-        return proposedPassword1;
+    public String getPassword() {
+        return password;
     }
 
-    public void setProposedPassword1(String proposedPassword) {
-        this.proposedPassword1 = proposedPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getProposedPassword2() {
-        return proposedPassword2;
+    public String getRepeatPassword() {
+        return repeatPassword;
     }
 
-    public void setProposedPassword2(String proposedPassword2) {
-        this.proposedPassword2 = proposedPassword2;
+    public void setRepeatPassword(String password) {
+        this.repeatPassword = password;
     }
 }
