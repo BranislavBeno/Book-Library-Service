@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminInitiateAuthResponse;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminSetUserPasswordResponse;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.ChallengeNameType;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.CognitoIdentityProviderException;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
 
 @Controller
 public class UserController {
@@ -93,10 +90,11 @@ public class UserController {
             ChallengeNameType challengeNameType = response.challengeName();
 
             if (challengeNameType == null) {
-                redirectAttributes.addFlashAttribute(MESSAGE_ATTR, "Login has failed!");
-                redirectAttributes.addFlashAttribute(MESSAGE_TYPE_ATTR, DANGER_ATTR);
+                AuthenticationResultType resultType = response.authenticationResult();
+                String refreshToken = resultType.refreshToken();
+                userService.refreshToken(user, refreshToken);
 
-                return "redirect:/login";
+                return "redirect:/";
             }
 
             if (challengeNameType.equals(ChallengeNameType.NEW_PASSWORD_REQUIRED)) {
@@ -155,7 +153,7 @@ public class UserController {
         }
 
         try {
-            AdminSetUserPasswordResponse response = userService.changePassword(changePassword);
+            userService.changePassword(changePassword);
 
             redirectAttributes.addFlashAttribute(MESSAGE_ATTR, "Password was changed successfully.");
             redirectAttributes.addFlashAttribute(MESSAGE_TYPE_ATTR, "success");
