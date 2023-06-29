@@ -63,7 +63,7 @@ public class CognitoUserService implements UserService {
         AdminInitiateAuthRequest authRequest = AdminInitiateAuthRequest.builder()
                 .userPoolId(userPoolId)
                 .clientId(clientId)
-                .authFlow(AuthFlowType.ADMIN_NO_SRP_AUTH)
+                .authFlow(AuthFlowType.ADMIN_USER_PASSWORD_AUTH)
                 .authParameters(Map.of(
                         "USERNAME", user.getUsername(),
                         "PASSWORD", user.getPassword(),

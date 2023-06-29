@@ -16,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,19 +31,24 @@ public class BookController extends AbstractBookController {
     private static final String FOUND_ATTR = "found";
     private static final String BOOKS_ATTR = "books";
     private static final String PAGE_NUMBERS_ATTR = "pageNumbers";
+    private static final String SAVE_BOOK_PAGE = "save-book";
 
     public BookController(@Autowired BookService service, @Autowired BookMapper mapper) {
         super(service, mapper);
     }
 
     @GetMapping("/")
-    public String showAll(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+    public String showAll(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            Model model,
+            @AuthenticationPrincipal OidcUser user) {
         Page<Book> bookPage = getService().findAll(page);
         PageData pageData = providePageData(page, bookPage, b -> getMapper().toAnyBookDto(b));
 
         model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
         model.addAttribute(BOOKS_ATTR, pageData.dtoPage());
         model.addAttribute(PAGE_NUMBERS_ATTR, pageData.pageNumbers());
+        model.addAttribute("username", user.getFullName());
 
         return "index";
     }
@@ -74,21 +81,21 @@ public class BookController extends AbstractBookController {
     public String addBook(Model model) {
         model.addAttribute("availableBookDto", new AvailableBookDto());
 
-        return "save-book";
+        return SAVE_BOOK_PAGE;
     }
 
     @GetMapping("/updateBook")
     public String updateBook(@RequestParam("bookId") int id, Model model) {
         model.addAttribute("availableBookDto", findBook(id));
 
-        return "save-book";
+        return SAVE_BOOK_PAGE;
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/save")
     public String save(@Valid AvailableBookDto availableBookDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "save-book";
+            return SAVE_BOOK_PAGE;
         }
 
         updateBook(availableBookDto);

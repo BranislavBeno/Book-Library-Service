@@ -1,6 +1,8 @@
 package com.book.library.user;
 
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -8,11 +10,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminInitiateAuthResponse;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.ChallengeNameType;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.CognitoIdentityProviderException;
 
 @Controller
 public class UserController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     private static final String MESSAGE_ATTR = "message";
     private static final String MESSAGE_TYPE_ATTR = "messageType";
     private static final String DANGER_ATTR = "danger";
@@ -90,14 +95,10 @@ public class UserController {
             ChallengeNameType challengeNameType = response.challengeName();
 
             if (challengeNameType == null) {
-                AuthenticationResultType resultType = response.authenticationResult();
-                String refreshToken = resultType.refreshToken();
-                userService.refreshToken(user, refreshToken);
-
-                return "redirect:/";
-            }
-
-            if (challengeNameType.equals(ChallengeNameType.NEW_PASSWORD_REQUIRED)) {
+                var resultType = response.authenticationResult();
+                LOGGER.debug("Access Token Type: {}", resultType.tokenType());
+                LOGGER.debug("Access Token:      {}", resultType.accessToken());
+            } else if (challengeNameType.equals(ChallengeNameType.NEW_PASSWORD_REQUIRED)) {
                 redirectAttributes.addFlashAttribute(
                         MESSAGE_ATTR,
                         """
