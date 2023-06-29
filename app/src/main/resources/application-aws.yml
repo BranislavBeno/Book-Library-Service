@@ -9,6 +9,7 @@ spring:
             clientSecret: ${COGNITO_CLIENT_SECRET}
             scope: openid, profile, email
             clientName: b-l-s-client
+            logoutUrl: ${COGNITO_LOGOUT_URL}
         provider:
           cognito:
             issuerUri: ${COGNITO_PROVIDER_URL}

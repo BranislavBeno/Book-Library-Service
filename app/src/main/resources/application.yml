@@ -36,14 +36,5 @@ spring:
       region:
         static: eu-central-1
 
-auth:
-  users:
-    bookadmin:
-      role: admin
-      password: adminpass
-    bookuser:
-      role: user
-      password: userpass
-
 custom:
   invitation-codes: DUKE, STRATOSPHERIC

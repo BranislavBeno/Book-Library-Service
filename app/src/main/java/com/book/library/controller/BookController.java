@@ -36,9 +36,7 @@ public class BookController extends AbstractBookController {
     }
 
     @GetMapping("/")
-    public String showAll(
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            Model model) {
+    public String showAll(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         Page<Book> bookPage = getService().findAll(page);
         PageData pageData = providePageData(page, bookPage, b -> getMapper().toAnyBookDto(b));
 

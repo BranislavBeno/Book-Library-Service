@@ -9,11 +9,10 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.oauth2.client.OAuth2LoginConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -23,10 +22,10 @@ public class SecurityConfig {
 
     private static final String LOGIN_URL = "/login";
 
-    private final BasicAuthProperties props;
+    private final LogoutSuccessHandler logoutSuccessHandler;
 
-    public SecurityConfig(BasicAuthProperties props) {
-        this.props = props;
+    public SecurityConfig(LogoutSuccessHandler logoutSuccessHandler) {
+        this.logoutSuccessHandler = logoutSuccessHandler;
     }
 
     @Bean
@@ -38,7 +37,7 @@ public class SecurityConfig {
                 .securityMatcher("/api/v1/books/**")
                 .authorizeHttpRequests(
                         auth -> auth.requestMatchers("/api/v1/books/**").authenticated())
-                .httpBasic(basic -> basic.authenticationEntryPoint(userAuthenticationEntryPoint()))
+                .oauth2Login(oauth2 -> new OAuth2LoginConfigurer<>())
                 .exceptionHandling(exception -> exception.accessDeniedHandler(new UserForbiddenErrorHandler()));
 
         return httpSecurity.build();
@@ -56,25 +55,10 @@ public class SecurityConfig {
                         .anyRequest()
                         .authenticated())
                 .oauth2Login(oauth2 -> oauth2.loginPage(LOGIN_URL).defaultSuccessUrl("/?page=0"))
-                .logout(logout -> logout.invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
-                        .logoutSuccessUrl(LOGIN_URL + "?logout"))
+                .logout(logout -> logout.logoutSuccessHandler(logoutSuccessHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                         .maximumSessions(1));
 
         return httpSecurity.build();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new InMemoryUserDetailsManager(props.getUserDetails());
-    }
-
-    @Bean
-    public AuthenticationEntryPoint userAuthenticationEntryPoint() {
-        UserAuthenticationEntryPoint userAuthenticationEntryPoint = new UserAuthenticationEntryPoint();
-        userAuthenticationEntryPoint.setRealmName("Basic Authentication");
-
-        return userAuthenticationEntryPoint;
     }
 }
