@@ -56,7 +56,7 @@ public class Service extends Construct {
                         .build());
         List<CfnTargetGroup.TargetGroupAttributeProperty> targetGroupAttributes =
                 new ArrayList<>(deregistrationDelayConfiguration);
-        if (ServiceInputParameters.PARAMETER_STICKY_SESSIONS_ENABLED) {
+        if (serviceInputParameters.stickySessionsEnabled) {
             targetGroupAttributes.addAll(stickySessionConfiguration);
         }
 
@@ -309,10 +309,10 @@ public class Service extends Construct {
         private static final int PARAMETER_DESIRED_INSTANCES_COUNT = 2;
         private static final int PARAMETER_MAXIMUM_INSTANCES_PERCENT = 200;
         private static final int PARAMETER_MINIMUM_HEALTHY_INSTANCES_PERCENT = 50;
-        private static final boolean PARAMETER_STICKY_SESSIONS_ENABLED = false;
         private static final String PARAMETER_AWS_LOGS_DATE_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%f%z";
         private String healthCheckPath = "/";
         private int healthCheckIntervalSeconds = 10;
+        private boolean stickySessionsEnabled = false;
         private List<PolicyStatement> taskRolePolicyStatements = Collections.emptyList();
         private final DockerImageSource dockerImageSource;
         private final Map<String, String> environmentVariables;
@@ -356,6 +356,15 @@ public class Service extends Construct {
          */
         public ServiceInputParameters withTaskRolePolicyStatements(List<PolicyStatement> taskRolePolicyStatements) {
             this.taskRolePolicyStatements = taskRolePolicyStatements;
+            return this;
+        }
+        /**
+         * Disable or enable sticky sessions for the load balancer.
+         * <p>
+         * Default: false.
+         */
+        public ServiceInputParameters withStickySessionsEnabled(boolean stickySessionsEnabled) {
+            this.stickySessionsEnabled = stickySessionsEnabled;
             return this;
         }
     }

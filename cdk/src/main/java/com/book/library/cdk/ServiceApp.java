@@ -56,6 +56,7 @@ public class ServiceApp {
                         dockerImageSource, environmentVariables(springProfile, cognitoOutputParameters))
                 .withHealthCheckPath("/actuator/info")
                 .withHealthCheckIntervalSeconds(30)
+                .withStickySessionsEnabled(true)
                 .withTaskRolePolicyStatements(List.of(PolicyStatement.Builder.create()
                         .sid("AllowCreatingUsers")
                         .effect(Effect.ALLOW)
