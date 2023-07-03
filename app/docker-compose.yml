@@ -1,0 +1,13 @@
+version: '3.3'
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:19.0.3-legacy
+    ports:
+      - "8888:8080"
+    environment:
+      - KEYCLOAK_USER=keycloak
+      - KEYCLOAK_PASSWORD=keycloak
+      - DB_VENDOR=h2
+      - JAVA_OPTS=-Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/tmp/stratospheric-realm.json
+    volumes:
+      - ./src/test/resources/keycloak/b-l-s-realm.json:/tmp/b-l-s-realm.json
