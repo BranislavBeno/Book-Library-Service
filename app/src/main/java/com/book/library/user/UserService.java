@@ -8,7 +8,5 @@ public interface UserService {
 
     AdminInitiateAuthResponse loginUser(User user);
 
-    void refreshToken(User user, String refreshToken);
-
     void changePassword(ChangePassword changePassword);
 }

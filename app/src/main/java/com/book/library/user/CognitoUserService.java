@@ -74,31 +74,19 @@ public class CognitoUserService implements UserService {
     }
 
     @Override
-    public void refreshToken(User user, String refreshToken) {
-        String secretHash = calculateSecretHash(user.getUsername());
-
-        AdminInitiateAuthRequest authRequest = AdminInitiateAuthRequest.builder()
+    public void changePassword(ChangePassword changePassword) {
+        String secretHash = calculateSecretHash(changePassword.getUserName());
+        AdminRespondToAuthChallengeRequest request = AdminRespondToAuthChallengeRequest.builder()
                 .userPoolId(userPoolId)
                 .clientId(clientId)
-                .authFlow(AuthFlowType.REFRESH_TOKEN_AUTH)
-                .authParameters(Map.of(
-                        "REFRESH_TOKEN", refreshToken,
-                        "SECRET_HASH", secretHash))
+                .challengeName(ChallengeNameType.NEW_PASSWORD_REQUIRED)
+                .challengeResponses(Map.of(
+                        "SECRET_HASH", secretHash,
+                        "USERNAME", changePassword.getUserName(),
+                        "NEW_PASSWORD", changePassword.getPassword()))
                 .build();
 
-        cognitoIdentityProvider.adminInitiateAuth(authRequest);
-    }
-
-    @Override
-    public void changePassword(ChangePassword changePassword) {
-        AdminSetUserPasswordRequest setUserPasswordRequest = AdminSetUserPasswordRequest.builder()
-                .userPoolId(userPoolId)
-                .username(changePassword.getUserName())
-                .password(changePassword.getPassword())
-                .permanent(true)
-                .build();
-
-        cognitoIdentityProvider.adminSetUserPassword(setUserPasswordRequest);
+        cognitoIdentityProvider.adminRespondToAuthChallenge(request);
     }
 
     private String calculateSecretHash(String userName) {
