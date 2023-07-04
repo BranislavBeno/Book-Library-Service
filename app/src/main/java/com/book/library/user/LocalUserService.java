@@ -21,11 +21,6 @@ public class LocalUserService implements UserService {
     }
 
     @Override
-    public void refreshToken(User user, String refreshToken) {
-        // This implementation serves only for testing purpose.
-    }
-
-    @Override
     public void changePassword(ChangePassword changePassword) {
         // This implementation serves only for testing purpose.
     }
