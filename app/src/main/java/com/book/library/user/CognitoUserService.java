@@ -75,18 +75,14 @@ public class CognitoUserService implements UserService {
 
     @Override
     public void changePassword(ChangePassword changePassword) {
-        String secretHash = calculateSecretHash(changePassword.getUserName());
-        AdminRespondToAuthChallengeRequest request = AdminRespondToAuthChallengeRequest.builder()
+        AdminSetUserPasswordRequest setUserPasswordRequest = AdminSetUserPasswordRequest.builder()
                 .userPoolId(userPoolId)
-                .clientId(clientId)
-                .challengeName(ChallengeNameType.NEW_PASSWORD_REQUIRED)
-                .challengeResponses(Map.of(
-                        "SECRET_HASH", secretHash,
-                        "USERNAME", changePassword.getUserName(),
-                        "NEW_PASSWORD", changePassword.getPassword()))
+                .username(changePassword.getUserName())
+                .password(changePassword.getPassword())
+                .permanent(true)
                 .build();
 
-        cognitoIdentityProvider.adminRespondToAuthChallenge(request);
+        cognitoIdentityProvider.adminSetUserPassword(setUserPasswordRequest);
     }
 
     private String calculateSecretHash(String userName) {
