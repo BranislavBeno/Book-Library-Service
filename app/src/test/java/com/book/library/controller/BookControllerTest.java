@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.book.library.config.AppConfig;
 import com.book.library.dto.BookMapper;
 import com.book.library.service.BookService;
+import com.c4_soft.springaddons.security.oauth2.test.annotations.WithOidcLogin;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -45,7 +46,7 @@ class BookControllerTest {
         }
 
         @Order(1)
-        @WithMockUser(username = "user")
+        @WithOidcLogin
         @ParameterizedTest
         @CsvSource(
                 value = {
@@ -189,7 +190,7 @@ class BookControllerTest {
             registry.add("book.repository.path", () -> "src/test/resources/Empty.xml");
         }
 
-        @WithMockUser(username = "user")
+        @WithOidcLogin
         @ParameterizedTest
         @CsvSource(value = {"/,index", "/available,available-books", "/borrowed,borrowed-books"})
         void testShowingEmptyBookList(String url, String viewName) throws Exception {

@@ -36,6 +36,7 @@ dependencies {
     implementation(libs.aws.sdk.cognito.idp)
     testImplementation(libs.spring.boot.starter.test)
     testImplementation(libs.spring.security.test)
+    testImplementation(libs.spring.addons.oauth2.test)
     testImplementation(libs.micrometer.observation.test)
     runtimeOnly(libs.database.h2)
 }

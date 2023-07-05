@@ -31,7 +31,7 @@
         </div>
         <div class="col-md-5" sec:authorize="isAuthenticated()">
             <div class="d-flex flex-row">
-                <div class="me-2">[[${#authentication.principal.attributes.name}]]</div>
+                <div class="me-2" th:text="${userName}"></div>
                 <form name="logoutForm" th:hidden="true" th:method="post" th:action="@{/logout}">
                     <input type="submit" value="Logout"/>
                 </form>

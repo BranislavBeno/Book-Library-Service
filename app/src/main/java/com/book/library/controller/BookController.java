@@ -16,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -36,10 +38,14 @@ public class BookController extends AbstractBookController {
     }
 
     @GetMapping("/")
-    public String showAll(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+    public String showAll(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            Model model,
+            @AuthenticationPrincipal OidcUser user) {
         Page<Book> bookPage = getService().findAll(page);
         PageData pageData = providePageData(page, bookPage, b -> getMapper().toAnyBookDto(b));
 
+        model.addAttribute("userName", user.getFullName());
         model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
         model.addAttribute(BOOKS_ATTR, pageData.dtoPage());
         model.addAttribute(PAGE_NUMBERS_ATTR, pageData.pageNumbers());
