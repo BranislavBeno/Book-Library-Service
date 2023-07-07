@@ -25,6 +25,7 @@ public class LogoutSuccessHandlerConfig {
         OidcClientInitiatedLogoutSuccessHandler successHandler =
                 new OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository);
         successHandler.setPostLogoutRedirectUri("{baseUrl}");
+
         return successHandler;
     }
 }

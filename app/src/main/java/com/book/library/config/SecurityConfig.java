@@ -1,7 +1,6 @@
 package com.book.library.config;
 
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -17,7 +16,6 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@EnableConfigurationProperties(BasicAuthProperties.class)
 public class SecurityConfig {
 
     private static final String LOGIN_URL = "/login";
