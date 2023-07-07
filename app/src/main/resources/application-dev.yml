@@ -5,13 +5,14 @@ spring:
         registration:
           cognito:
             poolId: b-l-s
-            clientId: book-library-service
-            clientSecret: b-l-s-token
-            scope: openid, profile, email
-            clientName: b-l-s-client
+            clientId: spring-boot-application
+            clientSecret: BZgLD9SHUSMSpcwufCl39ZlFO6u7tODg
+            scope: openid
+            clientName: spring-boot-application
+            logoutUrl: http://localhost:8888
         provider:
           cognito:
-            issuerUri: http://localhost:8888/auth/realms/b-l-s
+            issuerUri: http://localhost:8888/realms/b-l-s
 
 cloud:
   aws:

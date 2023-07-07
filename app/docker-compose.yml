@@ -2,12 +2,21 @@ version: '3.3'
 services:
   keycloak:
     image: quay.io/keycloak/keycloak:21.1
+    command: start-dev --import-realm
     ports:
       - "8888:8080"
     environment:
-      - KEYCLOAK_USER=keycloak
-      - KEYCLOAK_PASSWORD=keycloak
-      - DB_VENDOR=h2
-      - JAVA_OPTS=-Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/tmp/b-l-s-realm.json
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 8888
+      KC_HOSTNAME_STRICT_BACKCHANNEL: "true"
+      KEYCLOAK_ADMIN: keycloak
+      KEYCLOAK_ADMIN_PASSWORD: keycloak
+      KC_LOG_LEVEL: info
+      KC_HEALTH_ENABLED: "true"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8888/health/ready" ]
+      interval: 15s
+      timeout: 2s
+      retries: 15
     volumes:
-      - ./src/test/resources/keycloak/b-l-s-realm.json:/tmp/b-l-s-realm.json
+      - ./src/test/resources/keycloak:/opt/keycloak/data/import
