@@ -2,6 +2,7 @@ package com.book.library.controller;
 
 import static com.book.library.util.BookUtils.getTomorrowsDate;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -9,14 +10,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.book.library.config.AppConfig;
 import com.book.library.dto.BookMapper;
 import com.book.library.service.BookService;
-import com.c4_soft.springaddons.security.oauth2.test.annotations.WithOidcLogin;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -46,7 +45,6 @@ class BookControllerTest {
         }
 
         @Order(1)
-        @WithOidcLogin
         @ParameterizedTest
         @CsvSource(
                 value = {
@@ -57,7 +55,7 @@ class BookControllerTest {
                 })
         void testShowingBookList(String url, String viewName, String page, boolean found) throws Exception {
             this.mockMvc
-                    .perform(MockMvcRequestBuilders.get(url).param("page", page))
+                    .perform(MockMvcRequestBuilders.get(url).param("page", page).with(oidcLogin()))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.view().name(viewName))
                     .andExpect(MockMvcResultMatchers.model().attribute("found", found))
@@ -65,47 +63,48 @@ class BookControllerTest {
         }
 
         @Order(2)
-        @WithMockUser(username = "user")
         @Test
         void testShowAddBookForm() throws Exception {
             this.mockMvc
-                    .perform(MockMvcRequestBuilders.get("/addBook"))
+                    .perform(MockMvcRequestBuilders.get("/addBook").with(oidcLogin()))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.view().name("save-book"))
                     .andExpect(MockMvcResultMatchers.model().attributeExists("availableBookDto"));
         }
 
         @Order(3)
-        @WithMockUser(username = "user")
         @Test
         void testShowUpdateBookForm() throws Exception {
             this.mockMvc
-                    .perform(MockMvcRequestBuilders.get("/updateBook").param("bookId", "1"))
+                    .perform(MockMvcRequestBuilders.get("/updateBook")
+                            .param("bookId", "1")
+                            .with(oidcLogin()))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.view().name("save-book"))
                     .andExpect(MockMvcResultMatchers.model().attributeExists("availableBookDto"));
         }
 
         @Order(4)
-        @WithMockUser(username = "user")
         @Test
         void testShowBorrowBookForm() throws Exception {
             this.mockMvc
-                    .perform(MockMvcRequestBuilders.get("/borrowBook").param("bookId", "1"))
+                    .perform(MockMvcRequestBuilders.get("/borrowBook")
+                            .param("bookId", "1")
+                            .with(oidcLogin()))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.view().name("borrow-book"))
                     .andExpect(MockMvcResultMatchers.model().attributeExists("borrowedDto"));
         }
 
         @Order(5)
-        @WithMockUser(username = "user")
         @Test
         void testRejectingSavingBook() throws Exception {
             this.mockMvc
                     .perform(post("/save")
                             .param("name", "Very long book name")
                             .param("author", "John Doe")
-                            .with(csrf()))
+                            .with(csrf())
+                            .with(oidcLogin()))
                     .andExpect(status().isOk())
                     .andExpect(view().name("save-book"))
                     .andExpect(model().hasErrors())
@@ -113,30 +112,28 @@ class BookControllerTest {
         }
 
         @Order(6)
-        @WithMockUser(username = "user")
         @Test
         void testSavingBook() throws Exception {
             this.mockMvc
                     .perform(post("/save")
                             .param("name", "Book name")
                             .param("author", "John Doe")
-                            .with(csrf()))
+                            .with(csrf())
+                            .with(oidcLogin()))
                     .andExpect(status().is3xxRedirection())
                     .andExpect(header().string("Location", "/"));
         }
 
         @Order(7)
-        @WithMockUser(username = "user")
         @Test
         void testAvailingBook() throws Exception {
             this.mockMvc
-                    .perform(get("/avail").param("bookId", "1").with(csrf()))
+                    .perform(get("/avail").param("bookId", "1").with(csrf()).with(oidcLogin()))
                     .andExpect(status().is3xxRedirection())
                     .andExpect(header().string("Location", "/borrowed"));
         }
 
         @Order(8)
-        @WithMockUser(username = "user")
         @Test
         void testRejectingBorrowingBook() throws Exception {
             String date = getTomorrowsDate().toString();
@@ -146,7 +143,8 @@ class BookControllerTest {
                             .param("firstName", "Paul")
                             .param("lastName", "Newman")
                             .param("from", date)
-                            .with(csrf()))
+                            .with(csrf())
+                            .with(oidcLogin()))
                     .andExpect(status().isOk())
                     .andExpect(view().name("borrow-book"))
                     .andExpect(model().hasErrors())
@@ -154,7 +152,6 @@ class BookControllerTest {
         }
 
         @Order(9)
-        @WithMockUser(username = "user")
         @Test
         void testBorrowingBook() throws Exception {
             this.mockMvc
@@ -163,17 +160,17 @@ class BookControllerTest {
                             .param("firstName", "Paul")
                             .param("lastName", "Newman")
                             .param("from", "2023-01-05")
-                            .with(csrf()))
+                            .with(csrf())
+                            .with(oidcLogin()))
                     .andExpect(status().is3xxRedirection())
                     .andExpect(header().string("Location", "/available"));
         }
 
         @Order(10)
-        @WithMockUser(username = "user")
         @Test
         void testDeletingBook() throws Exception {
             this.mockMvc
-                    .perform(get("/delete").param("bookId", "1").with(csrf()))
+                    .perform(get("/delete").param("bookId", "1").with(csrf()).with(oidcLogin()))
                     .andExpect(status().is3xxRedirection())
                     .andExpect(header().string("Location", "/"));
         }
@@ -190,12 +187,11 @@ class BookControllerTest {
             registry.add("book.repository.path", () -> "src/test/resources/Empty.xml");
         }
 
-        @WithOidcLogin
         @ParameterizedTest
         @CsvSource(value = {"/,index", "/available,available-books", "/borrowed,borrowed-books"})
         void testShowingEmptyBookList(String url, String viewName) throws Exception {
             this.mockMvc
-                    .perform(MockMvcRequestBuilders.get(url))
+                    .perform(MockMvcRequestBuilders.get(url).with(oidcLogin()))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.view().name(viewName))
                     .andExpect(MockMvcResultMatchers.model().attribute("found", false))
