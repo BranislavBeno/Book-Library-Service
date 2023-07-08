@@ -37,6 +37,9 @@ dependencies {
     testImplementation(libs.spring.boot.starter.test)
     testImplementation(libs.spring.security.test)
     testImplementation(libs.micrometer.observation.test)
+    testImplementation(platform(libs.testcontainers.bom))
+    testImplementation(libs.testcontainers.common)
+    testImplementation(libs.testcontainers.keycloak)
     runtimeOnly(libs.database.h2)
 }
 
