@@ -71,6 +71,7 @@ public class BookController extends AbstractBookController {
         return "borrowed-books";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/addBook")
     public String addBook(Model model) {
         model.addAttribute("availableBookDto", new AvailableBookDto());
@@ -78,6 +79,7 @@ public class BookController extends AbstractBookController {
         return SAVE_BOOK_PAGE;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/updateBook")
     public String updateBook(@RequestParam("bookId") int id, Model model) {
         model.addAttribute("availableBookDto", findBook(id));

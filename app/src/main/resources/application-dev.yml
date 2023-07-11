@@ -4,15 +4,15 @@ spring:
       client:
         registration:
           cognito:
-            poolId: b-l-s
+            poolId: stratospheric
             clientId: spring-boot-application
-            clientSecret: BZgLD9SHUSMSpcwufCl39ZlFO6u7tODg
+            clientSecret: spring-boot-application-token
             scope: openid
             clientName: spring-boot-application
             logoutUrl: http://localhost:8888
         provider:
           cognito:
-            issuerUri: http://localhost:8888/realms/b-l-s
+            issuerUri: http://localhost:8888/realms/stratospheric
 
 cloud:
   aws:
