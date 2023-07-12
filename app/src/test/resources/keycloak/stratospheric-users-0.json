@@ -1,0 +1,52 @@
+{
+  "realm" : "stratospheric",
+  "users" : [ {
+    "id" : "3e905e7f-e50b-4803-bf58-0b2fce421983",
+    "createdTimestamp" : 1605899552456,
+    "username" : "duke",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "firstName" : "Duke",
+    "lastName" : "Java",
+    "email" : "duke@b-l-s.click",
+    "credentials" : [ {
+      "id" : "3dbb1057-ee81-4cf3-8f1d-ad0f108b0741",
+      "type" : "password",
+      "createdDate" : 1605899561680,
+      "secretData" : "{\"value\":\"mw+KAjJQ2AteUifyHe1Eep9a5GvlScJgSY+yIYZHMg10lfdMAo/sHlZsOkx+fa7BbQnE9H9HUNAQvonQOR69aw==\",\"salt\":\"Ce8Bi9l6ey5rOyxaITuIUw==\"}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\"}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "offline_access", "app-admin", "uma_authorization" ],
+    "clientRoles" : {
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "0efdaae6-2065-42d0-961e-4ad8e40b3821",
+    "createdTimestamp" : 1689195275999,
+    "username" : "mike",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "firstName" : "Mike",
+    "lastName" : "Kotlin",
+    "email" : "mike@b-l-s.click",
+    "credentials" : [ {
+      "id" : "5b6864a8-fd0f-4883-bb2b-4b61ae31bdc7",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1689195564683,
+      "secretData" : "{\"value\":\"NaiY3C8tFxebb/Mi4CMeytprY5DvK2cuy0sFwmPng0E=\",\"salt\":\"cRtXoUC4WG6mVKLs2RREyw==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-stratospheric" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  } ]
+}
