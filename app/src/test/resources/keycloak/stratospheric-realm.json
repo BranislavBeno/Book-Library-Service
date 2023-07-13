@@ -72,7 +72,9 @@
       "description" : "Admin related permissions",
       "composite" : true,
       "composites" : {
-        "realm" : [ "app-admin" ]
+        "client" : {
+          "spring-boot-application" : [ "ADMIN" ]
+        }
       },
       "clientRole" : false,
       "containerId" : "stratospheric",
@@ -260,10 +262,7 @@
         "id" : "e02d5f96-e4ca-4e9b-bf29-3f1e457ded82",
         "name" : "ADMIN",
         "description" : "To authorize admin related permissions",
-        "composite" : true,
-        "composites" : {
-          "realm" : [ "app-admin" ]
-        },
+        "composite" : false,
         "clientRole" : true,
         "containerId" : "345423d4-68c2-45c3-bbfd-87128bc5fd23",
         "attributes" : { }
@@ -373,7 +372,7 @@
   "otpPolicyLookAheadWindow" : 1,
   "otpPolicyPeriod" : 30,
   "otpPolicyCodeReusable" : false,
-  "otpSupportedApplications" : [ "totpAppFreeOTPName", "totpAppGoogleName", "totpAppMicrosoftAuthenticatorName" ],
+  "otpSupportedApplications" : [ "totpAppGoogleName", "totpAppMicrosoftAuthenticatorName", "totpAppFreeOTPName" ],
   "webAuthnPolicyRpEntityName" : "keycloak",
   "webAuthnPolicySignatureAlgorithms" : [ "ES256" ],
   "webAuthnPolicyRpId" : "",
@@ -1121,6 +1120,7 @@
   "browserSecurityHeaders" : {
     "contentSecurityPolicyReportOnly" : "",
     "xContentTypeOptions" : "nosniff",
+    "referrerPolicy" : "no-referrer",
     "xRobotsTag" : "none",
     "xFrameOptions" : "SAMEORIGIN",
     "contentSecurityPolicy" : "frame-src 'self'; frame-ancestors 'self'; object-src 'none';",
@@ -1159,7 +1159,7 @@
       "subType" : "authenticated",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "oidc-usermodel-attribute-mapper", "saml-user-attribute-mapper", "saml-user-property-mapper", "oidc-full-name-mapper", "oidc-usermodel-property-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-address-mapper", "saml-role-list-mapper" ]
+        "allowed-protocol-mapper-types" : [ "saml-user-property-mapper", "oidc-full-name-mapper", "oidc-usermodel-property-mapper", "oidc-address-mapper", "saml-role-list-mapper", "saml-user-attribute-mapper", "oidc-usermodel-attribute-mapper", "oidc-sha256-pairwise-sub-mapper" ]
       }
     }, {
       "id" : "7fa84e70-4bc4-4833-bb94-b4a52beb4e62",
@@ -1184,7 +1184,7 @@
       "subType" : "anonymous",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "oidc-usermodel-property-mapper", "oidc-address-mapper", "oidc-sha256-pairwise-sub-mapper", "saml-role-list-mapper", "oidc-usermodel-attribute-mapper", "saml-user-attribute-mapper", "saml-user-property-mapper", "oidc-full-name-mapper" ]
+        "allowed-protocol-mapper-types" : [ "oidc-sha256-pairwise-sub-mapper", "oidc-usermodel-attribute-mapper", "saml-role-list-mapper", "oidc-address-mapper", "saml-user-attribute-mapper", "saml-user-property-mapper", "oidc-usermodel-property-mapper", "oidc-full-name-mapper" ]
       }
     }, {
       "id" : "d9cf6ec8-4f44-4d0d-a500-12c614bfe24e",
@@ -1261,35 +1261,6 @@
       "priority" : 20,
       "autheticatorFlow" : true,
       "flowAlias" : "Verify Existing Account by Re-authentication",
-      "userSetupAllowed" : false
-    } ]
-  }, {
-    "id" : "d2132717-1e90-4897-a119-58fbb25165f7",
-    "alias" : "Authentication Options",
-    "description" : "Authentication options.",
-    "providerId" : "basic-flow",
-    "topLevel" : false,
-    "builtIn" : true,
-    "authenticationExecutions" : [ {
-      "authenticator" : "basic-auth",
-      "authenticatorFlow" : false,
-      "requirement" : "REQUIRED",
-      "priority" : 10,
-      "autheticatorFlow" : false,
-      "userSetupAllowed" : false
-    }, {
-      "authenticator" : "basic-auth-otp",
-      "authenticatorFlow" : false,
-      "requirement" : "DISABLED",
-      "priority" : 20,
-      "autheticatorFlow" : false,
-      "userSetupAllowed" : false
-    }, {
-      "authenticator" : "auth-spnego",
-      "authenticatorFlow" : false,
-      "requirement" : "DISABLED",
-      "priority" : 30,
-      "autheticatorFlow" : false,
       "userSetupAllowed" : false
     } ]
   }, {
@@ -1609,28 +1580,6 @@
       "userSetupAllowed" : false
     } ]
   }, {
-    "id" : "8c66c722-2ace-4964-bd81-76ecdd7c55df",
-    "alias" : "http challenge",
-    "description" : "An authentication flow based on challenge-response HTTP Authentication Schemes",
-    "providerId" : "basic-flow",
-    "topLevel" : true,
-    "builtIn" : true,
-    "authenticationExecutions" : [ {
-      "authenticator" : "no-cookie-redirect",
-      "authenticatorFlow" : false,
-      "requirement" : "REQUIRED",
-      "priority" : 10,
-      "autheticatorFlow" : false,
-      "userSetupAllowed" : false
-    }, {
-      "authenticatorFlow" : true,
-      "requirement" : "REQUIRED",
-      "priority" : 20,
-      "autheticatorFlow" : true,
-      "flowAlias" : "Authentication Options",
-      "userSetupAllowed" : false
-    } ]
-  }, {
     "id" : "3ac4c996-28c5-40af-836c-ab45d8216514",
     "alias" : "registration",
     "description" : "registration flow",
@@ -1824,7 +1773,7 @@
     "cibaInterval" : "5",
     "realmReusableOtpCode" : "false"
   },
-  "keycloakVersion" : "21.1.2",
+  "keycloakVersion" : "22.0.0",
   "userManagedAccessAllowed" : false,
   "clientProfiles" : {
     "profiles" : [ ]
