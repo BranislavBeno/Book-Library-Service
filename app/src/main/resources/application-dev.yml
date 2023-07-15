@@ -14,10 +14,15 @@ spring:
         provider:
           cognito:
             issuerUri: http://localhost:8888/realms/${spring.security.oauth2.client.registration.cognito.poolId}
-            userNameAttribute: preferred_username
+            userNameAttribute: ${jwt.auth.converter.principal-attribute}
       resourceServer:
         jwt:
           issuerUri: ${spring.security.oauth2.client.provider.cognito.issuerUri}
+
+jwt:
+  auth:
+    converter:
+      principalAttribute: preferred_username
 
 cloud:
   aws:

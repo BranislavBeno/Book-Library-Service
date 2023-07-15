@@ -52,4 +52,4 @@ version = "v$versionMajor.$versionMinor.$versionPatch"
 
 tasks.getByName<BootJar>("bootJar") { this.archiveFileName.set("book-library-service.jar") }
 
-tasks.getByName<BootRun>("bootRun") { this.jvmArgs = listOf("-Dspring.profiles.active=dev") }
+tasks.getByName<BootRun>("bootRun") { this.jvmArgs = listOf("-Dspring.profiles.active=aws") }

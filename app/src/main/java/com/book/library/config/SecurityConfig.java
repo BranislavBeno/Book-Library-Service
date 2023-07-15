@@ -40,7 +40,7 @@ public class SecurityConfig {
     @Value("${spring.security.oauth2.client.registration.cognito.clientId}")
     private String resourceId;
 
-    @Value("${spring.security.oauth2.client.provider.cognito.userNameAttribute}")
+    @Value("${jwt.auth.converter.principalAttribute:username}")
     private String userNameAttribute;
 
     public SecurityConfig(LogoutSuccessHandler logoutSuccessHandler) {
@@ -83,11 +83,11 @@ public class SecurityConfig {
 
     @Bean
     public OAuth2UserService<OidcUserRequest, OidcUser> oAuth2UserService(@Autowired JwtDecoder jwtDecoder) {
-        OidcUserService delegate = new OidcUserService();
         return userRequest -> {
             Jwt jwt = jwtDecoder.decode(userRequest.getAccessToken().getTokenValue());
             Collection<? extends GrantedAuthority> authorities = extractRoles(jwt);
 
+            OidcUserService delegate = new OidcUserService();
             OidcUser oidcUser = delegate.loadUser(userRequest);
 
             String nameAttributeKey = userNameAttribute == null ? JwtClaimNames.SUB : userNameAttribute;
