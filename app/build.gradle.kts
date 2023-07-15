@@ -22,6 +22,7 @@ dependencies {
     implementation(libs.spring.boot.starter.validation)
     implementation(libs.spring.boot.starter.security)
     implementation(libs.spring.boot.starter.oauth2.client)
+    implementation(libs.spring.boot.starter.oauth2.resource.server)
     implementation(libs.spring.boot.starter.thymeleaf)
     implementation(libs.thymeleaf.spring.security)
     implementation(platform(libs.jackson.bom))

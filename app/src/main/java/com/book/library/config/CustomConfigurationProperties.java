@@ -14,7 +14,7 @@ public class CustomConfigurationProperties {
     private Set<String> invitationCodes;
 
     @NotNull
-    private Boolean useCognitoAsIdentityProvider;
+    private Boolean useCognitoAsIdentityProvider = Boolean.FALSE;
 
     public Set<String> getInvitationCodes() {
         return invitationCodes;
