@@ -9,7 +9,7 @@ env:
 on:
   workflow_run:
     workflows:
-      - '03 - Run application tests'
+      - '04 - Run application tests'
     types:
       - completed
     branches:
@@ -46,7 +46,7 @@ jobs:
             dockerfile:
               - 'Dockerfile'
             workflow-deploy:
-              - '.github/workflows/04-build-and-deploy-application.yml'
+              - '.github/workflows/05-build-and-deploy-application.yml'
 
   build-and-publish:
     name: Build and publish the application

@@ -1,5 +1,5 @@
-[![Application Tests](https://github.com/BranislavBeno/Book-Library-Service/actions/workflows/03-run-tests.yml/badge.svg)](https://github.com/BranislavBeno/Book-Library-Service/actions/workflows/03-run-tests.yml)
-[![Application Deployment](https://github.com/BranislavBeno/Book-Library-Service/actions/workflows/04-build-and-deploy-application.yml/badge.svg)](https://github.com/BranislavBeno/Book-Library-Service/actions/workflows/04-build-and-deploy-application.yml)  
+[![Application Tests](https://github.com/BranislavBeno/Book-Library-Service/actions/workflows/04-run-tests.yml/badge.svg)](https://github.com/BranislavBeno/Book-Library-Service/actions/workflows/04-run-tests.yml)
+[![Application Deployment](https://github.com/BranislavBeno/Book-Library-Service/actions/workflows/05-build-and-deploy-application.yml/badge.svg)](https://github.com/BranislavBeno/Book-Library-Service/actions/workflows/05-build-and-deploy-application.yml)  
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=BranislavBeno_BookLibraryService&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=BranislavBeno_BookLibraryService)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=BranislavBeno_BookLibraryService&metric=coverage)](https://sonarcloud.io/summary/new_code?id=BranislavBeno_BookLibraryService)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=BranislavBeno_BookLibraryService&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=BranislavBeno_BookLibraryService)  
