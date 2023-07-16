@@ -73,18 +73,6 @@ public class CognitoStack extends Stack {
                         .build())
                 .build();
 
-        CfnUserPoolGroup.Builder.create(this, "groupAdmins")
-                .userPoolId(userPool.getUserPoolId())
-                .groupName(inputParameters.applicationName + "-group-admins")
-                .precedence(0)
-                .build();
-
-        CfnUserPoolGroup.Builder.create(this, "groupUsers")
-                .userPoolId(userPool.getUserPoolId())
-                .groupName(inputParameters.applicationName + "-group-users")
-                .precedence(1)
-                .build();
-
         this.userPoolClient = UserPoolClient.Builder.create(this, "userPoolClient")
                 .userPoolClientName(inputParameters.applicationName + "-client")
                 .generateSecret(true)
