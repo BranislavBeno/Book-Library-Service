@@ -2,41 +2,32 @@ package com.book.library.controller;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.book.library.config.AppConfig;
 import com.book.library.dto.BookMapper;
 import com.book.library.service.BookService;
 import com.book.library.util.BookUtils;
 import io.micrometer.observation.tck.TestObservationRegistry;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 
-@WebMvcTest(BookRestController.class)
-@Import(AppConfig.class)
-@EnableAutoConfiguration
 @EnableTestObservation
-class BookRestControllerTest {
+class BookRestControllerTest extends AbstractControllerTest {
 
     @Autowired
     private BookService service;
@@ -53,55 +44,55 @@ class BookRestControllerTest {
 
         private static final String BAD_REQUEST_BODY_1 =
                 """
-                {
-                   "id": 1,
-                    "name": "Very long book name",
-                    "author": "John Doe"
-                }""";
+                        {
+                           "id": 1,
+                            "name": "Very long book name",
+                            "author": "John Doe"
+                        }""";
         private static final String BAD_REQUEST_BODY_2 =
                 """
-                {
-                    "id": 1,
-                    "name": "",
-                    "author": "John Doe"
-                }""";
+                        {
+                            "id": 1,
+                            "name": "",
+                            "author": "John Doe"
+                        }""";
         private static final String BAD_REQUEST_BODY_3 =
                 """
-                {
-                    "id": 1,
-                    "name": "Book name",
-                    "author": ""
-                }""";
+                        {
+                            "id": 1,
+                            "name": "Book name",
+                            "author": ""
+                        }""";
         private static final String BAD_REQUEST_BODY_4 =
                 """
-                {
-                    "id": 10,
-                    "name": "Book name",
-                    "author": "John Doe"
-                }""";
+                        {
+                            "id": 10,
+                            "name": "Book name",
+                            "author": "John Doe"
+                        }""";
         private static final String REQUEST_BODY_1 =
                 """
-                {
-                    "id": 1,
-                    "name": "Book name",
-                    "author": "John Doe"
-                }""";
+                        {
+                            "id": 1,
+                            "name": "Book name",
+                            "author": "John Doe"
+                        }""";
         private static final String REQUEST_BODY_2 =
                 """
-                {
-                    "bookId": 4,
-                    "firstName": "John",
-                    "lastName": "Doe",
-                    "from": "2023-01-05"
-                }""";
+                        {
+                            "bookId": 4,
+                            "firstName": "John",
+                            "lastName": "Doe",
+                            "from": "2023-01-05"
+                        }""";
         private static final String BAD_REQUEST_BODY_5 =
                 """
-                {
-                    "bookId": 10,
-                    "firstName": "John",
-                    "lastName": "Doe",
-                    "from": "2023-01-05"
-                }""";
+                        {
+                            "bookId": 10,
+                            "firstName": "John",
+                            "lastName": "Doe",
+                            "from": "2023-01-05"
+                        }""";
         private static final String BAD_REQUEST_BODY_6 = BookUtils.createNonValidBorrowRequest();
 
         @Autowired
@@ -113,14 +104,14 @@ class BookRestControllerTest {
         }
 
         @Order(1)
-        @WithMockUser(username = "user")
         @ParameterizedTest
         @CsvSource(value = {"all,1,1", "all,2,0", "available,0,2", "borrowed,0,4"})
         void testFindAll(String endpoint, String page, int size) throws Exception {
             this.mockMvc
                     .perform(get("/api/v1/books/" + endpoint)
                             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                            .param("page", page))
+                            .param("page", page)
+                            .with(oidcLogin()))
                     .andExpect(status().is(200))
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.size()", is(size)))
@@ -129,7 +120,6 @@ class BookRestControllerTest {
         }
 
         @Order(2)
-        @WithMockUser(username = "user")
         @ParameterizedTest
         @MethodSource("creationRequests")
         void testAddingBook(String body, ResultMatcher status) throws Exception {
@@ -137,7 +127,8 @@ class BookRestControllerTest {
                     .perform(post("/api/v1/books/add")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(body)
-                            .with(csrf()))
+                            .with(csrf())
+                            .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                     .andExpect(status);
         }
 
@@ -150,7 +141,6 @@ class BookRestControllerTest {
         }
 
         @Order(3)
-        @WithMockUser(username = "user")
         @ParameterizedTest
         @MethodSource("updateRequests")
         void testUpdatingBook(String body, ResultMatcher status) throws Exception {
@@ -158,7 +148,8 @@ class BookRestControllerTest {
                     .perform(put("/api/v1/books/update")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(body)
-                            .with(csrf()))
+                            .with(csrf())
+                            .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                     .andExpect(status);
         }
 
@@ -172,7 +163,6 @@ class BookRestControllerTest {
         }
 
         @Order(4)
-        @WithMockUser(username = "user")
         @ParameterizedTest
         @MethodSource("borrowRequests")
         void testBorrowingBook(String body, ResultMatcher status) throws Exception {
@@ -180,7 +170,8 @@ class BookRestControllerTest {
                     .perform(put("/api/v1/books/borrow")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(body)
-                            .with(csrf()))
+                            .with(csrf())
+                            .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                     .andExpect(status);
         }
 
@@ -192,12 +183,14 @@ class BookRestControllerTest {
         }
 
         @Order(5)
-        @WithMockUser(username = "user")
         @ParameterizedTest
         @MethodSource("availRequests")
         void testAvailingBook(String id, ResultMatcher status) throws Exception {
             this.mockMvc
-                    .perform(put("/api/v1/books/avail").param("bookId", id).with(csrf()))
+                    .perform(put("/api/v1/books/avail")
+                            .param("bookId", id)
+                            .with(csrf())
+                            .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                     .andExpect(status);
         }
 
@@ -206,17 +199,72 @@ class BookRestControllerTest {
         }
 
         @Order(6)
-        @WithMockUser(username = "user")
         @ParameterizedTest
         @MethodSource("deleteRequests")
         void testDeletingBook(String id, ResultMatcher status) throws Exception {
             this.mockMvc
-                    .perform(delete("/api/v1/books/delete").param("bookId", id).with(csrf()))
+                    .perform(delete("/api/v1/books/delete")
+                            .param("bookId", id)
+                            .with(csrf())
+                            .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                     .andExpect(status);
         }
 
         private static Stream<Arguments> deleteRequests() {
             return Stream.of(Arguments.of("10", status().isNotFound()), Arguments.of("1", status().isOk()));
+        }
+
+        @Test
+        void testForbidAddingBook() throws Exception {
+            this.mockMvc
+                    .perform(put("/api/v1/books/add")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(REQUEST_BODY_1)
+                            .with(csrf())
+                            .with(oidcLogin()))
+                    .andExpect(status().isMethodNotAllowed());
+        }
+
+        @Test
+        void testForbidUpdatingBook() throws Exception {
+            this.mockMvc
+                    .perform(put("/api/v1/books/update")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(REQUEST_BODY_1)
+                            .with(csrf())
+                            .with(oidcLogin()))
+                    .andExpect(status().isForbidden());
+        }
+
+        @Test
+        void testForbidBorrowingBook() throws Exception {
+            this.mockMvc
+                    .perform(put("/api/v1/books/borrow")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(REQUEST_BODY_2)
+                            .with(csrf())
+                            .with(oidcLogin()))
+                    .andExpect(status().isForbidden());
+        }
+
+        @Test
+        void testForbidAvailingBook() throws Exception {
+            this.mockMvc
+                    .perform(put("/api/v1/books/avail")
+                            .param("bookId", "1")
+                            .with(csrf())
+                            .with(oidcLogin()))
+                    .andExpect(status().isForbidden());
+        }
+
+        @Test
+        void testForbidDeletingBook() throws Exception {
+            this.mockMvc
+                    .perform(delete("/api/v1/books/delete")
+                            .param("bookId", "1")
+                            .with(csrf())
+                            .with(oidcLogin()))
+                    .andExpect(status().isForbidden());
         }
     }
 
@@ -231,14 +279,14 @@ class BookRestControllerTest {
             registry.add("book.repository.path", () -> "src/test/resources/Empty.xml");
         }
 
-        @WithMockUser(username = "user")
         @ParameterizedTest
         @CsvSource(value = {"all,0,0", "available,0,0", "borrowed,0,0"})
         void testFindAll(String endpoint, String page, int size) throws Exception {
             this.mockMvc
                     .perform(get("/api/v1/books/" + endpoint)
                             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                            .param("page", page))
+                            .param("page", page)
+                            .with(oidcLogin()))
                     .andExpect(status().is(200))
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.size()", is(size)))

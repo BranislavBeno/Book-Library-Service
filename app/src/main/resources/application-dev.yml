@@ -1,0 +1,34 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          cognito:
+            poolId: stratospheric
+            clientId: spring-boot-application
+            clientSecret: spring-boot-application-token
+            authorizationGrantType: authorization_code
+            scope: openid
+            clientName: ${spring.security.oauth2.client.registration.cognito.clientId}
+            logoutUrl: http://localhost:8888
+        provider:
+          cognito:
+            issuerUri: http://localhost:8888/realms/${spring.security.oauth2.client.registration.cognito.poolId}
+            userNameAttribute: ${jwt.auth.converter.principal-attribute}
+      resourceServer:
+        jwt:
+          issuerUri: ${spring.security.oauth2.client.provider.cognito.issuerUri}
+
+jwt:
+  auth:
+    converter:
+      principalAttribute: preferred_username
+
+cloud:
+  aws:
+    credentials:
+      access-key: foo
+      secret-key: bar
+
+custom:
+  use-cognito-as-identity-provider: false

@@ -1,3 +1,10 @@
+logging:
+  level:
+    com:
+      book:
+        library:
+          user: DEBUG
+
 book:
   repository:
     path: ../database/Library.xml
@@ -15,6 +22,7 @@ management:
         include: info,health,metrics
 
 server:
+  forward-headers-strategy: framework
   error:
     whitelabel:
       enabled: false
@@ -23,12 +31,10 @@ spring:
   mvc:
     problemdetails:
       enabled: true
+  cloud:
+    aws:
+      region:
+        static: eu-central-1
 
-auth:
-  users:
-    bookadmin:
-      role: admin
-      password: adminpass
-    bookuser:
-      role: user
-      password: userpass
+custom:
+  invitation-codes: DUKE, STRATOSPHERIC

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/basic-layout}"
+      xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Library service</title>
+</head>
+<body>
+<section layout:fragment="basic-content">
+    <div class="row d-flex justify-content-center">
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Sign up</h5>
+                </div>
+                <div class="card-body">
+                    <div th:if="${message}" th:text="${message}" th:class="${'alert alert-' + messageType}"
+                         role="alert"></div>
+                    <form class="row g-2" th:action="@{/register}" th:object="${registration}" method="post">
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="username-icon"><i class="fa fa-user"></i></span>
+                            </div>
+                            <input name="username" type="text" class="form-control" id="username-input"
+                                   th:field="*{username}"
+                                   th:classappend="${#fields.hasErrors('username')}? 'is-invalid'"
+                                   placeholder="Username" aria-label="Username" aria-describedby="username" required
+                                   autofocus>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="email-icon"><i class="fa fa-envelope"></i></span>
+                            </div>
+                            <input name="email" type="email" class="form-control" id="email-input"
+                                   th:field="*{email}"
+                                   th:classappend="${#fields.hasErrors('email')}? 'is-invalid'"
+                                   placeholder="Email address" aria-label="Email" aria-describedby="emailHelp" required>
+                        </div>
+                        <div>
+                            <small id="emailHelp" class="form-text text-muted">
+                                We'll never share your email with anyone else.
+                            </small>
+                        </div>
+                        <div class="input-group mt-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="invitation-code-icon"><i
+                                        class="fa fa-bars"></i></span>
+                            </div>
+                            <input
+                                    name="invitation-code"
+                                    type="text"
+                                    th:field="*{invitationCode}"
+                                    th:classappend="${#fields.hasErrors('invitationCode')}? 'is-invalid'"
+                                    class="form-control"
+                                    id="invitation-code-input"
+                                    placeholder="Invitation code"
+                                    aria-label="Invitation code"
+                                    aria-describedby="invitationCodeHelp"
+                                    required>
+                            <div th:if="${#fields.hasErrors('invitationCode')}"
+                                 th:text="${#strings.listJoin(#fields.errors('invitationCode'), ', ')}"
+                                 class="invalid-feedback">
+                            </div>
+                        </div>
+                        <div>
+                            <small id="invitationCodeHelp" class="form-text text-muted">
+                                Enter the invitation code you received to register.
+                            </small>
+                        </div>
+                        <div class="form-outline">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

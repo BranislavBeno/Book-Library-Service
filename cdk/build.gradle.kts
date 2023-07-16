@@ -15,12 +15,8 @@ application {
     )
 }
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
-dependencies {
-    implementation(libs.aws.cdk)
-}
+dependencies { implementation(libs.aws.cdk.lib) }
 
 version = "0.1.0-SNAPSHOT"

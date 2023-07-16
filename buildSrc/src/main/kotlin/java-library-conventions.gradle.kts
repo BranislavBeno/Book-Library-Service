@@ -20,6 +20,7 @@ jacoco {
 }
 
 tasks.test {
+    this.jvmArgs = listOf("-Dspring.profiles.active=dev")
     useJUnitPlatform()
     finalizedBy(tasks.jacocoTestReport)
     afterSuite(

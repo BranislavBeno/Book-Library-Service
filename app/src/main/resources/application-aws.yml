@@ -1,0 +1,22 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          cognito:
+            poolId: ${COGNITO_USER_POOL_ID}
+            clientId: ${COGNITO_CLIENT_ID}
+            clientSecret: ${COGNITO_CLIENT_SECRET}
+            authorizationGrantType: authorization_code
+            scope: openid, profile, email
+            clientName: b-l-s-client
+            logoutUrl: ${COGNITO_LOGOUT_URL}
+        provider:
+          cognito:
+            issuerUri: ${COGNITO_PROVIDER_URL}
+      resourceServer:
+        jwt:
+          issuerUri: ${COGNITO_PROVIDER_URL}
+
+custom:
+  use-cognito-as-identity-provider: true

@@ -35,6 +35,13 @@ scan-vulnerabilities:
 test-code:
   stage: test
   script:
+    - apt-get update && apt-get install -y curl
+    - curl --version
+    - suffix=$([[ $(uname -m) == "aarch64" ]] && echo "arm64" || echo "x86-64")
+    - curl -L -o agent https://app.testcontainers.cloud/download/testcontainers-cloud-agent_linux_$suffix
+    - chmod +x agent
+    - ./agent &
+    - ./agent wait
     - chmod +x gradlew
     - ./gradlew :app:jacocoTestReport
     - cat app/build/reports/jacoco/test/html/index.html

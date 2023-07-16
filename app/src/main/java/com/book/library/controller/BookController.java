@@ -29,6 +29,7 @@ public class BookController extends AbstractBookController {
     private static final String FOUND_ATTR = "found";
     private static final String BOOKS_ATTR = "books";
     private static final String PAGE_NUMBERS_ATTR = "pageNumbers";
+    private static final String SAVE_BOOK_PAGE = "save-book";
 
     public BookController(@Autowired BookService service, @Autowired BookMapper mapper) {
         super(service, mapper);
@@ -70,25 +71,27 @@ public class BookController extends AbstractBookController {
         return "borrowed-books";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/addBook")
     public String addBook(Model model) {
         model.addAttribute("availableBookDto", new AvailableBookDto());
 
-        return "save-book";
+        return SAVE_BOOK_PAGE;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/updateBook")
     public String updateBook(@RequestParam("bookId") int id, Model model) {
         model.addAttribute("availableBookDto", findBook(id));
 
-        return "save-book";
+        return SAVE_BOOK_PAGE;
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/save")
     public String save(@Valid AvailableBookDto availableBookDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "save-book";
+            return SAVE_BOOK_PAGE;
         }
 
         updateBook(availableBookDto);

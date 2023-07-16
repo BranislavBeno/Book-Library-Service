@@ -32,13 +32,15 @@
         <div class="col-md-5" sec:authorize="isAuthenticated()">
             <div class="d-flex flex-row">
                 <div class="me-2" sec:authentication="name"></div>
-                <form name="logoutForm" th:hidden="true" th:method="POST" th:action="@{/logout}">
+                <form name="logoutForm" th:hidden="true" th:method="post" th:action="@{/logout}">
                     <input type="submit" value="Logout"/>
                 </form>
                 <a href="javascript: logoutForm.submit();">Sign Out</a>
             </div>
         </div>
         <div class="col-sm-5" sec:authorize="isAnonymous()">
+            <a class="me-2" th:href="@{/register}">Sign up</a>
+            <a th:href="@{/oauth2/authorization/cognito}">Sign in</a>
             <p class="display-5 text-end"></p>
         </div>
         <div class="col-sm-5">
