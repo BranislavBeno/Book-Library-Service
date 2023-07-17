@@ -12,7 +12,7 @@ spring-security-test = { module = "org.springframework.security:spring-security-
 micrometer-observation-test = { module = "io.micrometer:micrometer-observation-test" }
 testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version = "1.18.3" }
 testcontainers-common = { module = "org.testcontainers:testcontainers" }
-testcontainers-keycloak = { module = "com.github.dasniko:testcontainers-keycloak", version = "2.5.0" }
+testcontainers-keycloak = { module = "com.github.dasniko:testcontainers-keycloak", version = "2.6.0" }
 database-h2 = { module = "com.h2database:h2" }
 jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version = "2.15.2" }
 jackson-dataformat-xml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml" }
