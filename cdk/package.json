@@ -15,8 +15,8 @@
     "network:destroy": "cdk destroy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.NetworkApp\" --force --require-approval never",
     "repository:deploy": "cdk deploy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.DockerRepositoryApp\" --require-approval never",
     "repository:destroy": "cdk destroy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.DockerRepositoryApp\" --force --require-approval never",
-    "service:deploy": "cdk deploy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.ServiceApp\" --require-approval never",
-    "service:destroy": "cdk destroy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.ServiceApp\" --force --require-approval never"
+    "service:deploy": "cdk deploy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.ServiceApp\" --require-approval never --all",
+    "service:destroy": "cdk destroy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.ServiceApp\" --force --require-approval never --all"
   },
   "devDependencies": {
     "aws-cdk": "2.87.0"

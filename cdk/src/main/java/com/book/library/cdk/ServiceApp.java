@@ -34,19 +34,23 @@ public class ServiceApp {
         var appEnvironment = new ApplicationEnvironment(applicationName, environmentName);
 
         long timestamp = System.currentTimeMillis();
+        String paramsStackName = CdkUtil.createStackName("service-params-" + timestamp, appEnvironment);
         var parametersStack = new Stack(
                 app,
                 "ServiceParameters-" + timestamp,
                 StackProps.builder()
-                        .stackName(appEnvironment.prefix("Service-Parameters-" + timestamp))
+                        .stackName(paramsStackName)
                         .env(awsEnvironment)
                         .build());
 
-        String stackName = CdkUtil.createStackName("service", appEnvironment);
+        String serviceStackName = CdkUtil.createStackName("service", appEnvironment);
         var serviceStack = new Stack(
                 app,
                 "ServiceStack",
-                StackProps.builder().stackName(stackName).env(awsEnvironment).build());
+                StackProps.builder()
+                        .stackName(serviceStackName)
+                        .env(awsEnvironment)
+                        .build());
 
         var dockerImageSource = new Service.DockerImageSource(dockerRepositoryName, dockerImageTag);
         var cognitoOutputParameters =

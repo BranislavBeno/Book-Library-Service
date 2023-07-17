@@ -156,3 +156,13 @@ jobs:
           DOCKER_IMAGE_TAG: ${{ needs.build-and-publish.outputs.DOCKER_IMAGE_TAG }}
         working-directory: cdk
         run: npm run service:deploy -- -c dockerImageTag=${DOCKER_IMAGE_TAG} -c environmentName=staging
+
+      # Each Service stack updates creates a new parameter stack that CloudFormation does not clean up automatically.
+      # This step deletes all "*service-params*" stacks except the latest one to keep the house clean.
+      - name: Clean up old parameter stacks
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        working-directory: cdk
+        run: |
+          aws cloudformation describe-stacks --region ${AWS_REGION} --query "Stacks[].StackName" --output text | sed -e "s/\s\+/\n/g" | grep -e "b-l-s-service-params" | sort -r | tail -n+2 > stacks_to_be_deleted.txt
+          for stack in $(cat stacks_to_be_deleted.txt); do aws cloudformation delete-stack --stack-name $stack --region ${AWS_REGION};  done
