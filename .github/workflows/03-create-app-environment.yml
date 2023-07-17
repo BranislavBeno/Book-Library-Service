@@ -17,8 +17,8 @@ on:
 jobs:
   deploy-cognito-stack:
     name: Deploy the Cognito stack
-    runs-on: ubuntu-20.04
-    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-22.04
+    if: github.ref == 'refs/heads/master'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
