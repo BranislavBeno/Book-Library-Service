@@ -19,7 +19,7 @@
     "environmentName": "staging",
     "dockerRepositoryName": "book-library-service",
     "dockerImageTag": "latest",
-    "sslCertificateArn": "arn:aws:acm:eu-central-1:576475760950:certificate/5fe7fe3d-e416-4f06-8613-21312aa4da59",
+    "sslCertificateArn": "arn:aws:acm:eu-central-1:576475760950:certificate/7e0e84ed-b290-4457-a53e-6bf5618f7935",
     "hostedZoneDomain": "b-l-s.click",
     "applicationDomain": "app.b-l-s.click",
     "applicationUrl": "https://app.b-l-s.click",
