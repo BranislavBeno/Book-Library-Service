@@ -42,8 +42,7 @@ public class ServiceApp {
                         .env(awsEnvironment)
                         .build());
 
-        String stackName =
-                "%s-service-%s".formatted(appEnvironment.applicationName(), appEnvironment.environmentName());
+        String stackName = CdkUtil.createStackName("service", appEnvironment);
         var serviceStack = new Stack(
                 app,
                 "ServiceStack",

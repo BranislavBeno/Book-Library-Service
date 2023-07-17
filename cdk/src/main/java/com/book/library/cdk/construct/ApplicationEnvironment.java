@@ -20,13 +20,13 @@ public record ApplicationEnvironment(String applicationName, String environmentN
      * Strips non-alphanumeric characters from a String since some AWS resources don't cope with
      * them when using them in resource names.
      */
-    private String sanitize(String environmentName) {
-        return environmentName.replaceAll("[^a-zA-Z0-9-]", "");
+    private String sanitize(String fullName) {
+        return fullName.replaceAll("[^a-zA-Z0-9-]", "");
     }
 
     @Override
     public String toString() {
-        return sanitize(environmentName + "-" + applicationName);
+        return sanitize(applicationName + "-" + environmentName);
     }
 
     /**
@@ -37,7 +37,7 @@ public record ApplicationEnvironment(String applicationName, String environmentN
     }
 
     public void tag(IConstruct construct) {
-        Tags.of(construct).add("environment", environmentName);
         Tags.of(construct).add("application", applicationName);
+        Tags.of(construct).add("environment", environmentName);
     }
 }

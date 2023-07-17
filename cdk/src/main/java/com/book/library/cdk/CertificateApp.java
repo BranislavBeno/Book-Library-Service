@@ -23,9 +23,8 @@ public class CertificateApp {
 
         var appEnvironment = new ApplicationEnvironment(applicationName, environmentName);
 
-        String stackName =
-                "%s-certificate-%s".formatted(appEnvironment.applicationName(), appEnvironment.environmentName());
-        new CertificateStack(app, stackName, awsEnvironment, appEnvironment, applicationDomain, hostedZoneDomain);
+        String stackId = CdkUtil.createStackName("certificate", appEnvironment);
+        new CertificateStack(app, stackId, awsEnvironment, appEnvironment, applicationDomain, hostedZoneDomain);
 
         app.synth();
     }

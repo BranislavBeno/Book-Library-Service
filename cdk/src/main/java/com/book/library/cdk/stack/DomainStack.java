@@ -2,6 +2,7 @@ package com.book.library.cdk.stack;
 
 import com.book.library.cdk.construct.ApplicationEnvironment;
 import com.book.library.cdk.construct.Network;
+import com.book.library.cdk.util.CdkUtil;
 import software.amazon.awscdk.Environment;
 import software.amazon.awscdk.Stack;
 import software.amazon.awscdk.StackProps;
@@ -25,7 +26,7 @@ public class DomainStack extends Stack {
                 scope,
                 id,
                 StackProps.builder()
-                        .stackName(appEnvironment.prefix("Domain"))
+                        .stackName(CdkUtil.createStackName("domain", appEnvironment))
                         .env(awsEnvironment)
                         .build());
 

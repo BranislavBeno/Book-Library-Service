@@ -24,8 +24,7 @@ public class NetworkApp {
 
         var appEnvironment = new ApplicationEnvironment(applicationName, environmentName);
 
-        String stackName =
-                "%s-network-%s".formatted(appEnvironment.applicationName(), appEnvironment.environmentName());
+        String stackName = CdkUtil.createStackName("network", appEnvironment);
         var networkStack = new Stack(
                 app,
                 "NetworkStack",

@@ -1,6 +1,7 @@
 package com.book.library.cdk.stack;
 
 import com.book.library.cdk.construct.ApplicationEnvironment;
+import com.book.library.cdk.util.CdkUtil;
 import software.amazon.awscdk.*;
 import software.amazon.awscdk.services.certificatemanager.Certificate;
 import software.amazon.awscdk.services.certificatemanager.CertificateValidation;
@@ -16,14 +17,14 @@ public class CertificateStack extends Stack {
             final Construct scope,
             final String id,
             final Environment awsEnvironment,
-            final ApplicationEnvironment applicationEnvironment,
+            final ApplicationEnvironment appEnvironment,
             final String applicationDomain,
             final String hostedZoneDomain) {
         super(
                 scope,
                 id,
                 StackProps.builder()
-                        .stackName(applicationEnvironment.prefix("Certificate"))
+                        .stackName(CdkUtil.createStackName("certificate", appEnvironment))
                         .env(awsEnvironment)
                         .build());
 

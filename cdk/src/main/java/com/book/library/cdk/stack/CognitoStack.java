@@ -3,6 +3,7 @@ package com.book.library.cdk.stack;
 import static software.amazon.awscdk.customresources.AwsCustomResourcePolicy.ANY_RESOURCE;
 
 import com.book.library.cdk.construct.ApplicationEnvironment;
+import com.book.library.cdk.util.CdkUtil;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class CognitoStack extends Stack {
                 scope,
                 id,
                 StackProps.builder()
-                        .stackName(appEnvironment.prefix("Cognito"))
+                        .stackName(CdkUtil.createStackName("cognito", appEnvironment))
                         .env(awsEnvironment)
                         .build());
 

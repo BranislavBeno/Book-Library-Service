@@ -23,7 +23,7 @@ public class DomainApp {
 
         var appEnvironment = new ApplicationEnvironment(applicationName, environmentName);
 
-        String stackName = "%s-domain-%s".formatted(appEnvironment.applicationName(), appEnvironment.environmentName());
+        String stackName = CdkUtil.createStackName("domain", appEnvironment);
         new DomainStack(app, stackName, awsEnvironment, appEnvironment, hostedZoneDomain, applicationDomain);
 
         app.synth();
