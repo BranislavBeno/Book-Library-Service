@@ -25,6 +25,6 @@ abstract class AbstractControllerTest {
         registry.add("spring.security.oauth2.client.registration.cognito.logoutUrl", keycloak::getAuthServerUrl);
         registry.add(
                 "spring.security.oauth2.client.provider.cognito.issuerUri",
-                () -> keycloak.getAuthServerUrl() + "realms/stratospheric");
+                () -> keycloak.getAuthServerUrl() + "/realms/stratospheric");
     }
 }
