@@ -41,3 +41,30 @@ jobs:
       - name: Deploy network stack
         working-directory: cdk
         run: npm run network:deploy -- -c environmentName=${{ github.event.inputs.environmentName }}
+
+  deploy-domain-stack:
+    name: Deploy the network stack
+    runs-on: ubuntu-22.04
+    needs: deploy-network-stack
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '20'
+          distribution: 'zulu'
+          cache: 'gradle'
+
+      - name: NPM install
+        working-directory: cdk
+        run: |
+          npm i -D aws-cdk@latest
+          rm -fr node_modules package-lock.json cdk.out
+          npm i
+
+      - name: Deploy domain stack
+        working-directory: cdk
+        run: npm run domain:deploy -- -c environmentName=${{ github.event.inputs.environmentName }}
