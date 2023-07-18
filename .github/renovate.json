@@ -26,7 +26,8 @@
   "regexManagers": [
     {
       "fileMatch": [
-        "src/test/java/.+\\.java$"
+        "app/src/test/java/.+\\.java$",
+        "cdk/src/main/java/.+\\.java$"
       ],
       "matchStrings": [
         "\"(?<depName>.*?):(?<currentValue>.*?)\""
