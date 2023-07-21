@@ -74,7 +74,7 @@ public class PostgresDatabase extends Construct {
                 .groupName(applicationEnvironment.prefix("dbSecurityGroup"))
                 .build();
 
-        // This will generate a JSON object with the keys "username" and "password".
+        // This will generate a JSON object with the keys "username" and "password"
         databaseSecret = Secret.Builder.create(this, "databaseSecret")
                 .secretName(applicationEnvironment.prefix("DatabaseSecret"))
                 .description("Credentials to the RDS instance")
@@ -99,11 +99,11 @@ public class PostgresDatabase extends Construct {
                 .dbInstanceClass(DatabaseInputParameters.INSTANCE_CLASS)
                 .dbName(sanitizeDbParameterName(applicationEnvironment.prefix("database")))
                 .dbSubnetGroupName(subnetGroup.getDbSubnetGroupName())
-                .engine("postgres")
+                .engine(databaseInputParameters.engine)
                 .engineVersion(databaseInputParameters.version)
                 .masterUsername(username)
                 .masterUserPassword(
-                        databaseSecret.secretValueFromJson("password").toString())
+                        databaseSecret.secretValueFromJson("password").unsafeUnwrap())
                 .publiclyAccessible(false)
                 .vpcSecurityGroups(Collections.singletonList(databaseSecurityGroup.getAttrGroupId()))
                 .build();
@@ -243,16 +243,20 @@ public class PostgresDatabase extends Construct {
     public static class DatabaseInputParameters {
         private static final int STORAGE_IN_GB = 20;
         private static final String INSTANCE_CLASS = "db.t2.micro";
-        private String version = "12.9";
+        private String engine = "postgres";
+        private String version = "12.15";
 
         /**
-         * The version of the Postgres database.
+         * The docker image version of the Postgres database.
          * <p>
-         * Default: "12.9".
+         * Default: "postgres:12.15".
          */
-        public DatabaseInputParameters withVersion(String dockerVersion) {
+        public DatabaseInputParameters withDockerImageVersion(String dockerVersion) {
             Objects.requireNonNull(dockerVersion);
-            this.version = dockerVersion.split(":", 2)[1];
+            String[] dockerImage = dockerVersion.split(":", 2);
+            this.engine = dockerImage[0];
+            this.version = dockerImage[1];
+
             return this;
         }
     }
