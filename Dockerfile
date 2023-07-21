@@ -9,7 +9,7 @@ RUN java -Djarmode=layertools -jar book-library-service.jar extract
 
 FROM azul/zulu-openjdk-alpine:20-jre
 # install dumb-init
-RUN apk add --no-cache dumb-init=1.2.5-r1
+RUN apk add --no-cache dumb-init=1.2.5-r2
 
 RUN mkdir /database
 WORKDIR /database
