@@ -79,7 +79,7 @@ public class PostgresDatabase extends Construct {
                 .secretName(applicationEnvironment.prefix("DatabaseSecret"))
                 .description("Credentials to the RDS instance")
                 .generateSecretString(SecretStringGenerator.builder()
-                        .secretStringTemplate(String.format("{\"username\": \"%s\"}", username))
+                        .secretStringTemplate("{\"username\": \"%s\"}".formatted(username))
                         .generateStringKey("password")
                         .passwordLength(32)
                         .excludeCharacters("@/\\\" ")

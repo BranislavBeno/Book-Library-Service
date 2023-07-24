@@ -97,9 +97,8 @@ public class CognitoStack extends Stack {
                         .build())
                 .build();
 
-        this.logoutUrl = String.format(
-                "https://%s.auth.%s.amazoncognito.com/logout",
-                inputParameters.loginPageDomainPrefix, awsEnvironment.getRegion());
+        this.logoutUrl = "https://%s.auth.%s.amazoncognito.com/logout"
+                .formatted(inputParameters.loginPageDomainPrefix, awsEnvironment.getRegion());
 
         createOutputParameters(awsEnvironment);
 

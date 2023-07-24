@@ -76,9 +76,8 @@ public class ServiceApp {
                 .withTaskRolePolicyStatements(List.of(PolicyStatement.Builder.create()
                         .sid("AllowCreatingUsers")
                         .effect(Effect.ALLOW)
-                        .resources(List.of(String.format(
-                                "arn:aws:cognito-idp:%s:%s:userpool/%s",
-                                region, accountId, cognitoOutputParameters.userPoolId())))
+                        .resources(List.of("arn:aws:cognito-idp:%s:%s:userpool/%s"
+                                .formatted(region, accountId, cognitoOutputParameters.userPoolId())))
                         .actions(List.of("cognito-idp:AdminCreateUser"))
                         .build()));
 
