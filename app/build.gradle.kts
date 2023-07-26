@@ -36,15 +36,17 @@ dependencies {
     implementation(platform(libs.spring.cloud.aws.bom))
     implementation(libs.spring.cloud.aws.starter)
     implementation(libs.aws.sdk.cognito.idp)
+    runtimeOnly(libs.database.h2)
+    runtimeOnly(libs.database.postgresql)
     testImplementation(libs.spring.boot.starter.test)
+    testImplementation(libs.spring.boot.testcontainers)
     testImplementation(libs.spring.security.test)
     testImplementation(libs.micrometer.observation.test)
     testImplementation(platform(libs.testcontainers.bom))
     testImplementation(libs.testcontainers.common)
     testImplementation(libs.testcontainers.postgresql)
     testImplementation(libs.testcontainers.keycloak)
-    runtimeOnly(libs.database.h2)
-    runtimeOnly(libs.database.postgresql)
+    testCompileOnly(libs.spring.boot.devtools)
 }
 
 val versionMajor = 0
@@ -55,4 +57,6 @@ version = "v$versionMajor.$versionMinor.$versionPatch"
 
 tasks.getByName<BootJar>("bootJar") { this.archiveFileName.set("book-library-service.jar") }
 
-tasks.getByName<BootRun>("bootRun") { this.jvmArgs = listOf("-Dspring.profiles.active=dev") }
+tasks.getByName<BootRun>("bootRun") { this.jvmArgs = listOf("-Dspring.profiles.active=aws") }
+
+tasks.getByName<BootRun>("bootTestRun") { this.jvmArgs = listOf("-Dspring.profiles.active=dev") }
