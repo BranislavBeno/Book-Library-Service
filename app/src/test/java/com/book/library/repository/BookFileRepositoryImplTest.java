@@ -13,18 +13,18 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-class BookFileRepositoryTest implements WithAssertions {
+class BookFileRepositoryImplTest implements WithAssertions {
 
-    private static BookFileRepository cut;
+    private static BookFileRepositoryImpl cut;
 
     @BeforeAll
     static void setUp() {
-        cut = new BookFileRepository("src/test/resources/Library.xml");
+        cut = new BookFileRepositoryImpl("src/test/resources/Library.xml");
     }
 
     @Test
     void testFailingRepositoryImport() {
-        assertThatThrownBy(() -> new BookFileRepository("src/test/resources/Dummy.xml"))
+        assertThatThrownBy(() -> new BookFileRepositoryImpl("src/test/resources/Dummy.xml"))
                 .isInstanceOf(BookFileNotFoundException.class);
     }
 

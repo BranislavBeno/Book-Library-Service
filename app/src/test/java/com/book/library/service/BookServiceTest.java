@@ -3,7 +3,7 @@ package com.book.library.service;
 import static org.mockito.ArgumentMatchers.any;
 
 import com.book.library.domain.Book;
-import com.book.library.repository.BookRepository;
+import com.book.library.repository.BookFileRepository;
 import java.util.Optional;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +21,7 @@ import org.springframework.data.domain.PageRequest;
 class BookServiceTest implements WithAssertions {
 
     @Mock
-    private BookRepository repository;
+    private BookFileRepository repository;
 
     @Mock
     private Page<Book> page;

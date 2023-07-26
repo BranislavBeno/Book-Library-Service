@@ -1,11 +1,11 @@
 package com.book.library.service;
 
 import com.book.library.domain.Book;
-import com.book.library.repository.BookRepository;
+import com.book.library.repository.BookFileRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-public record BookService(BookRepository repository, int pageSize) {
+public record BookService(BookFileRepository repository, int pageSize) {
 
     public Page<Book> findAll(int page) {
         return repository.findAll(getPageRequest(page));
