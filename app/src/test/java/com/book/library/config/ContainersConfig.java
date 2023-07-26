@@ -13,6 +13,13 @@ import org.testcontainers.utility.DockerImageName;
 public class ContainersConfig {
 
     @Bean
+    @ServiceConnection
+    @RestartScope
+    public PostgreSQLContainer<?> postgresSqlContainer() {
+        return new PostgreSQLContainer<>("postgres:12.15");
+    }
+
+    @Bean
     @RestartScope
     public KeycloakContainer keycloakContainer(DynamicPropertyRegistry registry) {
         try (var container = new KeycloakContainer(
@@ -27,12 +34,5 @@ public class ContainersConfig {
 
             return container;
         }
-    }
-
-    @Bean
-    @ServiceConnection
-    @RestartScope
-    public PostgreSQLContainer<?> postgreSQLContainer() {
-        return new PostgreSQLContainer<>("postgres:12.15");
     }
 }
