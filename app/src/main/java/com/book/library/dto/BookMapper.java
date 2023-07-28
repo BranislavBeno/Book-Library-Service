@@ -1,11 +1,11 @@
 package com.book.library.dto;
 
-import com.book.library.domain.Book;
+import com.book.library.domain.FileBook;
 import java.time.format.DateTimeFormatter;
 
 public final class BookMapper {
 
-    public AnyBookDto toAnyBookDto(Book book) {
+    public AnyBookDto toAnyBookDto(FileBook book) {
         int id = book.getId();
         String name = book.getName();
         String author = book.getAuthor();
@@ -14,8 +14,8 @@ public final class BookMapper {
         return new AnyBookDto(id, name, author, borrowed);
     }
 
-    public Book toEntity(AvailableBookDto dto) {
-        Book book = new Book();
+    public FileBook toEntity(AvailableBookDto dto) {
+        FileBook book = new FileBook();
         book.setId(dto.getId());
         book.setName(dto.getName());
         book.setAuthor(dto.getAuthor());
@@ -23,7 +23,7 @@ public final class BookMapper {
         return book;
     }
 
-    public AvailableBookDto toAvailableBookDto(Book book) {
+    public AvailableBookDto toAvailableBookDto(FileBook book) {
         int id = book.getId();
         String name = book.getName();
         String author = book.getAuthor();
@@ -31,7 +31,7 @@ public final class BookMapper {
         return new AvailableBookDto(id, name, author);
     }
 
-    public BorrowedBookDto toBorrowedBookDto(Book book) {
+    public BorrowedBookDto toBorrowedBookDto(FileBook book) {
         int id = book.getId();
         String name = book.getName();
         String author = book.getAuthor();

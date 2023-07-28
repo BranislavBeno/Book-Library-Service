@@ -2,7 +2,7 @@ package com.book.library.service;
 
 import static org.mockito.ArgumentMatchers.any;
 
-import com.book.library.domain.Book;
+import com.book.library.domain.FileBook;
 import com.book.library.repository.BookFileRepository;
 import java.util.Optional;
 import org.assertj.core.api.WithAssertions;
@@ -24,10 +24,10 @@ class BookServiceTest implements WithAssertions {
     private BookFileRepository repository;
 
     @Mock
-    private Page<Book> page;
+    private Page<FileBook> page;
 
     @Mock
-    private Book book;
+    private FileBook book;
 
     private BookService cut;
 
@@ -59,9 +59,9 @@ class BookServiceTest implements WithAssertions {
 
     @Test
     void testSaveBook() {
-        Mockito.when(repository.save(any(Book.class))).thenReturn(book);
+        Mockito.when(repository.save(any(FileBook.class))).thenReturn(book);
         cut.save(book);
-        Mockito.verify(repository).save(any(Book.class));
+        Mockito.verify(repository).save(any(FileBook.class));
     }
 
     @ParameterizedTest
@@ -75,7 +75,7 @@ class BookServiceTest implements WithAssertions {
     @Test
     void testBookFound() {
         int id = 1;
-        Mockito.when(repository.findById(id)).thenReturn(Optional.ofNullable(any(Book.class)));
+        Mockito.when(repository.findById(id)).thenReturn(Optional.ofNullable(any(FileBook.class)));
         cut.findById(id);
         Mockito.verify(repository).findById(id);
     }

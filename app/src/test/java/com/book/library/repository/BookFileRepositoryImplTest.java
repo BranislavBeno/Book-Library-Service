@@ -1,6 +1,6 @@
 package com.book.library.repository;
 
-import com.book.library.domain.Book;
+import com.book.library.domain.FileBook;
 import com.book.library.domain.Borrowed;
 import com.book.library.util.BookUtils;
 import java.time.LocalDate;
@@ -30,16 +30,16 @@ class BookFileRepositoryImplTest implements WithAssertions {
 
     @Test
     void testFindEmptyBookPage() {
-        Page<Book> books = cut.findAll(PageRequest.of(1, 10));
+        Page<FileBook> books = cut.findAll(PageRequest.of(1, 10));
         assertThat(books).isEmpty();
     }
 
     @Test
     void testFindAllBooks() {
-        Page<Book> page = cut.findAll(getRequest());
+        Page<FileBook> page = cut.findAll(getRequest());
         assertThat(page).hasSize(5);
 
-        Book book = page.getContent().get(0);
+        FileBook book = page.getContent().get(0);
         assertThat(book.getAuthor()).isEqualTo("Ernest Hemingway");
 
         Borrowed borrowed = book.getBorrowed();
@@ -49,13 +49,13 @@ class BookFileRepositoryImplTest implements WithAssertions {
 
     @Test
     void testFindAvailableBooks() {
-        Page<Book> page = cut.findAllAvailable(getRequest());
+        Page<FileBook> page = cut.findAllAvailable(getRequest());
         assertThat(page).hasSize(2);
     }
 
     @Test
     void testFindBorrowedBooks() {
-        Page<Book> page = cut.findAllBorrowed(getRequest());
+        Page<FileBook> page = cut.findAllBorrowed(getRequest());
         assertThat(page).hasSize(4);
     }
 
@@ -64,7 +64,7 @@ class BookFileRepositoryImplTest implements WithAssertions {
         PageRequest request = PageRequest.of(0, 10);
         int previousSize = cut.findAll(request).getContent().size();
 
-        Book entity = new Book();
+        FileBook entity = new FileBook();
         entity.setName("King Rat");
         entity.setAuthor("James Clavell");
 
@@ -81,13 +81,13 @@ class BookFileRepositoryImplTest implements WithAssertions {
         PageRequest request = PageRequest.of(0, 10);
         int previousSize = cut.findAll(request).getContent().size();
 
-        Book entity = new Book();
+        FileBook entity = new FileBook();
         entity.setId(5);
         entity.setName("Macbeth");
         Borrowed borrowed = new Borrowed("Maria", "Tudor", LocalDate.now());
         entity.setBorrowed(borrowed);
 
-        Book book = cut.save(entity);
+        FileBook book = cut.save(entity);
         assertThat(entity.getId()).isEqualTo(book.getId());
 
         int currentSize = cut.findAll(request).getContent().size();
@@ -102,7 +102,7 @@ class BookFileRepositoryImplTest implements WithAssertions {
 
     @Test
     void testBookFound() {
-        Book book = BookUtils.createBook();
+        FileBook book = BookUtils.createBook();
         cut.findById(5).ifPresent(b -> assertThat(b.getAuthor()).isEqualTo(book.getAuthor()));
     }
 

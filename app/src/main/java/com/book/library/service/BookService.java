@@ -1,25 +1,25 @@
 package com.book.library.service;
 
-import com.book.library.domain.Book;
+import com.book.library.domain.FileBook;
 import com.book.library.repository.BookFileRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 public record BookService(BookFileRepository repository, int pageSize) {
 
-    public Page<Book> findAll(int page) {
+    public Page<FileBook> findAll(int page) {
         return repository.findAll(getPageRequest(page));
     }
 
-    public Page<Book> findAllAvailable(int page) {
+    public Page<FileBook> findAllAvailable(int page) {
         return repository.findAllAvailable(getPageRequest(page));
     }
 
-    public Page<Book> findAllBorrowed(int page) {
+    public Page<FileBook> findAllBorrowed(int page) {
         return repository.findAllBorrowed(getPageRequest(page));
     }
 
-    public Book save(Book book) {
+    public FileBook save(FileBook book) {
         return repository.save(book);
     }
 
@@ -27,7 +27,7 @@ public record BookService(BookFileRepository repository, int pageSize) {
         return repository.existsById(id);
     }
 
-    public Book findById(int id) {
+    public FileBook findById(int id) {
         return repository.findById(id).orElse(null);
     }
 

@@ -1,6 +1,6 @@
 package com.book.library.util;
 
-import com.book.library.domain.Book;
+import com.book.library.domain.FileBook;
 import com.book.library.domain.Borrowed;
 import com.book.library.dto.AvailableBookDto;
 import com.book.library.dto.BorrowedDto;
@@ -13,8 +13,8 @@ public final class BookUtils {
 
     private BookUtils() {}
 
-    public static Book createBook() {
-        Book book = new Book();
+    public static FileBook createBook() {
+        FileBook book = new FileBook();
         book.setId(1);
         book.setName("Hamlet");
         book.setAuthor("William Shakespeare");
