@@ -2,7 +2,7 @@ package com.book.library.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Book {
+public class FileBook {
 
     private int id;
 

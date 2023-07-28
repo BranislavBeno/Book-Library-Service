@@ -1,6 +1,6 @@
 package com.book.library.controller;
 
-import com.book.library.domain.Book;
+import com.book.library.domain.FileBook;
 import com.book.library.dto.AvailableBookDto;
 import com.book.library.dto.BookDto;
 import com.book.library.dto.BookMapper;
@@ -37,7 +37,7 @@ public class BookController extends AbstractBookController {
 
     @GetMapping("/")
     public String showAll(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-        Page<Book> bookPage = getService().findAll(page);
+        Page<FileBook> bookPage = getService().findAll(page);
         PageData pageData = providePageData(page, bookPage, b -> getMapper().toAnyBookDto(b));
 
         model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
@@ -49,7 +49,7 @@ public class BookController extends AbstractBookController {
 
     @GetMapping("/available")
     public String showAvailable(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-        Page<Book> bookPage = getService().findAllAvailable(page);
+        Page<FileBook> bookPage = getService().findAllAvailable(page);
         PageData pageData = providePageData(page, bookPage, b -> getMapper().toAvailableBookDto(b));
 
         model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
@@ -61,7 +61,7 @@ public class BookController extends AbstractBookController {
 
     @GetMapping("/borrowed")
     public String showBorrowed(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-        Page<Book> bookPage = getService().findAllBorrowed(page);
+        Page<FileBook> bookPage = getService().findAllBorrowed(page);
         PageData pageData = providePageData(page, bookPage, b -> getMapper().toBorrowedBookDto(b));
 
         model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
@@ -137,7 +137,7 @@ public class BookController extends AbstractBookController {
         return "redirect:/available";
     }
 
-    private Page<BookDto> provideDtoPage(int page, Page<Book> bookPage, Function<Book, BookDto> function) {
+    private Page<BookDto> provideDtoPage(int page, Page<FileBook> bookPage, Function<FileBook, BookDto> function) {
         List<BookDto> content = provideDtoList(bookPage, function);
         return new PageImpl<>(content, PageRequest.of(page, getService().pageSize()), bookPage.getTotalPages());
     }
@@ -150,7 +150,7 @@ public class BookController extends AbstractBookController {
         return Collections.emptyList();
     }
 
-    private PageData providePageData(int page, Page<Book> bookPage, Function<Book, BookDto> function) {
+    private PageData providePageData(int page, Page<FileBook> bookPage, Function<FileBook, BookDto> function) {
         Page<BookDto> dtoPage = provideDtoPage(page, bookPage, function);
         List<Integer> pageNumbers = providePageNumbers(bookPage.getTotalPages());
 

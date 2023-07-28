@@ -1,6 +1,6 @@
 package com.book.library.controller;
 
-import com.book.library.domain.Book;
+import com.book.library.domain.FileBook;
 import com.book.library.domain.Borrowed;
 import com.book.library.dto.*;
 import com.book.library.service.BookService;
@@ -31,12 +31,12 @@ abstract class AbstractBookController {
         return mapper;
     }
 
-    <T extends BookDto> List<T> provideDtoList(Page<Book> bookPage, Function<Book, T> function) {
+    <T extends BookDto> List<T> provideDtoList(Page<FileBook> bookPage, Function<FileBook, T> function) {
         return bookPage.getContent().stream().map(function).toList();
     }
 
     AvailableBookDto findBook(int id) {
-        Book book = service.findById(id);
+        FileBook book = service.findById(id);
         if (book != null) {
             return getMapper().toAvailableBookDto(book);
         }
@@ -45,7 +45,7 @@ abstract class AbstractBookController {
     }
 
     AvailableBookDto updateBook(AvailableBookDto dto) {
-        Book book = service.findById(dto.getId());
+        FileBook book = service.findById(dto.getId());
 
         if (book != null) {
             book.setName(dto.getName());
@@ -70,7 +70,7 @@ abstract class AbstractBookController {
     }
 
     AvailableBookDto availBook(int id) {
-        Book book = service.findById(id);
+        FileBook book = service.findById(id);
         book.setBorrowed(new Borrowed());
 
         AvailableBookDto bookDto = mapper.toAvailableBookDto(service.save(book));
@@ -82,7 +82,7 @@ abstract class AbstractBookController {
     }
 
     BorrowedBookDto borrowBook(BorrowedDto dto) {
-        Book book = service.findById(dto.getBookId());
+        FileBook book = service.findById(dto.getBookId());
         book.setBorrowed(new Borrowed(dto.getFirstName(), dto.getLastName(), dto.getFrom()));
 
         BorrowedBookDto bookDto = mapper.toBorrowedBookDto(service.save(book));

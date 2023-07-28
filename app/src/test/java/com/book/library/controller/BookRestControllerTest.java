@@ -27,7 +27,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 @EnableTestObservation
-@Disabled
 class BookRestControllerTest extends AbstractControllerTest {
 
     @Autowired

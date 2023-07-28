@@ -1,6 +1,6 @@
 package com.book.library.repository;
 
-import com.book.library.domain.Book;
+import com.book.library.domain.FileBook;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -21,7 +21,7 @@ public final class BookFileRepositoryImpl implements BookFileRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookFileRepositoryImpl.class);
 
-    private final List<Book> books;
+    private final List<FileBook> books;
     private final AtomicInteger identifier;
 
     public BookFileRepositoryImpl(String path) {
@@ -35,8 +35,8 @@ public final class BookFileRepositoryImpl implements BookFileRepository {
         try {
             XmlMapper mapper = getXmlMapper();
             File file = new File(path);
-            List<Book> list = mapper.readValue(file, new TypeReference<>() {});
-            int maxId = list.stream().mapToInt(Book::getId).max().orElse(0);
+            List<FileBook> list = mapper.readValue(file, new TypeReference<>() {});
+            int maxId = list.stream().mapToInt(FileBook::getId).max().orElse(0);
 
             String message = "Input file read successfully. %d books imported.".formatted(list.size());
             LOGGER.info(message);
@@ -50,28 +50,28 @@ public final class BookFileRepositoryImpl implements BookFileRepository {
     }
 
     @Override
-    public Page<Book> findAll(Pageable pageable) {
+    public Page<FileBook> findAll(Pageable pageable) {
         return provideBookPage(pageable, List.copyOf(books));
     }
 
     @Override
-    public Page<Book> findAllAvailable(Pageable pageable) {
-        Predicate<Book> predicate =
+    public Page<FileBook> findAllAvailable(Pageable pageable) {
+        Predicate<FileBook> predicate =
                 b -> b.getBorrowed() == null || b.getBorrowed().from() == null;
         return provideBookPage(pageable, filterBooks(predicate));
     }
 
     @Override
-    public Page<Book> findAllBorrowed(Pageable pageable) {
-        Predicate<Book> predicate =
+    public Page<FileBook> findAllBorrowed(Pageable pageable) {
+        Predicate<FileBook> predicate =
                 b -> b.getBorrowed() != null && b.getBorrowed().from() != null;
         return provideBookPage(pageable, filterBooks(predicate));
     }
 
     @Override
-    public Book save(Book entity) {
+    public FileBook save(FileBook entity) {
         try {
-            Book book = findById(entity.getId()).orElseThrow();
+            FileBook book = findById(entity.getId()).orElseThrow();
             book.setAuthor(entity.getAuthor());
             book.setName(entity.getName());
             book.setBorrowed(entity.getBorrowed());
@@ -91,17 +91,17 @@ public final class BookFileRepositoryImpl implements BookFileRepository {
     }
 
     @Override
-    public Optional<Book> findById(int id) {
+    public Optional<FileBook> findById(int id) {
         return books.stream().filter(b -> b.getId() == id).findFirst();
     }
 
     @Override
     public void deleteById(int id) {
-        Book book = findById(id).orElseThrow();
+        FileBook book = findById(id).orElseThrow();
         books.remove(book);
     }
 
-    private List<Book> filterBooks(Predicate<Book> predicate) {
+    private List<FileBook> filterBooks(Predicate<FileBook> predicate) {
         return books.stream().filter(predicate).toList();
     }
 
@@ -109,11 +109,11 @@ public final class BookFileRepositoryImpl implements BookFileRepository {
         return XmlMapper.builder().addModule(new JavaTimeModule()).build();
     }
 
-    private PageImpl<Book> provideBookPage(Pageable pageable, List<Book> books) {
+    private PageImpl<FileBook> provideBookPage(Pageable pageable, List<FileBook> books) {
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;
-        List<Book> list;
+        List<FileBook> list;
 
         if (books.size() < startItem) {
             list = Collections.emptyList();
@@ -125,5 +125,5 @@ public final class BookFileRepositoryImpl implements BookFileRepository {
         return new PageImpl<>(list, PageRequest.of(currentPage, pageSize), books.size());
     }
 
-    private record InitialData(List<Book> books, AtomicInteger id) {}
+    private record InitialData(List<FileBook> books, AtomicInteger id) {}
 }
