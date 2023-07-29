@@ -33,11 +33,13 @@ Only users with `admin` role are allowed to make changes in repository.
 Users with different roles are allowed only to watch/fetch listed data.
 
 > By default, are available following users:
-> - username=bookadmin (password=adminpass, role=admin)
-> - username=bookuser (password=userpass, role=user)
+> - username=duke (password=stratospheric, role=admin)
+> - username=mike (password=MikePass, role=user)
 
 ### Web UI usage
-After application start, click on http://localhost:8080/
+To start the application open terminal, change path to project root folder and run `./gradlew :app:bootTestRun`.  
+After application start, click on http://localhost:8080/  
+To login don't use login form. Use link `Sign in` on top of the page instead.
 
 After successful login, web UI offers three types of view:
 1. _*All books*_. Borrowed are highlighted red, available green. This view allows book data updating or book removal from library.  
