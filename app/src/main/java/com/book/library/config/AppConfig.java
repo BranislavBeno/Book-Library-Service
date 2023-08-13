@@ -19,7 +19,7 @@ import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityPr
 public class AppConfig {
 
     @Bean
-    public BookFileRepository bookRepository(@Value("${book.repository.path}") String path) {
+    public BookFileRepository bookFileRepository(@Value("${book.repository.path}") String path) {
         return new BookFileRepositoryImpl(path);
     }
 
