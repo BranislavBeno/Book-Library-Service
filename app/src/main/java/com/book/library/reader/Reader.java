@@ -1,7 +1,9 @@
 package com.book.library.reader;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
 public class Reader {
@@ -10,10 +12,8 @@ public class Reader {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty
     private String firstName;
 
-    @NotEmpty
     private String lastName;
 
     public Long getId() {

@@ -1,7 +1,6 @@
 package com.book.library.book;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 public class Book {
@@ -10,11 +9,20 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty
     private String name;
 
-    @NotEmpty
     private String author;
+
+    @OneToOne(mappedBy = "book")
+    private BorrowedBook borrowed;
+
+    public BorrowedBook getBorrowed() {
+        return borrowed;
+    }
+
+    public void setBorrowed(BorrowedBook borrowed) {
+        this.borrowed = borrowed;
+    }
 
     public Long getId() {
         return id;
