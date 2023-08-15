@@ -1,9 +1,8 @@
 package com.book.library.reader;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.book.library.book.BorrowedBook;
+import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 public class Reader {
@@ -15,6 +14,9 @@ public class Reader {
     private String firstName;
 
     private String lastName;
+
+    @OneToMany(mappedBy = "reader")
+    private List<BorrowedBook> borrowedBooks;
 
     public Long getId() {
         return id;
@@ -38,5 +40,13 @@ public class Reader {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public List<BorrowedBook> getBorrowedBooks() {
+        return borrowedBooks;
+    }
+
+    public void setBorrowedBooks(List<BorrowedBook> borrowedBooks) {
+        this.borrowedBooks = borrowedBooks;
     }
 }

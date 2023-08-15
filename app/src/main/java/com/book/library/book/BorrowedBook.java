@@ -1,5 +1,6 @@
 package com.book.library.book;
 
+import com.book.library.reader.Reader;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
@@ -15,6 +16,10 @@ public class BorrowedBook {
     @OneToOne
     @JoinColumn(name = "book_id")
     private Book book;
+
+    @ManyToOne
+    @JoinColumn(name = "reader_id")
+    private Reader reader;
 
     public Long getId() {
         return id;
@@ -38,5 +43,13 @@ public class BorrowedBook {
 
     public void setBook(Book book) {
         this.book = book;
+    }
+
+    public Reader getReader() {
+        return reader;
+    }
+
+    public void setReader(Reader reader) {
+        this.reader = reader;
     }
 }
