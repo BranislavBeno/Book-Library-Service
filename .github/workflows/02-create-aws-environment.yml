@@ -43,7 +43,7 @@ jobs:
         run: npm run network:deploy -- -c environmentName=${{ github.event.inputs.environmentName }}
 
   deploy-domain-stack:
-    name: Deploy the network stack
+    name: Deploy the domain stack
     runs-on: ubuntu-22.04
     needs: deploy-network-stack
     if: github.ref == 'refs/heads/master'

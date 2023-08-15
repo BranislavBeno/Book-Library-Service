@@ -22,9 +22,9 @@ thymeleaf-layout-dialect = { module = "nz.net.ultraq.thymeleaf:thymeleaf-layout-
 thymeleaf-spring-security = { module = "org.thymeleaf.extras:thymeleaf-extras-springsecurity6", version = "3.1.2.RELEASE" }
 webjars-locator-core = { module = "org.webjars:webjars-locator-core", version = "0.53" }
 webjars-bootstrap = { module = "org.webjars:bootstrap", version = "5.3.1" }
-webjars-font-awesome = { module = "org.webjars:font-awesome", version = "6.4.0" }
+webjars-font-awesome = { module = "org.webjars:font-awesome", version = "6.4.2" }
 problem-spring-web = { module = "org.zalando:problem-spring-web", version = "0.29.1" }
-spring-cloud-aws-bom = { module = "io.awspring.cloud:spring-cloud-aws-dependencies", version = "3.0.1" }
+spring-cloud-aws-bom = { module = "io.awspring.cloud:spring-cloud-aws-dependencies", version = "3.0.2" }
 spring-cloud-aws-starter = { module = "io.awspring.cloud:spring-cloud-aws-starter" }
 aws-sdk-cognito-idp = { module = "software.amazon.awssdk:cognitoidentityprovider" }
 aws-cdk-lib = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.91.0" }
