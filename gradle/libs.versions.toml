@@ -14,6 +14,7 @@ spring-security-test = { module = "org.springframework.security:spring-security-
 micrometer-observation-test = { module = "io.micrometer:micrometer-observation-test" }
 testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version = "1.18.3" }
 testcontainers-common = { module = "org.testcontainers:testcontainers" }
+testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter" }
 testcontainers-postgresql = { module = "org.testcontainers:postgresql" }
 testcontainers-keycloak = { module = "com.github.dasniko:testcontainers-keycloak", version = "3.0.0" }
 database-h2 = { module = "com.h2database:h2" }

@@ -44,6 +44,7 @@ dependencies {
     testImplementation(libs.micrometer.observation.test)
     testImplementation(platform(libs.testcontainers.bom))
     testImplementation(libs.testcontainers.common)
+    testImplementation(libs.testcontainers.junit.jupiter)
     testImplementation(libs.testcontainers.postgresql)
     testImplementation(libs.testcontainers.keycloak)
     testCompileOnly(libs.spring.boot.devtools)
