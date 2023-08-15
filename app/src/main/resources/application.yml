@@ -35,6 +35,9 @@ spring:
     aws:
       region:
         static: eu-central-1
+  jpa:
+    hibernate:
+      ddl-auto: validate
 
 custom:
   invitation-codes: DUKE, STRATOSPHERIC
