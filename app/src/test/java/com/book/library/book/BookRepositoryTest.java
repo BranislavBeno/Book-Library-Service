@@ -3,14 +3,13 @@ package com.book.library.book;
 import com.book.library.repository.BaseRepositoryTest;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.jdbc.Sql;
 
-class BookRepositoryTest extends BaseRepositoryTest implements WithAssertions {
+class BookRepositoryTest extends BaseRepositoryTest<Book> implements WithAssertions {
 
     @Autowired
     private BookRepository repository;
@@ -26,7 +25,7 @@ class BookRepositoryTest extends BaseRepositoryTest implements WithAssertions {
     @Test
     @Sql(scripts = "/sql/init_book.sql")
     void testFindById() {
-        assertBook(r -> {
+        assertEntity(r -> {
             assertThat(r.getName()).isEqualTo("The Old Man and the Sea");
             assertThat(r.getAuthor()).isEqualTo("Ernest Hemingway");
         });
@@ -54,18 +53,13 @@ class BookRepositoryTest extends BaseRepositoryTest implements WithAssertions {
     @Test
     @Sql(scripts = "/sql/init_book.sql")
     void testUpdateReader() {
-        assertBook(r -> {
+        assertEntity(r -> {
             assertThat(r.getAuthor()).isEqualTo("Ernest Hemingway");
             r.setAuthor("William Shakespeare");
             repository.save(r);
         });
 
-        assertBook(r -> assertThat(r.getAuthor()).isEqualTo("William Shakespeare"));
-    }
-
-    private void assertBook(Consumer<Book> consumer) {
-        Optional<Book> reader = repository.findById(1L);
-        reader.ifPresentOrElse(consumer, () -> fail("Book not found"));
+        assertEntity(r -> assertThat(r.getAuthor()).isEqualTo("William Shakespeare"));
     }
 
     @NotNull
@@ -75,5 +69,10 @@ class BookRepositoryTest extends BaseRepositoryTest implements WithAssertions {
         book.setAuthor("William Shakespeare");
 
         return book;
+    }
+
+    @Override
+    protected JpaRepository<Book, Long> getRepository() {
+        return repository;
     }
 }

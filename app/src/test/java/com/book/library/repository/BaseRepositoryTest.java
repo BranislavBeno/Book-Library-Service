@@ -1,8 +1,12 @@
 package com.book.library.repository;
 
+import java.util.Optional;
+import java.util.function.Consumer;
+import org.junit.Assert;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
@@ -10,7 +14,7 @@ import org.testcontainers.utility.DockerImageName;
 @Testcontainers(disabledWithoutDocker = true)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public abstract class BaseRepositoryTest {
+public abstract class BaseRepositoryTest<T> {
 
     @ServiceConnection
     private static final PostgreSQLContainer<?> REPOSITORY_CONTAINER =
@@ -18,5 +22,12 @@ public abstract class BaseRepositoryTest {
 
     static {
         REPOSITORY_CONTAINER.start();
+    }
+
+    protected abstract JpaRepository<T, Long> getRepository();
+
+    protected void assertEntity(Consumer<T> consumer) {
+        Optional<T> reader = getRepository().findById(1L);
+        reader.ifPresentOrElse(consumer, () -> Assert.fail("Entity not found"));
     }
 }
