@@ -8,7 +8,9 @@ import java.util.List;
 public class Reader {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reader_generator")
+    @SequenceGenerator(name = "reader_generator", sequenceName = "reader_seq", allocationSize = 1)
+    @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
     private String firstName;
