@@ -2,7 +2,7 @@ package com.book.library.repository;
 
 import java.util.Optional;
 import java.util.function.Consumer;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
@@ -28,6 +28,6 @@ public abstract class BaseRepositoryTest<T> {
 
     protected void assertEntity(Consumer<T> consumer) {
         Optional<T> reader = getRepository().findById(1L);
-        reader.ifPresentOrElse(consumer, () -> Assert.fail("Entity not found"));
+        reader.ifPresentOrElse(consumer, () -> Assertions.fail("Entity not found"));
     }
 }
