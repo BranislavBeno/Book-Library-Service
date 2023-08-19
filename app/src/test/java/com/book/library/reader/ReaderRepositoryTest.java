@@ -65,7 +65,7 @@ class ReaderRepositoryTest extends BaseRepositoryTest implements WithAssertions 
 
     private void assertReader(Consumer<Reader> consumer) {
         Optional<Reader> reader = repository.findById(1L);
-        reader.ifPresentOrElse(consumer, () -> fail("Entity not found"));
+        reader.ifPresentOrElse(consumer, () -> fail("Reader not found"));
     }
 
     @NotNull
