@@ -5,10 +5,13 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "borrowed_book")
 public class BorrowedBook {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "borrowed_book_generator")
+    @SequenceGenerator(name = "borrowed_book_generator", sequenceName = "borrowed_book_seq", allocationSize = 1)
+    @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
     private LocalDate borrowedOn;
