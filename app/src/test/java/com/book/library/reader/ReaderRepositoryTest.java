@@ -2,10 +2,10 @@ package com.book.library.reader;
 
 import com.book.library.repository.BaseRepositoryTest;
 import jakarta.validation.constraints.NotNull;
-import java.util.List;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -17,7 +17,7 @@ class ReaderRepositoryTest extends BaseRepositoryTest<Reader> implements WithAss
     @Test
     @Sql(scripts = "/sql/init_reader.sql")
     void testFindAll() {
-        List<Reader> readers = repository.findAll();
+        Page<Reader> readers = repository.findAll(getPageRequest());
 
         assertThat(readers).hasSize(2);
     }
@@ -35,7 +35,7 @@ class ReaderRepositoryTest extends BaseRepositoryTest<Reader> implements WithAss
     @Sql(scripts = "/sql/init_reader.sql")
     void testDeleteById() {
         repository.deleteById(1L);
-        List<Reader> readers = repository.findAll();
+        Page<Reader> readers = repository.findAll(getPageRequest());
 
         assertThat(readers).hasSize(1);
     }
@@ -45,7 +45,7 @@ class ReaderRepositoryTest extends BaseRepositoryTest<Reader> implements WithAss
     void testAddReader() {
         Reader reader = createReader();
         repository.save(reader);
-        List<Reader> readers = repository.findAll();
+        Page<Reader> readers = repository.findAll(getPageRequest());
 
         assertThat(readers).hasSize(3);
     }

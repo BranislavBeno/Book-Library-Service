@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -29,5 +30,9 @@ public abstract class BaseRepositoryTest<T> {
     protected void assertEntity(Consumer<T> consumer) {
         Optional<T> reader = getRepository().findById(1L);
         reader.ifPresentOrElse(consumer, () -> Assertions.fail("Entity not found"));
+    }
+
+    protected static PageRequest getPageRequest() {
+        return PageRequest.of(0, 5);
     }
 }

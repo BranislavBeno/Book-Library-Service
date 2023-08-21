@@ -2,10 +2,10 @@ package com.book.library.book;
 
 import com.book.library.repository.BaseRepositoryTest;
 import jakarta.validation.constraints.NotNull;
-import java.util.List;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -17,7 +17,7 @@ class BookRepositoryTest extends BaseRepositoryTest<Book> implements WithAsserti
     @Test
     @Sql(scripts = "/sql/init_book.sql")
     void testFindAll() {
-        List<Book> books = repository.findAll();
+        Page<Book> books = repository.findAll(getPageRequest());
 
         assertThat(books).hasSize(2);
     }
@@ -35,7 +35,7 @@ class BookRepositoryTest extends BaseRepositoryTest<Book> implements WithAsserti
     @Sql(scripts = "/sql/init_book.sql")
     void testDeleteById() {
         repository.deleteById(1L);
-        List<Book> books = repository.findAll();
+        Page<Book> books = repository.findAll(getPageRequest());
 
         assertThat(books).hasSize(1);
     }
@@ -45,7 +45,7 @@ class BookRepositoryTest extends BaseRepositoryTest<Book> implements WithAsserti
     void testAddBook() {
         Book book = createBook();
         repository.save(book);
-        List<Book> books = repository.findAll();
+        Page<Book> books = repository.findAll(getPageRequest());
 
         assertThat(books).hasSize(3);
     }
