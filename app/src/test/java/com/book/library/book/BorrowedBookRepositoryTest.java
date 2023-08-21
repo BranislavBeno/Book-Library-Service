@@ -5,6 +5,7 @@ import com.book.library.reader.ReaderRepository;
 import com.book.library.repository.BaseRepositoryTest;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.Assertions;
@@ -29,7 +30,30 @@ class BorrowedBookRepositoryTest extends BaseRepositoryTest<BorrowedBook> implem
     void testFindAll() {
         List<BorrowedBook> books = repository.findAll();
         assertThat(books).hasSize(2);
+    }
 
+    @Test
+    @Sql(scripts = "/sql/init_borrowed_book.sql")
+    void testFindById() {
+        assertEntity(r -> {
+            assertThat(r.getBorrowedOn()).isEqualTo(LocalDate.of(2016, 3, 25));
+            assertThat(r.getBook()).isNotNull();
+            assertThat(r.getReader()).isNotNull();
+        });
+    }
+
+    @Test
+    @Sql(scripts = "/sql/init_borrowed_book.sql")
+    void testDeleteById() {
+        repository.deleteById(1L);
+        List<BorrowedBook> borrowedBooks = repository.findAll();
+
+        assertThat(borrowedBooks).hasSize(1);
+    }
+
+    @Test
+    @Sql(scripts = "/sql/init_borrowed_book.sql")
+    void testAddBorrowedBook() {
         var borrowedBook = createBorrowedBook();
         borrowedBook.ifPresentOrElse(
                 b -> {
@@ -42,12 +66,12 @@ class BorrowedBookRepositoryTest extends BaseRepositoryTest<BorrowedBook> implem
 
     @Test
     @Sql(scripts = "/sql/init_borrowed_book.sql")
-    void testFindById() {
-        assertEntity(r -> {
-            assertThat(r.getBorrowedOn()).isEqualTo(LocalDate.of(2016, 3, 25));
-            assertThat(r.getBook()).isNotNull();
-            assertThat(r.getReader()).isNotNull();
-        });
+    void testAvailableBooks() {
+        List<Book> availableBooks = bookRepository.findAll().stream()
+                .filter(b -> Objects.isNull(b.getBorrowed()))
+                .toList();
+
+        assertThat(availableBooks).hasSize(1);
     }
 
     @Override
