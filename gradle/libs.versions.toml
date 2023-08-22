@@ -12,7 +12,7 @@ spring-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools
 spring-boot-testcontainers = { module = "org.springframework.boot:spring-boot-testcontainers" }
 spring-security-test = { module = "org.springframework.security:spring-security-test" }
 micrometer-observation-test = { module = "io.micrometer:micrometer-observation-test" }
-testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version = "1.18.3" }
+testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version = "1.19.0" }
 testcontainers-common = { module = "org.testcontainers:testcontainers" }
 testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter" }
 testcontainers-postgresql = { module = "org.testcontainers:postgresql" }
