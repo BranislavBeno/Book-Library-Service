@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.book.library.dto.BookMapper;
-import com.book.library.service.BookService;
+import com.book.library.service.BookFileService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 class BookControllerTest extends AbstractControllerTest {
 
     @Autowired
-    private BookService service;
+    private BookFileService service;
 
     @Autowired
     private BookMapper mapper;

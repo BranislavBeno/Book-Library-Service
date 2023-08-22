@@ -1,7 +1,7 @@
 package com.book.library.controller;
 
 import com.book.library.dto.*;
-import com.book.library.service.BookService;
+import com.book.library.service.BookFileService;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
 import jakarta.validation.Valid;
@@ -23,8 +23,10 @@ public class BookRestController extends AbstractBookController {
     private final ObservationRegistry registry;
 
     public BookRestController(
-            @Autowired BookService bookService, @Autowired BookMapper mapper, @Autowired ObservationRegistry registry) {
-        super(bookService, mapper);
+            @Autowired BookFileService bookFileService,
+            @Autowired BookMapper mapper,
+            @Autowired ObservationRegistry registry) {
+        super(bookFileService, mapper);
         this.registry = registry;
     }
 

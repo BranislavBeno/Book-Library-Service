@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.book.library.dto.BookMapper;
-import com.book.library.service.BookService;
+import com.book.library.service.BookFileService;
 import com.book.library.util.BookUtils;
 import io.micrometer.observation.tck.TestObservationRegistry;
 import java.util.stream.Stream;
@@ -30,7 +30,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 class BookRestControllerTest extends AbstractControllerTest {
 
     @Autowired
-    private BookService service;
+    private BookFileService service;
 
     @Autowired
     private BookMapper mapper;

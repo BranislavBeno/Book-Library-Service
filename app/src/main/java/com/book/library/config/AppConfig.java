@@ -3,7 +3,7 @@ package com.book.library.config;
 import com.book.library.dto.BookMapper;
 import com.book.library.repository.BookFileRepository;
 import com.book.library.repository.BookFileRepositoryImpl;
-import com.book.library.service.BookService;
+import com.book.library.service.BookFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -24,9 +24,9 @@ public class AppConfig {
     }
 
     @Bean
-    public BookService bookService(
+    public BookFileService bookService(
             @Autowired BookFileRepository repository, @Value("${book.service.page.size:20}") int pageSize) {
-        return new BookService(repository, pageSize);
+        return new BookFileService(repository, pageSize);
     }
 
     @Bean

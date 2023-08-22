@@ -5,7 +5,7 @@ import com.book.library.dto.AvailableBookDto;
 import com.book.library.dto.BookDto;
 import com.book.library.dto.BookMapper;
 import com.book.library.dto.BorrowedDto;
-import com.book.library.service.BookService;
+import com.book.library.service.BookFileService;
 import jakarta.validation.Valid;
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +31,7 @@ public class BookController extends AbstractBookController {
     private static final String PAGE_NUMBERS_ATTR = "pageNumbers";
     private static final String SAVE_BOOK_PAGE = "save-book";
 
-    public BookController(@Autowired BookService service, @Autowired BookMapper mapper) {
+    public BookController(@Autowired BookFileService service, @Autowired BookMapper mapper) {
         super(service, mapper);
     }
 

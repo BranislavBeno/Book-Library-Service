@@ -5,7 +5,7 @@ import com.book.library.repository.BookFileRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-public record BookService(BookFileRepository repository, int pageSize) {
+public record BookFileService(BookFileRepository repository, int pageSize) {
 
     public Page<FileBook> findAll(int page) {
         return repository.findAll(getPageRequest(page));

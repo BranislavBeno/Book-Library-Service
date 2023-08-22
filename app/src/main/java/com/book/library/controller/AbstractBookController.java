@@ -3,7 +3,7 @@ package com.book.library.controller;
 import com.book.library.domain.Borrowed;
 import com.book.library.domain.FileBook;
 import com.book.library.dto.*;
-import com.book.library.service.BookService;
+import com.book.library.service.BookFileService;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -15,15 +15,15 @@ abstract class AbstractBookController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractBookController.class);
 
-    private final BookService service;
+    private final BookFileService service;
     private final BookMapper mapper;
 
-    AbstractBookController(BookService service, BookMapper mapper) {
+    AbstractBookController(BookFileService service, BookMapper mapper) {
         this.service = Objects.requireNonNull(service);
         this.mapper = Objects.requireNonNull(mapper);
     }
 
-    BookService getService() {
+    BookFileService getService() {
         return service;
     }
 

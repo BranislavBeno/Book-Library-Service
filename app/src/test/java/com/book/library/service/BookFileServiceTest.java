@@ -18,7 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 @ExtendWith(MockitoExtension.class)
-class BookServiceTest implements WithAssertions {
+class BookFileServiceTest implements WithAssertions {
 
     @Mock
     private BookFileRepository repository;
@@ -29,11 +29,11 @@ class BookServiceTest implements WithAssertions {
     @Mock
     private FileBook book;
 
-    private BookService cut;
+    private BookFileService cut;
 
     @BeforeEach
     void setUp() {
-        cut = new BookService(repository, 5);
+        cut = new BookFileService(repository, 5);
     }
 
     @Test
