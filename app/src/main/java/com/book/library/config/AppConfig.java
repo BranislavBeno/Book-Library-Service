@@ -1,6 +1,10 @@
 package com.book.library.config;
 
+import com.book.library.book.BookRepository;
+import com.book.library.book.BookService;
+import com.book.library.book.BorrowedBookRepository;
 import com.book.library.dto.BookMapper;
+import com.book.library.reader.ReaderRepository;
 import com.book.library.repository.BookFileRepository;
 import com.book.library.repository.BookFileRepositoryImpl;
 import com.book.library.service.BookFileService;
@@ -24,9 +28,18 @@ public class AppConfig {
     }
 
     @Bean
-    public BookFileService bookService(
+    public BookFileService bookFileService(
             @Autowired BookFileRepository repository, @Value("${book.service.page.size:20}") int pageSize) {
         return new BookFileService(repository, pageSize);
+    }
+
+    @Bean
+    public BookService bookService(
+            @Autowired BookRepository bookRepository,
+            @Autowired BorrowedBookRepository borrowedBookRepository,
+            @Autowired ReaderRepository readerRepository,
+            @Value("${book.service.page.size:20}") int pageSize) {
+        return new BookService(bookRepository, borrowedBookRepository, readerRepository, pageSize);
     }
 
     @Bean
