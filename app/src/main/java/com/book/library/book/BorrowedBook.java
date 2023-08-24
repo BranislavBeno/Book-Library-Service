@@ -16,7 +16,7 @@ public class BorrowedBook {
 
     private LocalDate borrowedOn;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     private Book book;
 

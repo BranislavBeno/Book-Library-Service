@@ -38,6 +38,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+    open-in-view: false
 
 custom:
   invitation-codes: DUKE, STRATOSPHERIC
