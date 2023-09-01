@@ -43,6 +43,18 @@ public record BookService(
     }
 
     @Nullable
+    public AvailableBookDto availBook(long id) {
+        Optional<BorrowedBook> borrowedBook = borrowedBookRepository.findById(id);
+        Optional<Book> book = borrowedBook.map(BorrowedBook::getBook);
+
+        return book.map(b -> {
+                    borrowedBookRepository.deleteById(id);
+                    return new AvailableBookDto(b);
+                })
+                .orElse(null);
+    }
+
+    @Nullable
     public BorrowedBookDto borrowBook(long bookId, long readerId) {
         Optional<BorrowedBook> borrowedBook = createBorrowedBook(bookId, readerId);
 

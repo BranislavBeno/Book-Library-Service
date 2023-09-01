@@ -1,16 +1,19 @@
 package com.book.library.book;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 
 import com.book.library.reader.Reader;
 import com.book.library.reader.ReaderRepository;
 import java.util.Optional;
+import java.util.stream.Stream;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -103,6 +106,53 @@ class BookServiceTest implements WithAssertions {
     }
 
     @Test
+    void testNotExistingBookAvailing() {
+        long borrowedBookId = 1;
+        Mockito.when(borrowedBookRepository.findById(borrowedBookId)).thenReturn(Optional.empty());
+
+        AvailableBookDto result = cut.availBook(borrowedBookId);
+        assertThat(result).isNull();
+
+        Mockito.verify(borrowedBookRepository).findById(anyLong());
+        Mockito.verifyNoMoreInteractions(borrowedBookRepository);
+    }
+
+    @Test
+    void testBookAvailing() {
+        long borrowedBookId = 1;
+        var borrowedBook = Mockito.mock(BorrowedBook.class);
+        Mockito.when(borrowedBookRepository.findById(borrowedBookId)).thenReturn(Optional.of(borrowedBook));
+        Mockito.when(borrowedBook.getBook()).thenReturn(book);
+
+        AvailableBookDto result = cut.availBook(borrowedBookId);
+        assertThat(result).isNotNull();
+
+        Mockito.verify(borrowedBookRepository).findById(anyLong());
+        Mockito.verify(borrowedBook).getBook();
+        Mockito.verify(borrowedBookRepository).deleteById(anyLong());
+    }
+
+    @ParameterizedTest
+    @MethodSource("parameters")
+    void testBookBorrowingWithIncompleteParameters(Book bookParam, Reader readerParam) {
+        long bookId = 1;
+        long readerId = 1;
+        Mockito.when(bookRepository.findById(bookId)).thenReturn(Optional.ofNullable(bookParam));
+        Mockito.when(readerRepository.findById(readerId)).thenReturn(Optional.ofNullable(readerParam));
+
+        BorrowedBookDto result = cut.borrowBook(bookId, readerId);
+        assertThat(result).isNull();
+
+        Mockito.verify(bookRepository).findById(bookId);
+        Mockito.verify(readerRepository).findById(bookId);
+        Mockito.verifyNoInteractions(borrowedBookRepository);
+    }
+
+    public static Stream<Arguments> parameters() {
+        return Stream.of(Arguments.of(new Book(), null), Arguments.of(null, new Reader()));
+    }
+
+    @Test
     void testBookBorrowing() {
         long bookId = 1;
         long readerId = 1;
@@ -112,7 +162,8 @@ class BookServiceTest implements WithAssertions {
         Mockito.when(readerRepository.findById(readerId)).thenReturn(Optional.of(reader));
         Mockito.when(borrowedBookRepository.save(any(BorrowedBook.class))).thenReturn(borrowedBook);
 
-        cut.borrowBook(bookId, readerId);
+        BorrowedBookDto result = cut.borrowBook(bookId, readerId);
+        assertThat(result).isNotNull();
 
         Mockito.verify(bookRepository).findById(bookId);
         Mockito.verify(readerRepository).findById(bookId);
