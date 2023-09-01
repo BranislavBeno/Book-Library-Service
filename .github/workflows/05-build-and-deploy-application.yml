@@ -130,6 +130,8 @@ jobs:
   scan-docker-image:
     name: Check Docker image for vulnerabilities
     runs-on: ubuntu-22.04
+    permissions:
+      security-events: write
     needs: build-and-publish
     steps:
       - name: Checkout Code
