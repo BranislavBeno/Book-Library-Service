@@ -3,7 +3,8 @@ package com.book.library.book;
 import java.time.LocalDate;
 
 public record BorrowedBookDto(
-        long id, LocalDate borrowedOn, String name, String author, String firstName, String lastName) {
+        long id, LocalDate borrowedOn, String name, String author, String firstName, String lastName)
+        implements BookDto {
 
     public BorrowedBookDto(BorrowedBook book) {
         this(

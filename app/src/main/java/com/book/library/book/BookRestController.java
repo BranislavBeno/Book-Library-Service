@@ -1,7 +1,5 @@
-package com.book.library.controller;
+package com.book.library.book;
 
-import com.book.library.dto.*;
-import com.book.library.service.BookFileService;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
 import jakarta.validation.Valid;
@@ -22,29 +20,24 @@ public class BookRestController extends AbstractBookController {
 
     private final ObservationRegistry registry;
 
-    public BookRestController(
-            @Autowired BookFileService bookFileService,
-            @Autowired BookMapper mapper,
-            @Autowired ObservationRegistry registry) {
-        super(bookFileService, mapper);
+    public BookRestController(@Autowired BookService bookService, @Autowired ObservationRegistry registry) {
+        super(bookService);
         this.registry = registry;
     }
 
     @GetMapping("/all")
     public List<AnyBookDto> all(@RequestParam(name = "page", defaultValue = "0") int page) {
-        return provideDtoList(getService().findAll(page), b -> getMapper().toAnyBookDto(b));
+        return getService().findAllBooks(page).toList();
     }
 
     @GetMapping("/available")
     public List<AvailableBookDto> available(@RequestParam(name = "page", defaultValue = "0") int page) {
-        return provideDtoList(
-                getService().findAllAvailable(page), b -> getMapper().toAvailableBookDto(b));
+        return getService().findAllAvailableBooks(page).toList();
     }
 
     @GetMapping("/borrowed")
     public List<BorrowedBookDto> borrowed(@RequestParam(name = "page", defaultValue = "0") int page) {
-        return provideDtoList(
-                getService().findAllBorrowed(page), b -> getMapper().toBorrowedBookDto(b));
+        return getService().findAllBorrowedBooks(page).toList();
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -56,8 +49,8 @@ public class BookRestController extends AbstractBookController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/update")
     public AvailableBookDto update(@Valid @RequestBody AvailableBookDto dto) {
-        int id = dto.getId();
-        if (!getService().existsById(id)) {
+        long id = dto.id();
+        if (!getService().bookExists(id)) {
             handleBookNotFound("updating", id);
         }
 
@@ -67,7 +60,7 @@ public class BookRestController extends AbstractBookController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/delete")
     public void delete(@RequestParam("bookId") int id) {
-        if (!getService().existsById(id)) {
+        if (!getService().bookExists(id)) {
             handleBookNotFound("deletion", id);
         }
 
@@ -77,7 +70,7 @@ public class BookRestController extends AbstractBookController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/avail")
     public AvailableBookDto avail(@RequestParam("bookId") int id) {
-        if (!getService().existsById(id)) {
+        if (!getService().bookExists(id)) {
             handleBookNotFound("availing", id);
         }
 
@@ -87,15 +80,15 @@ public class BookRestController extends AbstractBookController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/borrow")
     public BorrowedBookDto borrow(@Valid @RequestBody BorrowedDto dto) {
-        int bookId = dto.getBookId();
-        if (!getService().existsById(bookId)) {
+        long bookId = dto.bookId();
+        if (!getService().bookExists(bookId)) {
             handleBookNotFound("borrowing", bookId);
         }
 
         return observe("borrowing.book.id", () -> borrowBook(dto));
     }
 
-    private static void handleBookNotFound(String operation, int id) {
+    private static void handleBookNotFound(String operation, long id) {
         String message = MESSAGE.formatted(operation, id);
         LOGGER.error(message);
         throw new BookNotFoundException(message);

@@ -1,20 +1,11 @@
-package com.book.library.controller;
+package com.book.library.book;
 
-import com.book.library.domain.FileBook;
-import com.book.library.dto.AvailableBookDto;
-import com.book.library.dto.BookDto;
-import com.book.library.dto.BookMapper;
-import com.book.library.dto.BorrowedDto;
-import com.book.library.service.BookFileService;
 import jakarta.validation.Valid;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,14 +22,14 @@ public class BookController extends AbstractBookController {
     private static final String PAGE_NUMBERS_ATTR = "pageNumbers";
     private static final String SAVE_BOOK_PAGE = "save-book";
 
-    public BookController(@Autowired BookFileService service, @Autowired BookMapper mapper) {
-        super(service, mapper);
+    public BookController(@Autowired BookService service) {
+        super(service);
     }
 
     @GetMapping("/")
     public String showAll(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-        Page<FileBook> bookPage = getService().findAll(page);
-        PageData pageData = providePageData(page, bookPage, b -> getMapper().toAnyBookDto(b));
+        Page<AnyBookDto> bookPage = getService().findAllBooks(page);
+        PageData<AnyBookDto> pageData = providePageData(bookPage);
 
         model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
         model.addAttribute(BOOKS_ATTR, pageData.dtoPage());
@@ -49,8 +40,8 @@ public class BookController extends AbstractBookController {
 
     @GetMapping("/available")
     public String showAvailable(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-        Page<FileBook> bookPage = getService().findAllAvailable(page);
-        PageData pageData = providePageData(page, bookPage, b -> getMapper().toAvailableBookDto(b));
+        Page<AvailableBookDto> bookPage = getService().findAllAvailableBooks(page);
+        PageData<AvailableBookDto> pageData = providePageData(bookPage);
 
         model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
         model.addAttribute(BOOKS_ATTR, pageData.dtoPage());
@@ -61,8 +52,8 @@ public class BookController extends AbstractBookController {
 
     @GetMapping("/borrowed")
     public String showBorrowed(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-        Page<FileBook> bookPage = getService().findAllBorrowed(page);
-        PageData pageData = providePageData(page, bookPage, b -> getMapper().toBorrowedBookDto(b));
+        Page<BorrowedBookDto> bookPage = getService().findAllBorrowedBooks(page);
+        PageData<BorrowedBookDto> pageData = providePageData(bookPage);
 
         model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
         model.addAttribute(BOOKS_ATTR, pageData.dtoPage());
@@ -74,7 +65,7 @@ public class BookController extends AbstractBookController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/addBook")
     public String addBook(Model model) {
-        model.addAttribute("availableBookDto", new AvailableBookDto());
+        model.addAttribute("availableBookDto", new AvailableBookDto(new Book()));
 
         return SAVE_BOOK_PAGE;
     }
@@ -118,8 +109,7 @@ public class BookController extends AbstractBookController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/borrowBook")
     public String borrowBook(@RequestParam("bookId") int id, Model model) {
-        BorrowedDto borrowedDto = new BorrowedDto();
-        borrowedDto.setBookId(id);
+        BorrowedDto borrowedDto = new BorrowedDto(id);
         model.addAttribute("borrowedDto", borrowedDto);
 
         return "borrow-book";
@@ -137,11 +127,6 @@ public class BookController extends AbstractBookController {
         return "redirect:/available";
     }
 
-    private Page<BookDto> provideDtoPage(int page, Page<FileBook> bookPage, Function<FileBook, BookDto> function) {
-        List<BookDto> content = provideDtoList(bookPage, function);
-        return new PageImpl<>(content, PageRequest.of(page, getService().pageSize()), bookPage.getTotalPages());
-    }
-
     private List<Integer> providePageNumbers(int totalPages) {
         if (totalPages > 0) {
             return IntStream.rangeClosed(1, totalPages).boxed().toList();
@@ -150,12 +135,11 @@ public class BookController extends AbstractBookController {
         return Collections.emptyList();
     }
 
-    private PageData providePageData(int page, Page<FileBook> bookPage, Function<FileBook, BookDto> function) {
-        Page<BookDto> dtoPage = provideDtoPage(page, bookPage, function);
-        List<Integer> pageNumbers = providePageNumbers(bookPage.getTotalPages());
+    private <T extends BookDto> PageData<T> providePageData(Page<T> page) {
+        List<Integer> pageNumbers = providePageNumbers(page.getTotalPages());
 
-        return new PageData(dtoPage, pageNumbers);
+        return new PageData<>(page, pageNumbers);
     }
 
-    private record PageData(Page<BookDto> dtoPage, List<Integer> pageNumbers) {}
+    private record PageData<T extends BookDto>(Page<T> dtoPage, List<Integer> pageNumbers) {}
 }

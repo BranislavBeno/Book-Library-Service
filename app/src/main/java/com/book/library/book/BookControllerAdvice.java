@@ -1,4 +1,4 @@
-package com.book.library.controller;
+package com.book.library.book;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;

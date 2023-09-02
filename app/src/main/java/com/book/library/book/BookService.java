@@ -13,8 +13,8 @@ public record BookService(
         ReaderRepository readerRepository,
         int pageSize) {
 
-    public Page<Book> findAllBooks(int page) {
-        return bookRepository.findAll(getPageRequest(page));
+    public Page<AnyBookDto> findAllBooks(int page) {
+        return bookRepository.findAll(getPageRequest(page)).map(this::toAnyBookDto);
     }
 
     public Page<AvailableBookDto> findAllAvailableBooks(int page) {
@@ -78,5 +78,14 @@ public record BookService(
 
     private PageRequest getPageRequest(int page) {
         return PageRequest.of(page, pageSize);
+    }
+
+    private AnyBookDto toAnyBookDto(Book book) {
+        long id = book.getId();
+        String name = book.getName();
+        String author = book.getAuthor();
+        boolean borrowed = book.getBorrowed() != null && book.getBorrowed().getBorrowedOn() != null;
+
+        return new AnyBookDto(id, name, author, borrowed);
     }
 }
