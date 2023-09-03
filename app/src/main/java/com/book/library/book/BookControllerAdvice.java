@@ -11,8 +11,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class BookControllerAdvice {
 
     @ExceptionHandler(BookNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     ProblemDetail onBookNotFoundException() {
         return ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(404), "Book id is invalid");
+    }
+
+    @ExceptionHandler(BookDeletionException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    ProblemDetail onBookDeletionException() {
+        return ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), "Book is still borrowed");
     }
 }

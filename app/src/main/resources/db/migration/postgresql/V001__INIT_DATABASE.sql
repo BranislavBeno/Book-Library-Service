@@ -1,3 +1,4 @@
+-- Reader
 CREATE SEQUENCE IF NOT EXISTS reader_seq START WITH 100 INCREMENT BY 1;
 
 CREATE TABLE reader (
@@ -7,6 +8,7 @@ CREATE TABLE reader (
    CONSTRAINT pk_reader PRIMARY KEY (id)
 );
 
+-- Book
 CREATE SEQUENCE IF NOT EXISTS book_seq START WITH 100 INCREMENT BY 1;
 
 CREATE TABLE book (
@@ -16,6 +18,7 @@ CREATE TABLE book (
    CONSTRAINT pk_book PRIMARY KEY (id)
 );
 
+-- Borrowed book
 CREATE SEQUENCE IF NOT EXISTS borrowed_book_seq START WITH 100 INCREMENT BY 1;
 
 CREATE TABLE borrowed_book (

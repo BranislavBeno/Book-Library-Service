@@ -3,6 +3,7 @@ package com.book.library.book;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 
 abstract class AbstractBookController {
 
@@ -43,10 +44,15 @@ abstract class AbstractBookController {
     }
 
     void deleteBook(long id) {
-        service.deleteBook(id);
-
-        String message = "Book with id='%d' deleted successfully.".formatted(id);
-        LOGGER.info(message);
+        try {
+            service.deleteBook(id);
+            String message = "Book with id='%d' deleted successfully.".formatted(id);
+            LOGGER.info(message);
+        } catch (DataIntegrityViolationException e) {
+            String message = "Book with id='%d' can't be deleted due to is still borrowed.".formatted(id);
+            LOGGER.error(message);
+            throw new BookDeletionException(message);
+        }
     }
 
     AvailableBookDto availBook(long id) {

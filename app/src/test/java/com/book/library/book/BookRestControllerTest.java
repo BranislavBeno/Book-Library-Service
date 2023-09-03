@@ -1,14 +1,13 @@
-package com.book.library.controller;
+package com.book.library.book;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.book.library.dto.BookMapper;
-import com.book.library.service.BookFileService;
 import com.book.library.util.BookUtils;
 import io.micrometer.observation.tck.TestObservationRegistry;
 import java.util.stream.Stream;
@@ -21,8 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 
@@ -30,16 +28,14 @@ import org.springframework.test.web.servlet.ResultMatcher;
 class BookRestControllerTest extends AbstractControllerTest {
 
     @Autowired
-    private BookFileService service;
-
-    @Autowired
-    private BookMapper mapper;
+    private BookService service;
 
     @Autowired
     private TestObservationRegistry registry;
 
     @Nested
-    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    @Sql(scripts = "/sql/init_for_controller.sql")
+    @Sql(scripts = "/sql/clean_up_for_controller.sql", executionPhase = AFTER_TEST_METHOD)
     class BookListTest {
 
         private static final String BAD_REQUEST_BODY_1 =
@@ -98,12 +94,6 @@ class BookRestControllerTest extends AbstractControllerTest {
         @Autowired
         private MockMvc mockMvc;
 
-        @DynamicPropertySource
-        static void properties(DynamicPropertyRegistry registry) {
-            registry.add("book.repository.path", () -> "src/test/resources/Library.xml");
-        }
-
-        @Order(1)
         @ParameterizedTest
         @CsvSource(value = {"all,1,1", "all,2,0", "available,0,2", "borrowed,0,4"})
         void testFindAll(String endpoint, String page, int size) throws Exception {
@@ -119,7 +109,6 @@ class BookRestControllerTest extends AbstractControllerTest {
                     .andReturn();
         }
 
-        @Order(2)
         @ParameterizedTest
         @MethodSource("creationRequests")
         void testAddingBook(String body, ResultMatcher status) throws Exception {
@@ -140,7 +129,6 @@ class BookRestControllerTest extends AbstractControllerTest {
                     Arguments.of(REQUEST_BODY_1, status().isOk()));
         }
 
-        @Order(3)
         @ParameterizedTest
         @MethodSource("updateRequests")
         void testUpdatingBook(String body, ResultMatcher status) throws Exception {
@@ -162,7 +150,6 @@ class BookRestControllerTest extends AbstractControllerTest {
                     Arguments.of(REQUEST_BODY_1, status().isOk()));
         }
 
-        @Order(4)
         @ParameterizedTest
         @MethodSource("borrowRequests")
         void testBorrowingBook(String body, ResultMatcher status) throws Exception {
@@ -182,7 +169,6 @@ class BookRestControllerTest extends AbstractControllerTest {
                     Arguments.of(BAD_REQUEST_BODY_6, status().isBadRequest()));
         }
 
-        @Order(5)
         @ParameterizedTest
         @MethodSource("availRequests")
         void testAvailingBook(String id, ResultMatcher status) throws Exception {
@@ -198,7 +184,6 @@ class BookRestControllerTest extends AbstractControllerTest {
             return Stream.of(Arguments.of("10", status().isNotFound()), Arguments.of("1", status().isOk()));
         }
 
-        @Order(6)
         @ParameterizedTest
         @MethodSource("deleteRequests")
         void testDeletingBook(String id, ResultMatcher status) throws Exception {
@@ -211,7 +196,10 @@ class BookRestControllerTest extends AbstractControllerTest {
         }
 
         private static Stream<Arguments> deleteRequests() {
-            return Stream.of(Arguments.of("10", status().isNotFound()), Arguments.of("1", status().isOk()));
+            return Stream.of(
+                    Arguments.of("10", status().isNotFound()),
+                    Arguments.of("1", status().isForbidden()),
+                    Arguments.of("4", status().isOk()));
         }
 
         @Test
@@ -273,11 +261,6 @@ class BookRestControllerTest extends AbstractControllerTest {
 
         @Autowired
         private MockMvc mockMvc;
-
-        @DynamicPropertySource
-        static void properties(DynamicPropertyRegistry registry) {
-            registry.add("book.repository.path", () -> "src/test/resources/Empty.xml");
-        }
 
         @ParameterizedTest
         @CsvSource(value = {"all,0,0", "available,0,0", "borrowed,0,0"})

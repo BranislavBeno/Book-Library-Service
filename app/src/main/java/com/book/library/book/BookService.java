@@ -47,9 +47,9 @@ public record BookService(
         Optional<BorrowedBook> borrowedBook = borrowedBookRepository.findById(id);
         Optional<Book> book = borrowedBook.map(BorrowedBook::getBook);
 
-        return book.map(b -> {
+        return book.flatMap(b -> {
                     borrowedBookRepository.deleteById(id);
-                    return new AvailableBookDto(b);
+                    return bookRepository.findById(b.getId()).map(AvailableBookDto::new);
                 })
                 .orElse(null);
     }
