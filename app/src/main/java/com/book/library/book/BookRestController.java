@@ -49,7 +49,7 @@ public class BookRestController extends AbstractBookController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/update")
     public AvailableBookDto update(@Valid @RequestBody AvailableBookDto dto) {
-        long id = dto.id();
+        int id = dto.getId();
         if (!getService().bookExists(id)) {
             handleBookNotFound("updating", id);
         }
@@ -80,7 +80,7 @@ public class BookRestController extends AbstractBookController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/borrow")
     public BorrowedBookDto borrow(@Valid @RequestBody BorrowedDto dto) {
-        long bookId = dto.bookId();
+        int bookId = dto.getBookId();
         if (!getService().bookExists(bookId)) {
             handleBookNotFound("borrowing", bookId);
         }
@@ -88,7 +88,7 @@ public class BookRestController extends AbstractBookController {
         return observe("borrowing.book.id", () -> borrowBook(dto));
     }
 
-    private static void handleBookNotFound(String operation, long id) {
+    private static void handleBookNotFound(String operation, int id) {
         String message = MESSAGE.formatted(operation, id);
         LOGGER.error(message);
         throw new BookNotFoundException(message);

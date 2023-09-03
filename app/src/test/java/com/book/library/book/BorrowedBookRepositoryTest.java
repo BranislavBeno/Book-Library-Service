@@ -45,7 +45,7 @@ class BorrowedBookRepositoryTest extends BaseRepositoryTest<BorrowedBook> implem
     @Test
     @Sql(scripts = "/sql/init_borrowed_book.sql")
     void testDeleteById() {
-        repository.deleteById(1L);
+        repository.deleteById(1);
         Page<BorrowedBook> borrowedBooks = repository.findAll(getPageRequest());
 
         assertThat(borrowedBooks).hasSize(1);
@@ -73,13 +73,13 @@ class BorrowedBookRepositoryTest extends BaseRepositoryTest<BorrowedBook> implem
     }
 
     @Override
-    protected JpaRepository<BorrowedBook, Long> getRepository() {
+    protected JpaRepository<BorrowedBook, Integer> getRepository() {
         return repository;
     }
 
     private Optional<BorrowedBook> createBorrowedBook() {
-        Optional<Reader> reader = readerRepository.findById(1L);
-        Optional<Book> book = bookRepository.findById(1L);
+        Optional<Reader> reader = readerRepository.findById(1);
+        Optional<Book> book = bookRepository.findById(1);
 
         return reader.flatMap(r -> book.map(b -> {
             BorrowedBook bb = new BorrowedBook();

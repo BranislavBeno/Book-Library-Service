@@ -11,7 +11,7 @@ public class Reader {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reader_generator")
     @SequenceGenerator(name = "reader_generator", sequenceName = "reader_seq", allocationSize = 1)
     @Column(name = "id", updatable = false, nullable = false)
-    private Long id;
+    private int id;
 
     private String firstName;
 
@@ -20,11 +20,11 @@ public class Reader {
     @OneToMany(mappedBy = "reader")
     private List<BorrowedBook> borrowedBooks;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

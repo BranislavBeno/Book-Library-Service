@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface BorrowedBookRepository extends JpaRepository<BorrowedBook, Long> {
+public interface BorrowedBookRepository extends JpaRepository<BorrowedBook, Integer> {
 
     @Query(
             """

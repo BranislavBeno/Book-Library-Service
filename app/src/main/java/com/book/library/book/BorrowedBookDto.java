@@ -3,7 +3,7 @@ package com.book.library.book;
 import java.time.LocalDate;
 
 public record BorrowedBookDto(
-        long id, LocalDate borrowedOn, String name, String author, String firstName, String lastName)
+        int id, LocalDate borrowedOn, String name, String author, String firstName, String lastName)
         implements BookDto {
 
     public BorrowedBookDto(BorrowedBook book) {
@@ -14,5 +14,11 @@ public record BorrowedBookDto(
                 book.getBook().getAuthor(),
                 book.getReader().getFirstName(),
                 book.getReader().getLastName());
+    }
+
+    @Override
+    public String toString() {
+        return "Book[id=%d, name='%s', author='%s'', borrowedTo='%s %s', borrowedOn='%s']"
+                .formatted(id, name, author, firstName, lastName, borrowedOn);
     }
 }

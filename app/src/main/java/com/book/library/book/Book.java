@@ -9,7 +9,7 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "book_generator")
     @SequenceGenerator(name = "book_generator", sequenceName = "book_seq", allocationSize = 1)
     @Column(name = "id", updatable = false, nullable = false)
-    private Long id;
+    private int id;
 
     private String name;
 
@@ -26,11 +26,11 @@ public class Book {
         this.borrowed = borrowed;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

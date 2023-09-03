@@ -29,21 +29,21 @@ public record BookService(
         return bookRepository.save(book);
     }
 
-    public boolean bookExists(long id) {
+    public boolean bookExists(int id) {
         return bookRepository.existsById(id);
     }
 
     @Nullable
-    public Book findBook(long id) {
+    public Book findBook(int id) {
         return bookRepository.findById(id).orElse(null);
     }
 
-    public void deleteBook(long id) {
+    public void deleteBook(int id) {
         bookRepository.deleteById(id);
     }
 
     @Nullable
-    public AvailableBookDto availBook(long id) {
+    public AvailableBookDto availBook(int id) {
         Optional<BorrowedBook> borrowedBook = borrowedBookRepository.findById(id);
         Optional<Book> book = borrowedBook.map(BorrowedBook::getBook);
 
@@ -55,7 +55,7 @@ public record BookService(
     }
 
     @Nullable
-    public BorrowedBookDto borrowBook(long bookId, long readerId) {
+    public BorrowedBookDto borrowBook(int bookId, int readerId) {
         Optional<BorrowedBook> borrowedBook = createBorrowedBook(bookId, readerId);
 
         return borrowedBook
@@ -64,7 +64,7 @@ public record BookService(
                 .orElse(null);
     }
 
-    private Optional<BorrowedBook> createBorrowedBook(long bookId, long readerId) {
+    private Optional<BorrowedBook> createBorrowedBook(int bookId, int readerId) {
         Optional<Book> book = bookRepository.findById(bookId);
         Optional<Reader> reader = readerRepository.findById(readerId);
 
@@ -81,7 +81,7 @@ public record BookService(
     }
 
     private AnyBookDto toAnyBookDto(Book book) {
-        long id = book.getId();
+        int id = book.getId();
         String name = book.getName();
         String author = book.getAuthor();
         boolean borrowed = book.getBorrowed() != null && book.getBorrowed().getBorrowedOn() != null;

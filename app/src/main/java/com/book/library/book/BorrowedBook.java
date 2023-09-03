@@ -12,7 +12,7 @@ public class BorrowedBook {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "borrowed_book_generator")
     @SequenceGenerator(name = "borrowed_book_generator", sequenceName = "borrowed_book_seq", allocationSize = 1)
     @Column(name = "id", updatable = false, nullable = false)
-    private Long id;
+    private int id;
 
     private LocalDate borrowedOn;
 
@@ -24,11 +24,11 @@ public class BorrowedBook {
     @JoinColumn(name = "reader_id")
     private Reader reader;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

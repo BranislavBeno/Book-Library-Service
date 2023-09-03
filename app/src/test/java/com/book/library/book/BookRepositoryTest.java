@@ -34,7 +34,7 @@ class BookRepositoryTest extends BaseRepositoryTest<Book> implements WithAsserti
     @Test
     @Sql(scripts = "/sql/init_book.sql")
     void testDeleteById() {
-        repository.deleteById(1L);
+        repository.deleteById(1);
         Page<Book> books = repository.findAll(getPageRequest());
 
         assertThat(books).hasSize(1);
@@ -72,7 +72,7 @@ class BookRepositoryTest extends BaseRepositoryTest<Book> implements WithAsserti
     }
 
     @Override
-    protected JpaRepository<Book, Long> getRepository() {
+    protected JpaRepository<Book, Integer> getRepository() {
         return repository;
     }
 }

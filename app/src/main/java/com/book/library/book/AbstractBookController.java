@@ -19,31 +19,31 @@ abstract class AbstractBookController {
         return service;
     }
 
-    AvailableBookDto findBook(long id) {
+    AvailableBookDto findBook(int id) {
         Book book = service.findBook(id);
 
         return new AvailableBookDto(Objects.requireNonNullElseGet(book, Book::new));
     }
 
     AvailableBookDto updateBook(AvailableBookDto dto) {
-        Book book = service.findBook(dto.id());
+        Book book = service.findBook(dto.getId());
 
         if (book != null) {
-            book.setName(dto.name());
-            book.setAuthor(dto.author());
+            book.setName(dto.getName());
+            book.setAuthor(dto.getAuthor());
         } else {
             book = toBookEntity(dto);
         }
 
         AvailableBookDto bookDto = new AvailableBookDto(service.saveBook(book));
 
-        String message = "%s saved into repository.".formatted(book.toString());
+        String message = "%s saved into repository.".formatted(bookDto.toString());
         LOGGER.info(message);
 
         return bookDto;
     }
 
-    void deleteBook(long id) {
+    void deleteBook(int id) {
         try {
             service.deleteBook(id);
             String message = "Book with id='%d' deleted successfully.".formatted(id);
@@ -55,7 +55,7 @@ abstract class AbstractBookController {
         }
     }
 
-    AvailableBookDto availBook(long id) {
+    AvailableBookDto availBook(int id) {
         AvailableBookDto bookDto = service.availBook(id);
 
         String message = bookDto != null
@@ -67,11 +67,11 @@ abstract class AbstractBookController {
     }
 
     BorrowedBookDto borrowBook(BorrowedDto dto) {
-        BorrowedBookDto bookDto = service.borrowBook(dto.bookId(), dto.readerId());
+        BorrowedBookDto bookDto = service.borrowBook(dto.getBookId(), dto.getReaderId());
 
         String message = bookDto != null
                 ? "%s borrowed successfully.".formatted(bookDto.toString())
-                : "Book with id=%d not found".formatted(dto.bookId());
+                : "Book with id=%d not found".formatted(dto.getBookId());
 
         LOGGER.info(message);
 
@@ -80,9 +80,9 @@ abstract class AbstractBookController {
 
     private Book toBookEntity(AvailableBookDto dto) {
         var book = new Book();
-        book.setId(dto.id());
-        book.setName(dto.name());
-        book.setAuthor(dto.author());
+        book.setId(dto.getId());
+        book.setName(dto.getName());
+        book.setAuthor(dto.getAuthor());
 
         return book;
     }

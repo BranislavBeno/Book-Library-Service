@@ -25,10 +25,10 @@ public abstract class BaseRepositoryTest<T> {
         REPOSITORY_CONTAINER.start();
     }
 
-    protected abstract JpaRepository<T, Long> getRepository();
+    protected abstract JpaRepository<T, Integer> getRepository();
 
     protected void assertEntity(Consumer<T> consumer) {
-        Optional<T> reader = getRepository().findById(1L);
+        Optional<T> reader = getRepository().findById(1);
         reader.ifPresentOrElse(consumer, () -> Assertions.fail("Entity not found"));
     }
 
