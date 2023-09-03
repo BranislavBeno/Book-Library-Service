@@ -123,12 +123,14 @@ class BookServiceTest implements WithAssertions {
         var borrowedBook = Mockito.mock(BorrowedBook.class);
         Mockito.when(borrowedBookRepository.findById(borrowedBookId)).thenReturn(Optional.of(borrowedBook));
         Mockito.when(borrowedBook.getBook()).thenReturn(book);
+        Mockito.when(bookRepository.findById(anyLong())).thenReturn(Optional.of(book));
 
         AvailableBookDto result = cut.availBook(borrowedBookId);
         assertThat(result).isNotNull();
 
         Mockito.verify(borrowedBookRepository).findById(anyLong());
         Mockito.verify(borrowedBook).getBook();
+        Mockito.verify(bookRepository).findById(anyLong());
         Mockito.verify(borrowedBookRepository).deleteById(anyLong());
     }
 
