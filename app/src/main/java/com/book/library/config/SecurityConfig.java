@@ -73,7 +73,7 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest()
                         .authenticated())
-                .oauth2Login(oauth2 -> oauth2.loginPage(LOGIN_URL).defaultSuccessUrl("/?page=0"))
+                .oauth2Login(oauth2 -> oauth2.loginPage(LOGIN_URL).defaultSuccessUrl("/books?page=0", true))
                 .logout(logout -> logout.logoutSuccessHandler(logoutSuccessHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                         .maximumSessions(1));

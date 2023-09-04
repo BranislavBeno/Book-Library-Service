@@ -34,8 +34,8 @@ public class BookController extends AbstractBookController {
         return false;
     }
 
-    @GetMapping("/")
-    public String showAll(
+    @GetMapping("/books")
+    public String showBooks(
             @RequestParam(name = "page", defaultValue = "0") int page,
             Model model,
             @ModelAttribute(FORBIDDEN_ATTR) boolean forbidden) {
@@ -47,11 +47,11 @@ public class BookController extends AbstractBookController {
         model.addAttribute(BOOKS_ATTR, pageData.dtoPage());
         model.addAttribute(PAGE_NUMBERS_ATTR, pageData.pageNumbers());
 
-        return "index";
+        return "all-books";
     }
 
     @GetMapping("/available")
-    public String showAvailable(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+    public String showAvailableBooks(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         Page<AvailableBookDto> bookPage = getService().findAllAvailableBooks(page);
         PageData<AvailableBookDto> pageData = providePageData(bookPage);
 
@@ -63,7 +63,7 @@ public class BookController extends AbstractBookController {
     }
 
     @GetMapping("/borrowed")
-    public String showBorrowed(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+    public String showBorrowedBooks(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         Page<BorrowedBookDto> bookPage = getService().findAllBorrowedBooks(page);
         PageData<BorrowedBookDto> pageData = providePageData(bookPage);
 
@@ -99,7 +99,7 @@ public class BookController extends AbstractBookController {
 
         updateBook(availableBookDto);
 
-        return "redirect:/";
+        return "redirect:/books";
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -112,7 +112,7 @@ public class BookController extends AbstractBookController {
             attributes.addFlashAttribute(FORBIDDEN_ATTR, true);
         }
 
-        return "redirect:/";
+        return "redirect:/books";
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

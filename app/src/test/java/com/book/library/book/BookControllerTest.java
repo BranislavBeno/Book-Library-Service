@@ -34,8 +34,8 @@ class BookControllerTest extends AbstractControllerTest {
         @ParameterizedTest
         @CsvSource(
                 value = {
-                    "/,index,1,true",
-                    "/,index,2,false",
+                    "/books,all-books,1,true",
+                    "/books,all-books,2,false",
                     "/available,available-books,0,true",
                     "/borrowed,borrowed-books,0,true"
                 })
@@ -104,7 +104,7 @@ class BookControllerTest extends AbstractControllerTest {
                             .with(csrf())
                             .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                     .andExpect(status().is3xxRedirection())
-                    .andExpect(header().string("Location", "/"));
+                    .andExpect(header().string("Location", "/books"));
         }
 
         @Test
@@ -159,7 +159,7 @@ class BookControllerTest extends AbstractControllerTest {
                             .with(csrf())
                             .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                     .andExpect(status().is3xxRedirection())
-                    .andExpect(header().string("Location", "/"))
+                    .andExpect(header().string("Location", "/books"))
                     .andExpect(MockMvcResultMatchers.flash().attribute("forbidden", forbidden));
         }
 
@@ -221,7 +221,7 @@ class BookControllerTest extends AbstractControllerTest {
         private MockMvc mockMvc;
 
         @ParameterizedTest
-        @CsvSource(value = {"/,index", "/available,available-books", "/borrowed,borrowed-books"})
+        @CsvSource(value = {"/books,all-books", "/available,available-books", "/borrowed,borrowed-books"})
         void testShowingEmptyBookList(String url, String viewName) throws Exception {
             this.mockMvc
                     .perform(MockMvcRequestBuilders.get(url).with(oidcLogin()))
