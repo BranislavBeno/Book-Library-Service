@@ -33,7 +33,7 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private static final String LOGIN_URL = "/login";
+    private static final String LOGIN_URL = "/";
 
     private final LogoutSuccessHandler logoutSuccessHandler;
 
