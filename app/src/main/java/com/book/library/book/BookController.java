@@ -11,12 +11,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class BookController extends AbstractBookController {
 
+    private static final String FORBIDDEN_ATTR = "forbidden";
     private static final String FOUND_ATTR = "found";
     private static final String BOOKS_ATTR = "books";
     private static final String PAGE_NUMBERS_ATTR = "pageNumbers";
@@ -26,11 +29,20 @@ public class BookController extends AbstractBookController {
         super(service);
     }
 
+    @ModelAttribute(FORBIDDEN_ATTR)
+    public boolean defaultForbidden() {
+        return false;
+    }
+
     @GetMapping("/")
-    public String showAll(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+    public String showAll(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            Model model,
+            @ModelAttribute(FORBIDDEN_ATTR) boolean forbidden) {
         Page<AnyBookDto> bookPage = getService().findAllBooks(page);
         PageData<AnyBookDto> pageData = providePageData(bookPage);
 
+        model.addAttribute(FORBIDDEN_ATTR, forbidden);
         model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
         model.addAttribute(BOOKS_ATTR, pageData.dtoPage());
         model.addAttribute(PAGE_NUMBERS_ATTR, pageData.pageNumbers());
@@ -92,8 +104,13 @@ public class BookController extends AbstractBookController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/delete")
-    public String delete(@RequestParam("bookId") int id) {
-        deleteBook(id);
+    public String delete(@RequestParam("bookId") int id, RedirectAttributes attributes) {
+        try {
+            deleteBook(id);
+            attributes.addFlashAttribute(FORBIDDEN_ATTR, false);
+        } catch (BookDeletionException e) {
+            attributes.addFlashAttribute(FORBIDDEN_ATTR, true);
+        }
 
         return "redirect:/";
     }

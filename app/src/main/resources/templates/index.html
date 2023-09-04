@@ -22,6 +22,10 @@
                         <strong>Warning:</strong>
                         <span>No books have been found.</span>
                     </div>
+                    <div class="alert alert-danger" role="alert" th:if="${forbidden}">
+                        <strong>Error:</strong>
+                        <span>Borrowed book can't be deleted.</span>
+                    </div>
                     <div th:if="${found}">
                         <table aria-label="All books" class="table table-striped">
                             <thead>

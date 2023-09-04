@@ -24,7 +24,6 @@ class BookControllerTest extends AbstractControllerTest {
     private BookService service;
 
     @Nested
-    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     @Sql(scripts = "/sql/init_for_controller.sql")
     @Sql(scripts = "/sql/clean_up_for_controller.sql", executionPhase = AFTER_TEST_METHOD)
     class BookListTest {
@@ -32,7 +31,6 @@ class BookControllerTest extends AbstractControllerTest {
         @Autowired
         private MockMvc mockMvc;
 
-        @Order(1)
         @ParameterizedTest
         @CsvSource(
                 value = {
@@ -50,7 +48,6 @@ class BookControllerTest extends AbstractControllerTest {
                     .andExpect(MockMvcResultMatchers.model().attributeExists("books", "pageNumbers"));
         }
 
-        @Order(2)
         @Test
         void testShowAddBookForm() throws Exception {
             this.mockMvc
@@ -61,7 +58,6 @@ class BookControllerTest extends AbstractControllerTest {
                     .andExpect(MockMvcResultMatchers.model().attributeExists("availableBookDto"));
         }
 
-        @Order(3)
         @Test
         void testShowUpdateBookForm() throws Exception {
             this.mockMvc
@@ -73,7 +69,6 @@ class BookControllerTest extends AbstractControllerTest {
                     .andExpect(MockMvcResultMatchers.model().attributeExists("availableBookDto"));
         }
 
-        @Order(4)
         @Test
         @Disabled("refactoring required")
         void testShowBorrowBookForm() throws Exception {
@@ -86,7 +81,6 @@ class BookControllerTest extends AbstractControllerTest {
                     .andExpect(MockMvcResultMatchers.model().attributeExists("borrowedDto"));
         }
 
-        @Order(5)
         @Test
         void testRejectingSavingBook() throws Exception {
             this.mockMvc
@@ -101,7 +95,6 @@ class BookControllerTest extends AbstractControllerTest {
                     .andExpect(model().attributeHasErrors("availableBookDto"));
         }
 
-        @Order(6)
         @Test
         void testSavingBook() throws Exception {
             this.mockMvc
@@ -114,7 +107,6 @@ class BookControllerTest extends AbstractControllerTest {
                     .andExpect(header().string("Location", "/"));
         }
 
-        @Order(7)
         @Test
         void testAvailingBook() throws Exception {
             this.mockMvc
@@ -126,7 +118,6 @@ class BookControllerTest extends AbstractControllerTest {
                     .andExpect(header().string("Location", "/borrowed"));
         }
 
-        @Order(8)
         @Test
         @Disabled("refactoring required")
         void testRejectingBorrowingBook() throws Exception {
@@ -145,7 +136,6 @@ class BookControllerTest extends AbstractControllerTest {
                     .andExpect(model().attributeHasErrors("borrowedDto"));
         }
 
-        @Order(9)
         @Test
         void testBorrowingBook() throws Exception {
             this.mockMvc
@@ -160,16 +150,17 @@ class BookControllerTest extends AbstractControllerTest {
                     .andExpect(header().string("Location", "/available"));
         }
 
-        @Order(10)
-        @Test
-        void testDeletingBook() throws Exception {
+        @ParameterizedTest
+        @CsvSource(value = {"1,true", "4,false"})
+        void testDeletingBook(String bookId, boolean forbidden) throws Exception {
             this.mockMvc
                     .perform(get("/delete")
-                            .param("bookId", "1")
+                            .param("bookId", bookId)
                             .with(csrf())
                             .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                     .andExpect(status().is3xxRedirection())
-                    .andExpect(header().string("Location", "/"));
+                    .andExpect(header().string("Location", "/"))
+                    .andExpect(MockMvcResultMatchers.flash().attribute("forbidden", forbidden));
         }
 
         @Test
