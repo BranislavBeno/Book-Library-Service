@@ -18,6 +18,8 @@ spring:
       resourceServer:
         jwt:
           issuerUri: ${spring.security.oauth2.client.provider.cognito.issuerUri}
+  flyway:
+    locations: 'classpath:/dev/db/migration/postgresql'
 
 jwt:
   auth:
