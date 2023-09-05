@@ -1,8 +1,9 @@
 -- Reader
-INSERT INTO reader (id, first_name, last_name) VALUES (1, 'Peter', 'Prvý');
+INSERT INTO reader (id, first_name, last_name) VALUES (1, 'Ján', 'Prvý');
 INSERT INTO reader (id, first_name, last_name) VALUES (2, 'Lukáš', 'Druhý');
 INSERT INTO reader (id, first_name, last_name) VALUES (3, 'Matej', 'Tretí');
 INSERT INTO reader (id, first_name, last_name) VALUES (4, 'Jozef', 'Štvrtý');
+INSERT INTO reader (id, first_name, last_name) VALUES (5, 'Peter', 'Piaty');
 -- Book
 INSERT INTO book (id, name, author) VALUES (1, 'Starec a more', 'Ernest Hemingway');
 INSERT INTO book (id, name, author) VALUES (2, 'Rómeo a Júlia', 'William Shakespeare');

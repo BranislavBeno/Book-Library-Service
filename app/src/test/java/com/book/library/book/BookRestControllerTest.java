@@ -34,8 +34,8 @@ class BookRestControllerTest extends AbstractControllerTest {
     private TestObservationRegistry registry;
 
     @Nested
-    @Sql(scripts = "/sql/init_for_controller.sql")
-    @Sql(scripts = "/sql/clean_up_for_controller.sql", executionPhase = AFTER_TEST_METHOD)
+    @Sql(scripts = "/sql/init_db.sql")
+    @Sql(scripts = "/sql/clean_up_db.sql", executionPhase = AFTER_TEST_METHOD)
     class BookListTest {
 
         private static final String BAD_REQUEST_BODY_1 =

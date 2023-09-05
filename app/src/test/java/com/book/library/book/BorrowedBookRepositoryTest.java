@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.jdbc.Sql;
 
+@Sql(scripts = "/sql/init_db.sql")
 class BorrowedBookRepositoryTest extends BaseRepositoryTest<BorrowedBook> implements WithAssertions {
 
     @Autowired
@@ -25,17 +26,15 @@ class BorrowedBookRepositoryTest extends BaseRepositoryTest<BorrowedBook> implem
     private BorrowedBookRepository repository;
 
     @Test
-    @Sql(scripts = "/sql/init_borrowed_book.sql")
     void testFindAll() {
         Page<BorrowedBookDto> borrowedBooks = repository.findAllBorrowedBooks(getPageRequest());
 
-        assertThat(borrowedBooks).hasSize(2);
+        assertThat(borrowedBooks).hasSize(4);
     }
 
     @Test
-    @Sql(scripts = "/sql/init_borrowed_book.sql")
     void testFindById() {
-        assertEntity(r -> {
+        assertEntity(1, r -> {
             assertThat(r.getBorrowedOn()).isEqualTo(LocalDate.of(2016, 3, 25));
             assertThat(r.getBook()).isNotNull();
             assertThat(r.getReader()).isNotNull();
@@ -43,33 +42,30 @@ class BorrowedBookRepositoryTest extends BaseRepositoryTest<BorrowedBook> implem
     }
 
     @Test
-    @Sql(scripts = "/sql/init_borrowed_book.sql")
     void testDeleteById() {
         repository.deleteById(1);
         Page<BorrowedBook> borrowedBooks = repository.findAll(getPageRequest());
 
-        assertThat(borrowedBooks).hasSize(1);
+        assertThat(borrowedBooks).hasSize(3);
     }
 
     @Test
-    @Sql(scripts = "/sql/init_borrowed_book.sql")
     void testAddBorrowedBook() {
         var borrowedBook = createBorrowedBook();
         borrowedBook.ifPresentOrElse(
                 b -> {
                     repository.save(b);
                     Page<BorrowedBook> bookList = repository.findAll(getPageRequest());
-                    assertThat(bookList).hasSize(3);
+                    assertThat(bookList).hasSize(5);
                 },
                 () -> Assertions.fail("Borrowed book creation failed"));
     }
 
     @Test
-    @Sql(scripts = "/sql/init_borrowed_book.sql")
     void testAvailableBooks() {
         Page<AvailableBookDto> availableBooks = bookRepository.findAllAvailableBooks(getPageRequest());
 
-        assertThat(availableBooks).hasSize(1);
+        assertThat(availableBooks).hasSize(2);
     }
 
     @Override

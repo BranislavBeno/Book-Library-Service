@@ -27,8 +27,8 @@ public abstract class BaseRepositoryTest<T> {
 
     protected abstract JpaRepository<T, Integer> getRepository();
 
-    protected void assertEntity(Consumer<T> consumer) {
-        Optional<T> reader = getRepository().findById(1);
+    protected void assertEntity(int id, Consumer<T> consumer) {
+        Optional<T> reader = getRepository().findById(id);
         reader.ifPresentOrElse(consumer, () -> Assertions.fail("Entity not found"));
     }
 

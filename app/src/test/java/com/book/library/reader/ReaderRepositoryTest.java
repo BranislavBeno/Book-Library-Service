@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.jdbc.Sql;
 
-@Sql(scripts = "/sql/init_reader.sql")
+@Sql(scripts = "/sql/init_db.sql")
 class ReaderRepositoryTest extends BaseRepositoryTest<Reader> implements WithAssertions {
 
     @Autowired
@@ -19,23 +19,23 @@ class ReaderRepositoryTest extends BaseRepositoryTest<Reader> implements WithAss
     void testFindAll() {
         Page<Reader> readers = repository.findAll(getPageRequest());
 
-        assertThat(readers).hasSize(2);
+        assertThat(readers).hasSize(5);
     }
 
     @Test
     void testFindById() {
-        assertEntity(r -> {
+        assertEntity(5, r -> {
             assertThat(r.getFirstName()).isEqualTo("Peter");
-            assertThat(r.getLastName()).isEqualTo("First");
+            assertThat(r.getLastName()).isEqualTo("Piaty");
         });
     }
 
     @Test
     void testDeleteById() {
-        repository.deleteById(1);
+        repository.deleteById(5);
         Page<Reader> readers = repository.findAll(getPageRequest());
 
-        assertThat(readers).hasSize(1);
+        assertThat(readers).hasSize(4);
     }
 
     @Test
@@ -44,18 +44,18 @@ class ReaderRepositoryTest extends BaseRepositoryTest<Reader> implements WithAss
         repository.save(reader);
         Page<Reader> readers = repository.findAll(getPageRequest());
 
-        assertThat(readers).hasSize(3);
+        assertThat(readers).hasSize(5);
     }
 
     @Test
     void testUpdateReader() {
-        assertEntity(r -> {
+        assertEntity(5, r -> {
             assertThat(r.getFirstName()).isEqualTo("Peter");
             r.setFirstName("Thomas");
             repository.save(r);
         });
 
-        assertEntity(r -> assertThat(r.getFirstName()).isEqualTo("Thomas"));
+        assertEntity(5, r -> assertThat(r.getFirstName()).isEqualTo("Thomas"));
     }
 
     @NotNull

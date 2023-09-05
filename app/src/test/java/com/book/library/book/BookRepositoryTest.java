@@ -9,63 +9,59 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.jdbc.Sql;
 
+@Sql(scripts = "/sql/init_db.sql")
 class BookRepositoryTest extends BaseRepositoryTest<Book> implements WithAssertions {
 
     @Autowired
     private BookRepository repository;
 
     @Test
-    @Sql(scripts = "/sql/init_book.sql")
     void testFindAll() {
         Page<Book> books = repository.findAll(getPageRequest());
 
-        assertThat(books).hasSize(2);
+        assertThat(books).hasSize(5);
     }
 
     @Test
-    @Sql(scripts = "/sql/init_book.sql")
     void testFindById() {
-        assertEntity(r -> {
-            assertThat(r.getName()).isEqualTo("The Old Man and the Sea");
+        assertEntity(1, r -> {
+            assertThat(r.getName()).isEqualTo("Starec a more");
             assertThat(r.getAuthor()).isEqualTo("Ernest Hemingway");
         });
     }
 
     @Test
-    @Sql(scripts = "/sql/init_book.sql")
     void testDeleteById() {
-        repository.deleteById(1);
+        repository.deleteById(4);
         Page<Book> books = repository.findAll(getPageRequest());
 
-        assertThat(books).hasSize(1);
+        assertThat(books).hasSize(5);
     }
 
     @Test
-    @Sql(scripts = "/sql/init_book.sql")
     void testAddBook() {
         Book book = createBook();
         repository.save(book);
         Page<Book> books = repository.findAll(getPageRequest());
 
-        assertThat(books).hasSize(3);
+        assertThat(books).hasSize(5);
     }
 
     @Test
-    @Sql(scripts = "/sql/init_book.sql")
     void testUpdateReader() {
-        assertEntity(r -> {
+        assertEntity(1, r -> {
             assertThat(r.getAuthor()).isEqualTo("Ernest Hemingway");
             r.setAuthor("William Shakespeare");
             repository.save(r);
         });
 
-        assertEntity(r -> assertThat(r.getAuthor()).isEqualTo("William Shakespeare"));
+        assertEntity(1, r -> assertThat(r.getAuthor()).isEqualTo("William Shakespeare"));
     }
 
     @NotNull
     private static Book createBook() {
         var book = new Book();
-        book.setName("Hamlet");
+        book.setName("Macbeth");
         book.setAuthor("William Shakespeare");
 
         return book;
