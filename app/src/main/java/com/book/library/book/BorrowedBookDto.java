@@ -16,6 +16,10 @@ public record BorrowedBookDto(
                 book.getReader().getLastName());
     }
 
+    public String readerName() {
+        return "%s %s".formatted(firstName(), lastName());
+    }
+
     @Override
     public String toString() {
         return "Book[id=%d, name='%s', author='%s'', borrowedTo='%s %s', borrowedOn='%s']"

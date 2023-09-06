@@ -37,7 +37,7 @@
                             <tr th:each="item : ${books.content}">
                                 <td th:text="${item.name}"></td>
                                 <td th:text="${item.author}"></td>
-                                <td th:text="#{${item.firstName} + ' ' + ${item.lastName}}"></td>
+                                <td th:text="${item.readerName()}"></td>
                                 <td th:text="${item.borrowedOn}"></td>
                                 <td sec:authorize="hasRole('ROLE_ADMIN')">
                                     <a th:href="@{/avail(bookId=${item.id})}"
