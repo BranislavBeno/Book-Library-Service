@@ -1,5 +1,9 @@
 package com.book.library.book;
 
+import com.book.library.dto.AnyBookDto;
+import com.book.library.dto.AvailableBookDto;
+import com.book.library.dto.BorrowedBookDto;
+import com.book.library.dto.DataTransferObject;
 import jakarta.validation.Valid;
 import java.util.Collections;
 import java.util.List;
@@ -153,11 +157,11 @@ public class BookController extends AbstractBookController {
         return Collections.emptyList();
     }
 
-    private <T extends BookDto> PageData<T> providePageData(Page<T> page) {
+    private <T extends DataTransferObject> PageData<T> providePageData(Page<T> page) {
         List<Integer> pageNumbers = providePageNumbers(page.getTotalPages());
 
         return new PageData<>(page, pageNumbers);
     }
 
-    private record PageData<T extends BookDto>(Page<T> dtoPage, List<Integer> pageNumbers) {}
+    private record PageData<T extends DataTransferObject>(Page<T> dtoPage, List<Integer> pageNumbers) {}
 }

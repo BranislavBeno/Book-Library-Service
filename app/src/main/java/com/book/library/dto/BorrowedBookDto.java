@@ -1,10 +1,11 @@
-package com.book.library.book;
+package com.book.library.dto;
 
+import com.book.library.book.BorrowedBook;
 import java.time.LocalDate;
 
 public record BorrowedBookDto(
         int id, LocalDate borrowedOn, String name, String author, String firstName, String lastName)
-        implements BookDto {
+        implements DataTransferObject {
 
     public BorrowedBookDto(BorrowedBook book) {
         this(

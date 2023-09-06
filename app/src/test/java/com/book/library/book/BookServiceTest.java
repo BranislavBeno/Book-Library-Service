@@ -2,6 +2,8 @@ package com.book.library.book;
 
 import static org.mockito.ArgumentMatchers.*;
 
+import com.book.library.dto.AvailableBookDto;
+import com.book.library.dto.BorrowedBookDto;
 import com.book.library.reader.Reader;
 import com.book.library.reader.ReaderDto;
 import com.book.library.reader.ReaderRepository;

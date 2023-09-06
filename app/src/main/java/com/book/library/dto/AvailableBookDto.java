@@ -1,9 +1,10 @@
-package com.book.library.book;
+package com.book.library.dto;
 
+import com.book.library.book.Book;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
-public final class AvailableBookDto implements BookDto {
+public final class AvailableBookDto implements DataTransferObject {
 
     private int id;
 

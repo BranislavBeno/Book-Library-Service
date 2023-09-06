@@ -1,5 +1,8 @@
 package com.book.library.book;
 
+import com.book.library.dto.AnyBookDto;
+import com.book.library.dto.AvailableBookDto;
+import com.book.library.dto.BorrowedBookDto;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
 import jakarta.validation.Valid;
