@@ -2,8 +2,7 @@ package com.book.library.util;
 
 import com.book.library.domain.Borrowed;
 import com.book.library.domain.FileBook;
-import com.book.library.dto.AvailableBookDto;
-import com.book.library.dto.BorrowedDto;
+import com.book.library.filedto.BorrowedDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -22,10 +21,6 @@ public final class BookUtils {
         book.setBorrowed(borrowed);
 
         return book;
-    }
-
-    public static AvailableBookDto createAvailableDto() {
-        return new AvailableBookDto(1, "Hamlet", "William Shakespeare");
     }
 
     public static String createNonValidBorrowRequest() {
