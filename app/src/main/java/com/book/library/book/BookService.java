@@ -1,6 +1,7 @@
 package com.book.library.book;
 
 import com.book.library.reader.Reader;
+import com.book.library.reader.ReaderDto;
 import com.book.library.reader.ReaderRepository;
 import java.util.Optional;
 import javax.annotation.Nullable;
@@ -13,16 +14,20 @@ public record BookService(
         ReaderRepository readerRepository,
         int pageSize) {
 
-    public Page<AnyBookDto> findAllBooks(int page) {
+    public Page<AnyBookDto> findBooks(int page) {
         return bookRepository.findAll(getPageRequest(page)).map(this::toAnyBookDto);
     }
 
-    public Page<AvailableBookDto> findAllAvailableBooks(int page) {
+    public Page<AvailableBookDto> findAvailableBooks(int page) {
         return bookRepository.findAllAvailableBooks(getPageRequest(page));
     }
 
-    public Page<BorrowedBookDto> findAllBorrowedBooks(int page) {
+    public Page<BorrowedBookDto> findBorrowedBooks(int page) {
         return borrowedBookRepository.findAllBorrowedBooks(getPageRequest(page));
+    }
+
+    public Page<ReaderDto> findReaders(int page) {
+        return readerRepository.findAllReaders(getPageRequest(page));
     }
 
     public Book saveBook(Book book) {

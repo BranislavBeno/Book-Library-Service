@@ -3,6 +3,7 @@ package com.book.library.book;
 import static org.mockito.ArgumentMatchers.*;
 
 import com.book.library.reader.Reader;
+import com.book.library.reader.ReaderDto;
 import com.book.library.reader.ReaderRepository;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -42,6 +43,9 @@ class BookServiceTest implements WithAssertions {
     private Page<BorrowedBookDto> borrowedBookPage;
 
     @Mock
+    private Page<ReaderDto> readerPage;
+
+    @Mock
     private Book book;
 
     private BookService cut;
@@ -52,26 +56,33 @@ class BookServiceTest implements WithAssertions {
     }
 
     @Test
-    void testFindAll() {
+    void testFindBooks() {
         Mockito.when(bookRepository.findAll(any(PageRequest.class))).thenReturn(bookPage);
-        cut.findAllBooks(1);
+        cut.findBooks(1);
         Mockito.verify(bookRepository).findAll(any(PageRequest.class));
     }
 
     @Test
-    void testFindAllAvailable() {
+    void testFindAvailableBooks() {
         Mockito.when(bookRepository.findAllAvailableBooks(any(PageRequest.class)))
                 .thenReturn(availableBookPage);
-        cut.findAllAvailableBooks(0);
+        cut.findAvailableBooks(1);
         Mockito.verify(bookRepository).findAllAvailableBooks(any(PageRequest.class));
     }
 
     @Test
-    void testFindAllBorrowed() {
+    void testFindBorrowedBooks() {
         Mockito.when(borrowedBookRepository.findAllBorrowedBooks(any(PageRequest.class)))
                 .thenReturn(borrowedBookPage);
-        cut.findAllBorrowedBooks(2);
+        cut.findBorrowedBooks(1);
         Mockito.verify(borrowedBookRepository).findAllBorrowedBooks(any(PageRequest.class));
+    }
+
+    @Test
+    void testFindReaders() {
+        Mockito.when(readerRepository.findAllReaders(any(PageRequest.class))).thenReturn(readerPage);
+        cut.findReaders(1);
+        Mockito.verify(readerRepository).findAllReaders(any(PageRequest.class));
     }
 
     @Test

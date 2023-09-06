@@ -39,7 +39,7 @@ public class BookController extends AbstractBookController {
             @RequestParam(name = "page", defaultValue = "0") int page,
             Model model,
             @ModelAttribute(FORBIDDEN_ATTR) boolean forbidden) {
-        Page<AnyBookDto> bookPage = getService().findAllBooks(page);
+        Page<AnyBookDto> bookPage = getService().findBooks(page);
         PageData<AnyBookDto> pageData = providePageData(bookPage);
 
         model.addAttribute(FORBIDDEN_ATTR, forbidden);
@@ -52,7 +52,7 @@ public class BookController extends AbstractBookController {
 
     @GetMapping("/available")
     public String showAvailableBooks(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-        Page<AvailableBookDto> bookPage = getService().findAllAvailableBooks(page);
+        Page<AvailableBookDto> bookPage = getService().findAvailableBooks(page);
         PageData<AvailableBookDto> pageData = providePageData(bookPage);
 
         model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
@@ -64,7 +64,7 @@ public class BookController extends AbstractBookController {
 
     @GetMapping("/borrowed")
     public String showBorrowedBooks(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-        Page<BorrowedBookDto> bookPage = getService().findAllBorrowedBooks(page);
+        Page<BorrowedBookDto> bookPage = getService().findBorrowedBooks(page);
         PageData<BorrowedBookDto> pageData = providePageData(bookPage);
 
         model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());

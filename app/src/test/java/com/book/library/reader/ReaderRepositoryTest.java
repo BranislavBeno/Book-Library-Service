@@ -16,8 +16,8 @@ class ReaderRepositoryTest extends BaseRepositoryTest<Reader> implements WithAss
     private ReaderRepository repository;
 
     @Test
-    void testFindAll() {
-        Page<Reader> readers = repository.findAll(getPageRequest());
+    void testFindAllReaders() {
+        Page<ReaderDto> readers = repository.findAllReaders(getPageRequest());
 
         assertThat(readers).hasSize(5);
     }

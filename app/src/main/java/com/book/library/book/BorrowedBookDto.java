@@ -22,7 +22,7 @@ public record BorrowedBookDto(
 
     @Override
     public String toString() {
-        return "Book[id=%d, name='%s', author='%s'', borrowedTo='%s %s', borrowedOn='%s']"
-                .formatted(id, name, author, firstName, lastName, borrowedOn);
+        return "Book[id=%d, name='%s', author='%s'', borrowedTo='%s', borrowedOn='%s']"
+                .formatted(id, name, author, readerName(), borrowedOn);
     }
 }

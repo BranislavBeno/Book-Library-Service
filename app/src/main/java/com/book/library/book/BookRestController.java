@@ -27,17 +27,17 @@ public class BookRestController extends AbstractBookController {
 
     @GetMapping("/all")
     public List<AnyBookDto> all(@RequestParam(name = "page", defaultValue = "0") int page) {
-        return getService().findAllBooks(page).toList();
+        return getService().findBooks(page).toList();
     }
 
     @GetMapping("/available")
     public List<AvailableBookDto> available(@RequestParam(name = "page", defaultValue = "0") int page) {
-        return getService().findAllAvailableBooks(page).toList();
+        return getService().findAvailableBooks(page).toList();
     }
 
     @GetMapping("/borrowed")
     public List<BorrowedBookDto> borrowed(@RequestParam(name = "page", defaultValue = "0") int page) {
-        return getService().findAllBorrowedBooks(page).toList();
+        return getService().findBorrowedBooks(page).toList();
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
