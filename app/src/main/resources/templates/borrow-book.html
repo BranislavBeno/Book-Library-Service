@@ -20,25 +20,9 @@
                     <form class="row g-2" th:method="POST" th:object="${borrowedDto}" th:action="@{/borrow}">
                         <input type="hidden" th:field="*{bookId}"/>
                         <div class="col-12">
-                            <input id="firstName" class="form-control" type="text" placeholder="First name"
-                                   aria-label="First name" aria-describedby="firstNameHelp"
-                                   th:field="*{firstName}"
-                                   th:classappend="${#fields.hasErrors('firstName')}? 'is-invalid'">
-                            <div>
-                                <small id="firstNameHelp" class="form-text text-muted">
-                                    Client's first name.
-                                </small>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <input id="lastName" class="form-control" type="text" placeholder="Last name"
-                                   aria-label="Last name" aria-describedby="lastNameHelp" th:field="*{lastName}"
-                                   th:classappend="${#fields.hasErrors('lastName')}? 'is-invalid'">
-                            <div>
-                                <small id="lastNameHelp" class="form-text text-muted">
-                                    Client's last name.
-                                </small>
-                            </div>
+                            <select class="form-select" aria-label="Default select example" th:field="*{readerId}">
+                                <option th:each="item : ${readers.content}" th:value="${item.id}" th:text="${item.toString()}"></option>
+                            </select>
                         </div>
                         <div>
                             <input id="fromDate" class="form-control" type="date"

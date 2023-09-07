@@ -126,13 +126,10 @@ public class BookController extends AbstractBookController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/borrowBook")
-    public String borrowBook(
-            @RequestParam("bookId") int bookId,
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            Model model) {
+    public String borrowBook(@RequestParam("bookId") int bookId, Model model) {
         BorrowedDto borrowedDto = new BorrowedDto(bookId);
 
-        Page<ReaderDto> readerPage = getService().findReaders(page);
+        Page<ReaderDto> readerPage = getService().findReaders(0);
         PageData<ReaderDto> pageData = providePageData(readerPage);
 
         model.addAttribute(FOUND_ATTR, !readerPage.isEmpty());
