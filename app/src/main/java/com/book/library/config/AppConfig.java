@@ -4,9 +4,6 @@ import com.book.library.book.BookRepository;
 import com.book.library.book.BookService;
 import com.book.library.book.BorrowedBookRepository;
 import com.book.library.reader.ReaderRepository;
-import com.book.library.repository.BookFileRepository;
-import com.book.library.repository.BookFileRepositoryImpl;
-import com.book.library.service.BookFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -20,17 +17,6 @@ import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityPr
 @Configuration
 @EnableConfigurationProperties(CustomConfigurationProperties.class)
 public class AppConfig {
-
-    @Bean
-    public BookFileRepository bookFileRepository(@Value("${book.repository.path}") String path) {
-        return new BookFileRepositoryImpl(path);
-    }
-
-    @Bean
-    public BookFileService bookFileService(
-            @Autowired BookFileRepository repository, @Value("${book.service.page.size:20}") int pageSize) {
-        return new BookFileService(repository, pageSize);
-    }
 
     @Bean
     public BookService bookService(

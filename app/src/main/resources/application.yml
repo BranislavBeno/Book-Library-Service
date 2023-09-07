@@ -1,6 +1,4 @@
 book:
-  repository:
-    path: ../database/Library.xml
   service:
     page:
       size: 5
