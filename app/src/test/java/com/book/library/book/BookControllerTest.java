@@ -140,9 +140,8 @@ class BookControllerTest extends AbstractControllerTest {
         void testBorrowingBook() throws Exception {
             this.mockMvc
                     .perform(post("/borrow")
-                            .param("bookId", "1")
-                            .param("firstName", "Paul")
-                            .param("lastName", "Newman")
+                            .param("bookId", "4")
+                            .param("readerId", "1")
                             .param("from", "2023-01-05")
                             .with(csrf())
                             .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))

@@ -11,6 +11,10 @@ public final class BorrowedDto {
     @PastOrPresent(message = "Borrow date can't be later than today.")
     private LocalDate from;
 
+    public BorrowedDto() {
+        this(0);
+    }
+
     public BorrowedDto(int bookId) {
         this(bookId, 0, LocalDate.now());
     }
