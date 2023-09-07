@@ -1,9 +1,6 @@
 package com.book.library.book;
 
-import com.book.library.dto.AnyBookDto;
-import com.book.library.dto.AvailableBookDto;
-import com.book.library.dto.BorrowedBookDto;
-import com.book.library.dto.DataTransferObject;
+import com.book.library.dto.*;
 import jakarta.validation.Valid;
 import java.util.Collections;
 import java.util.List;
@@ -129,9 +126,18 @@ public class BookController extends AbstractBookController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/borrowBook")
-    public String borrowBook(@RequestParam("bookId") int id, Model model) {
-        BorrowedDto borrowedDto = new BorrowedDto();
-        borrowedDto.setBookId(id);
+    public String borrowBook(
+            @RequestParam("bookId") int bookId,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            Model model) {
+        BorrowedDto borrowedDto = new BorrowedDto(bookId);
+
+        Page<ReaderDto> readerPage = getService().findReaders(page);
+        PageData<ReaderDto> pageData = providePageData(readerPage);
+
+        model.addAttribute(FOUND_ATTR, !readerPage.isEmpty());
+        model.addAttribute("readers", pageData.dtoPage());
+        model.addAttribute(PAGE_NUMBERS_ATTR, pageData.pageNumbers());
         model.addAttribute("borrowedDto", borrowedDto);
 
         return "borrow-book";

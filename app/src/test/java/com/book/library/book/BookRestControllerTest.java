@@ -77,16 +77,14 @@ class BookRestControllerTest extends AbstractControllerTest {
                 """
                         {
                             "bookId": 4,
-                            "firstName": "John",
-                            "lastName": "Doe",
+                            "readerId": 1,
                             "from": "2023-01-05"
                         }""";
         private static final String BAD_REQUEST_BODY_5 =
                 """
                         {
                             "bookId": 10,
-                            "firstName": "John",
-                            "lastName": "Doe",
+                            "readerId": 1,
                             "from": "2023-01-05"
                         }""";
         private static final String BAD_REQUEST_BODY_6 = BookUtils.createNonValidBorrowRequest();

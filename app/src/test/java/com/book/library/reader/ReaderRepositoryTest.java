@@ -1,5 +1,6 @@
 package com.book.library.reader;
 
+import com.book.library.dto.ReaderDto;
 import com.book.library.repository.BaseRepositoryTest;
 import jakarta.validation.constraints.NotNull;
 import org.assertj.core.api.WithAssertions;

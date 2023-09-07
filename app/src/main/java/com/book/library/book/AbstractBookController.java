@@ -2,6 +2,7 @@ package com.book.library.book;
 
 import com.book.library.dto.AvailableBookDto;
 import com.book.library.dto.BorrowedBookDto;
+import com.book.library.dto.BorrowedDto;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

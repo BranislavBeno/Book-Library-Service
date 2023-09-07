@@ -10,11 +10,11 @@
 [![](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 # Simple web application for book library service
-This application allows to provide usual actions with book library, such as:
+This application allows providing usual actions with a book library, such as:
 - view paginated all books (highlighted whether are borrowed or available)
 - view paginated only available books
 - view paginated only borrowed books
-- add new book into library
+- add a new book into the library
 - update book data
 - remove book from library
 - borrow and return book
@@ -23,7 +23,7 @@ This application allows to provide usual actions with book library, such as:
 > It offers web UI and REST API interface as well.
 
 ### Configuration
-Following application settings are configurable over application.yml file:
+The following application settings are configurable over application.yml file:
 - book.repository.path - input file destination
 - book.service.page.size - page size for paginated outputs
 - auth.users - list of users defined by its usernames
@@ -37,17 +37,17 @@ Users with different roles are allowed only to watch/fetch listed data.
 > - username=mike (password=MikePass, role=user)
 
 ### Web UI usage
-To start the application open terminal, change path to project root folder and run `./gradlew :app:bootTestRun`.  
-After application start, click on http://localhost:8080/  
-To login don't use login form. Use link `Sign in` on top of the page instead.
+To start the application open terminal, change a path to project root folder and run `./gradlew :app:bootTestRun`.  
+After the application starts, click on http://localhost:8080/  
+To log in use link `Sign in` on top of the page.
 
 After successful login, web UI offers three types of view:
-1. _*All books*_. Borrowed are highlighted red, available green. This view allows book data updating or book removal from library.  
+1. _*All books*_. Borrowed are highlighted red, available green. This view allows book data updating or book removal from the library.  
    Book data updating doesn't allow borrow or rent book.
-2. _*Available books*_. This view allows to borrow book.
-3. _*Borrowed books*_.  This view allows to return book.
+2. _*Available books*_. This view allows a book borrowing.
+3. _*Borrowed books*_.  This view allows a book returning.
 
-Main page offers also adding book into library.
+The main page offers also to add a book into the library.
 
 ### REST API usage
 For sending requests and receiving responses use `Postman`, `curl` or web browser.
@@ -57,13 +57,13 @@ For sending requests and receiving responses use `Postman`, `curl` or web browse
 #### API description
 Following endpoints are available for usage:
 
-- **GET /api/v1/books/all?page={pageNumber}** - returns required page from list of all books or empty list when no book was found.
-- **GET /api/v1/books/available?page={pageNumber}** - returns required page from list of available books or empty list when no book was found.
-- **GET /api/v1/books/borrowed?page={pageNumber}** - returns required page from list of borrowed books or empty list when no book was found.
-- **POST /api/v1/books/add** - adds new book into library.  
+- **GET /api/v1/books/all?page={pageNumber}** - returns required page from a list of all books or empty list when no book was found.
+- **GET /api/v1/books/available?page={pageNumber}** - returns required page from a list of available books or empty list when no book was found.
+- **GET /api/v1/books/borrowed?page={pageNumber}** - returns required page from a list of borrowed books or empty list when no book was found.
+- **POST /api/v1/books/add** - adds a new book into the library.  
 > Input is validated. Book author can't be empty. Book name can't be empty or longer than 15 signs.
 
-  Request body example for new book adding:
+  Request body example for a new book adding:
   ```json
   {
      "name": "My memories",
@@ -81,17 +81,16 @@ Following endpoints are available for usage:
      "author": "John Doe"
   }
   ```
-- **DELETE /api/v1/books/delete?bookId={id}** - deletes book with given ID. Operation is refused when book with given ID doesn't exist.  
-- **PUT /api/v1/books/avail?bookId={id}** - makes available book with given ID. Operation is refused when book with given ID doesn't exist.  
+- **DELETE /api/v1/books/delete?bookId={id}** - deletes book with given ID. Operation is refused when a book with given ID doesn't exist.  
+- **PUT /api/v1/books/avail?bookId={id}** - makes an available book with given ID. Operation is refused when a book with given ID doesn't exist.  
 - **PUT /api/v1/books/borrow** - borrows the book. Operation is refused when a book with given ID doesn't exist.  
-> Input is validated. Date of borrow can't be later than today.
+> Input is validated. The Date of borrow can't be later than today.
 
   Request body example for book borrowing:
   ```json
   {
      "bookId": 1,
-     "firstName": "John",
-     "lastName": "Doe",
+     "readerId": 1,
      "from": "2023-01-05"
   }
   ```

@@ -11,7 +11,7 @@ public final class BookUtils {
     private BookUtils() {}
 
     public static String createNonValidBorrowRequest() {
-        return createNonValidRequest(new BorrowedDto(4, "John", "Doe", getTomorrowDate()));
+        return createNonValidRequest(new BorrowedDto(4, 1, getTomorrowDate()));
     }
 
     public static LocalDate getTomorrowDate() {
