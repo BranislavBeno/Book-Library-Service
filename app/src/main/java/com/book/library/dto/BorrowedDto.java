@@ -1,4 +1,4 @@
-package com.book.library.filedto;
+package com.book.library.dto;
 
 import jakarta.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
@@ -11,10 +11,6 @@ public final class BorrowedDto {
 
     @PastOrPresent(message = "Borrow date can't be later than today.")
     private LocalDate from;
-
-    public BorrowedDto() {
-        this(0, "", "", null);
-    }
 
     public BorrowedDto(int bookId, String firstName, String lastName, LocalDate from) {
         this.bookId = bookId;

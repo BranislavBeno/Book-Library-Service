@@ -1,6 +1,5 @@
 package com.book.library.book;
 
-import static com.book.library.util.BookUtils.getTomorrowsDate;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
@@ -8,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.book.library.util.BookUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -121,7 +121,7 @@ class BookControllerTest extends AbstractControllerTest {
         @Test
         @Disabled("refactoring required")
         void testRejectingBorrowingBook() throws Exception {
-            String date = getTomorrowsDate().toString();
+            String date = BookUtils.getTomorrowDate().toString();
 
             this.mockMvc
                     .perform(post("/borrow")
