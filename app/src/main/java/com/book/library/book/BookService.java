@@ -1,9 +1,6 @@
 package com.book.library.book;
 
-import com.book.library.dto.AnyBookDto;
-import com.book.library.dto.AvailableBookDto;
-import com.book.library.dto.BorrowedBookDto;
-import com.book.library.dto.ReaderDto;
+import com.book.library.dto.*;
 import com.book.library.reader.Reader;
 import com.book.library.reader.ReaderRepository;
 import java.util.Optional;
@@ -63,8 +60,8 @@ public record BookService(
     }
 
     @Nullable
-    public BorrowedBookDto borrowBook(int bookId, int readerId) {
-        Optional<BorrowedBook> borrowedBook = createBorrowedBook(bookId, readerId);
+    public BorrowedBookDto borrowBook(BorrowedDto dto) {
+        Optional<BorrowedBook> borrowedBook = createBorrowedBook(dto);
 
         return borrowedBook
                 .map(borrowedBookRepository::save)
@@ -72,14 +69,16 @@ public record BookService(
                 .orElse(null);
     }
 
-    private Optional<BorrowedBook> createBorrowedBook(int bookId, int readerId) {
-        Optional<Book> book = bookRepository.findById(bookId);
-        Optional<Reader> reader = readerRepository.findById(readerId);
+    private Optional<BorrowedBook> createBorrowedBook(BorrowedDto dto) {
+        Optional<Book> book = bookRepository.findById(dto.getBookId());
+        Optional<Reader> reader = readerRepository.findById(dto.getReaderId());
 
         return reader.flatMap(r -> book.map(b -> {
             BorrowedBook bb = new BorrowedBook();
             bb.setBook(b);
             bb.setReader(r);
+            bb.setBorrowedOn(dto.getFrom());
+
             return bb;
         }));
     }

@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.*;
 
 import com.book.library.dto.AvailableBookDto;
 import com.book.library.dto.BorrowedBookDto;
+import com.book.library.dto.BorrowedDto;
 import com.book.library.dto.ReaderDto;
 import com.book.library.reader.Reader;
 import com.book.library.reader.ReaderRepository;
@@ -155,7 +156,8 @@ class BookServiceTest implements WithAssertions {
         Mockito.when(bookRepository.findById(bookId)).thenReturn(Optional.ofNullable(bookParam));
         Mockito.when(readerRepository.findById(readerId)).thenReturn(Optional.ofNullable(readerParam));
 
-        BorrowedBookDto result = cut.borrowBook(bookId, readerId);
+        BorrowedDto dto = new BorrowedDto(bookId, readerId);
+        BorrowedBookDto result = cut.borrowBook(dto);
         assertThat(result).isNull();
 
         Mockito.verify(bookRepository).findById(bookId);
@@ -177,7 +179,8 @@ class BookServiceTest implements WithAssertions {
         Mockito.when(readerRepository.findById(readerId)).thenReturn(Optional.of(reader));
         Mockito.when(borrowedBookRepository.save(any(BorrowedBook.class))).thenReturn(borrowedBook);
 
-        BorrowedBookDto result = cut.borrowBook(bookId, readerId);
+        BorrowedDto dto = new BorrowedDto(bookId, readerId);
+        BorrowedBookDto result = cut.borrowBook(dto);
         assertThat(result).isNotNull();
 
         Mockito.verify(bookRepository).findById(bookId);

@@ -3,7 +3,8 @@ package com.book.library.dto;
 import jakarta.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
-public final class BorrowedDto {
+public final class
+BorrowedDto {
 
     private int bookId;
     private int readerId;
@@ -16,7 +17,11 @@ public final class BorrowedDto {
     }
 
     public BorrowedDto(int bookId) {
-        this(bookId, 0, LocalDate.now());
+        this(bookId, 0);
+    }
+
+    public BorrowedDto(int bookId, int readerId) {
+        this(bookId, readerId, LocalDate.now());
     }
 
     public BorrowedDto(int bookId, int readerId, LocalDate from) {

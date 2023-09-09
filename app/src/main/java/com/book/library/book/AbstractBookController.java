@@ -70,7 +70,7 @@ abstract class AbstractBookController {
     }
 
     BorrowedBookDto borrowBook(BorrowedDto dto) {
-        BorrowedBookDto bookDto = service.borrowBook(dto.getBookId(), dto.getReaderId());
+        BorrowedBookDto bookDto = service.borrowBook(dto);
 
         String message = bookDto != null
                 ? "%s borrowed successfully.".formatted(bookDto.toString())
