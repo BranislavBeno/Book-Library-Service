@@ -4,6 +4,7 @@ import com.book.library.book.BookRepository;
 import com.book.library.book.BookService;
 import com.book.library.book.BorrowedBookRepository;
 import com.book.library.reader.ReaderRepository;
+import com.book.library.reader.ReaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -25,6 +26,12 @@ public class AppConfig {
             @Autowired ReaderRepository readerRepository,
             @Value("${book.service.page.size:20}") int pageSize) {
         return new BookService(bookRepository, borrowedBookRepository, readerRepository, pageSize);
+    }
+
+    @Bean
+    public ReaderService readerService(
+            @Autowired ReaderRepository readerRepository, @Value("${book.service.page.size:20}") int pageSize) {
+        return new ReaderService(readerRepository, pageSize);
     }
 
     @Bean
