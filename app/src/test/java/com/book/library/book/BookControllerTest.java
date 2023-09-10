@@ -70,14 +70,16 @@ class BookControllerTest extends AbstractControllerTest {
         }
 
         @Test
-        @Disabled("refactoring required")
         void testShowBorrowBookForm() throws Exception {
             this.mockMvc
                     .perform(MockMvcRequestBuilders.get("/borrowBook")
                             .param("bookId", "1")
+                            .param("readerId", "1")
                             .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.view().name("borrow-book"))
+                    .andExpect(MockMvcResultMatchers.model().attribute("found", true))
+                    .andExpect(MockMvcResultMatchers.model().attributeExists("readers"))
                     .andExpect(MockMvcResultMatchers.model().attributeExists("borrowedDto"));
         }
 
@@ -119,14 +121,13 @@ class BookControllerTest extends AbstractControllerTest {
         }
 
         @Test
-        @Disabled("refactoring required")
         void testRejectingBorrowingBook() throws Exception {
             String date = BookUtils.getTomorrowDate().toString();
 
             this.mockMvc
                     .perform(post("/borrow")
-                            .param("firstName", "Paul")
-                            .param("lastName", "Newman")
+                            .param("bookId", "4")
+                            .param("readerId", "1")
                             .param("from", date)
                             .with(csrf())
                             .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
