@@ -12,11 +12,7 @@ public final class BorrowedDto {
     private LocalDate from;
 
     public BorrowedDto() {
-        this(0);
-    }
-
-    public BorrowedDto(int bookId) {
-        this(bookId, 0);
+        this(0, 0);
     }
 
     public BorrowedDto(int bookId, int readerId) {

@@ -126,9 +126,28 @@ public class BookController extends AbstractBookController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/borrowBook")
-    public String borrowBook(@RequestParam("bookId") int bookId, Model model) {
-        BorrowedDto borrowedDto = new BorrowedDto(bookId);
+    public String borrowBook(
+            @RequestParam("bookId") int bookId,
+            @RequestParam(name = "readerId", defaultValue = "1") int readerId,
+            Model model) {
+        BorrowedDto borrowedDto = new BorrowedDto(bookId, readerId);
 
+        return callBorrowTemplate(model, borrowedDto);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/borrow")
+    public String borrow(@Valid BorrowedDto borrowedDto, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return callBorrowTemplate(model, borrowedDto);
+        }
+
+        borrowBook(borrowedDto);
+
+        return "redirect:/available";
+    }
+
+    private String callBorrowTemplate(Model model, BorrowedDto borrowedDto) {
         List<ReaderDto> readers = getService().findAllReaders();
 
         model.addAttribute(FOUND_ATTR, !readers.isEmpty());
@@ -136,18 +155,6 @@ public class BookController extends AbstractBookController {
         model.addAttribute("borrowedDto", borrowedDto);
 
         return "borrow-book";
-    }
-
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/borrow")
-    public String borrow(@Valid BorrowedDto borrowedDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "borrow-book";
-        }
-
-        borrowBook(borrowedDto);
-
-        return "redirect:/available";
     }
 
     private List<Integer> providePageNumbers(int totalPages) {
