@@ -3,6 +3,7 @@ package com.book.library.book;
 import com.book.library.dto.*;
 import com.book.library.reader.Reader;
 import com.book.library.reader.ReaderRepository;
+import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nullable;
 import org.springframework.data.domain.Page;
@@ -26,8 +27,8 @@ public record BookService(
         return borrowedBookRepository.findAllBorrowedBooks(getPageRequest(page));
     }
 
-    public Page<ReaderDto> findReaders(int page) {
-        return readerRepository.findAllReaders(getPageRequest(page));
+    public List<ReaderDto> findAllReaders() {
+        return readerRepository.findAllReaders();
     }
 
     public Book saveBook(Book book) {

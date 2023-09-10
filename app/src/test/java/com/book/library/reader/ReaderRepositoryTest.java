@@ -18,7 +18,12 @@ class ReaderRepositoryTest extends BaseRepositoryTest<Reader> implements WithAss
 
     @Test
     void testFindAllReaders() {
-        Page<ReaderDto> readers = repository.findAllReaders(getPageRequest());
+        assertThat(repository.findAllReaders()).hasSize(7);
+    }
+
+    @Test
+    void testFindAllReadersPaged() {
+        Page<ReaderDto> readers = repository.findAllReadersPaged(getPageRequest());
 
         assertThat(readers).hasSize(5);
     }
@@ -33,19 +38,21 @@ class ReaderRepositoryTest extends BaseRepositoryTest<Reader> implements WithAss
 
     @Test
     void testDeleteById() {
-        repository.deleteById(5);
-        Page<Reader> readers = repository.findAll(getPageRequest());
+        assertThat(repository.findAll()).hasSize(7);
 
-        assertThat(readers).hasSize(4);
+        repository.deleteById(5);
+
+        assertThat(repository.findAll()).hasSize(6);
     }
 
     @Test
     void testAddReader() {
+        assertThat(repository.findAll()).hasSize(7);
+
         Reader reader = createReader();
         repository.save(reader);
-        Page<Reader> readers = repository.findAll(getPageRequest());
 
-        assertThat(readers).hasSize(5);
+        assertThat(repository.findAll()).hasSize(8);
     }
 
     @Test

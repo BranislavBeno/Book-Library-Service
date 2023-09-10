@@ -8,6 +8,7 @@ import com.book.library.dto.BorrowedDto;
 import com.book.library.dto.ReaderDto;
 import com.book.library.reader.Reader;
 import com.book.library.reader.ReaderRepository;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.assertj.core.api.WithAssertions;
@@ -46,9 +47,6 @@ class BookServiceTest implements WithAssertions {
     private Page<BorrowedBookDto> borrowedBookPage;
 
     @Mock
-    private Page<ReaderDto> readerPage;
-
-    @Mock
     private Book book;
 
     private BookService cut;
@@ -83,9 +81,10 @@ class BookServiceTest implements WithAssertions {
 
     @Test
     void testFindReaders() {
-        Mockito.when(readerRepository.findAllReaders(any(PageRequest.class))).thenReturn(readerPage);
-        cut.findReaders(1);
-        Mockito.verify(readerRepository).findAllReaders(any(PageRequest.class));
+        var dto = Mockito.mock(ReaderDto.class);
+        Mockito.when(readerRepository.findAllReaders()).thenReturn(List.of(dto));
+        cut.findAllReaders();
+        Mockito.verify(readerRepository).findAllReaders();
     }
 
     @Test

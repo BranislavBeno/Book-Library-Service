@@ -20,11 +20,17 @@
                     <form class="row g-2" th:method="POST" th:object="${borrowedDto}" th:action="@{/borrow}">
                         <input type="hidden" th:field="*{bookId}"/>
                         <div class="col-12">
-                            <select class="form-select" aria-label="Default select example" th:field="*{readerId}">
-                                <option th:each="item : ${readers.content}" th:value="${item.id}" th:text="${item.toString()}"></option>
+                            <label class="form-check-label" for="readerSelect">
+                                Select reader
+                            </label>
+                            <select class="form-select" id="readerSelect" th:field="*{readerId}">
+                                <option th:each="item : ${readers}" th:value="${item.id}" th:text="${item.toString()}"></option>
                             </select>
                         </div>
-                        <div>
+                        <div class="col-12">
+                            <label class="form-check-label" for="readerSelect">
+                                Choose date of borrow
+                            </label>
                             <input id="fromDate" class="form-control" type="date"
                                    aria-label="Date of borrow" aria-describedby="fromDateHelp" th:field="*{from}"
                                    th:classappend="${#fields.hasErrors('from')}? 'is-invalid'">

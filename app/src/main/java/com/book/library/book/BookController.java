@@ -129,12 +129,10 @@ public class BookController extends AbstractBookController {
     public String borrowBook(@RequestParam("bookId") int bookId, Model model) {
         BorrowedDto borrowedDto = new BorrowedDto(bookId);
 
-        Page<ReaderDto> readerPage = getService().findReaders(0);
-        PageData<ReaderDto> pageData = providePageData(readerPage);
+        List<ReaderDto> readers = getService().findAllReaders();
 
-        model.addAttribute(FOUND_ATTR, !readerPage.isEmpty());
-        model.addAttribute("readers", pageData.dtoPage());
-        model.addAttribute(PAGE_NUMBERS_ATTR, pageData.pageNumbers());
+        model.addAttribute(FOUND_ATTR, !readers.isEmpty());
+        model.addAttribute("readers", readers);
         model.addAttribute("borrowedDto", borrowedDto);
 
         return "borrow-book";
