@@ -27,9 +27,9 @@ problem-spring-web = { module = "org.zalando:problem-spring-web", version = "0.2
 spring-cloud-aws-bom = { module = "io.awspring.cloud:spring-cloud-aws-dependencies", version = "3.0.2" }
 spring-cloud-aws-starter = { module = "io.awspring.cloud:spring-cloud-aws-starter" }
 aws-sdk-cognito-idp = { module = "software.amazon.awssdk:cognitoidentityprovider" }
-aws-cdk-lib = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.94.0" }
+aws-cdk-lib = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.95.1" }
 # code quality
-palantir-javaformat = { module = "com.palantir.javaformat:palantir-java-format", version = "2.35.0" }
+palantir-javaformat = { module = "com.palantir.javaformat:palantir-java-format", version = "2.36.0" }
 # gradle plugins
 spring-boot = { module = "org.springframework.boot:spring-boot-gradle-plugin", version = "3.1.3" }
 git-properties = { module = "com.gorylenko.gradle-git-properties:gradle-git-properties", version = "2.4.1" }
