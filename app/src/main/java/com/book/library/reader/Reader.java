@@ -17,6 +17,8 @@ public class Reader {
 
     private String lastName;
 
+    private String email;
+
     @OneToMany(mappedBy = "reader")
     private List<BorrowedBook> borrowedBooks;
 
@@ -42,6 +44,14 @@ public class Reader {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public List<BorrowedBook> getBorrowedBooks() {

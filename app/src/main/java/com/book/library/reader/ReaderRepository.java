@@ -11,13 +11,13 @@ public interface ReaderRepository extends JpaRepository<Reader, Integer> {
 
     @Query(
             """
-                    SELECT new com.book.library.dto.ReaderDto(r.id, r.firstName, r.lastName)
+                    SELECT new com.book.library.dto.ReaderDto(r.id, r.firstName, r.lastName, r.email)
                     FROM Reader r""")
     List<ReaderDto> findAllReaders();
 
     @Query(
             """
-                    SELECT new com.book.library.dto.ReaderDto(r.id, r.firstName, r.lastName)
+                    SELECT new com.book.library.dto.ReaderDto(r.id, r.firstName, r.lastName, r.email)
                     FROM Reader r""")
     Page<ReaderDto> findAllReadersPaged(Pageable pageable);
 }

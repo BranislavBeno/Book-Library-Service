@@ -1,11 +1,11 @@
 -- Reader
-INSERT INTO reader (id, first_name, last_name) VALUES (1, 'Ján', 'Prvý');
-INSERT INTO reader (id, first_name, last_name) VALUES (2, 'Lukáš', 'Druhý');
-INSERT INTO reader (id, first_name, last_name) VALUES (3, 'Matej', 'Tretí');
-INSERT INTO reader (id, first_name, last_name) VALUES (4, 'Jozef', 'Štvrtý');
-INSERT INTO reader (id, first_name, last_name) VALUES (5, 'Peter', 'Piaty');
-INSERT INTO reader (id, first_name, last_name) VALUES (6, 'Pavol', 'Šiesty');
-INSERT INTO reader (id, first_name, last_name) VALUES (7, 'Juraj', 'Siedmy');
+INSERT INTO reader (id, first_name, last_name, email) VALUES (1, 'Ján', 'Prvý', 'jan@example.com');
+INSERT INTO reader (id, first_name, last_name, email) VALUES (2, 'Lukáš', 'Druhý', 'lukas@example.com');
+INSERT INTO reader (id, first_name, last_name, email) VALUES (3, 'Matej', 'Tretí', 'matej@example.com');
+INSERT INTO reader (id, first_name, last_name, email) VALUES (4, 'Jozef', 'Štvrtý', 'jozef@example.com');
+INSERT INTO reader (id, first_name, last_name, email) VALUES (5, 'Peter', 'Piaty', 'peter@example.com');
+INSERT INTO reader (id, first_name, last_name, email) VALUES (6, 'Pavol', 'Šiesty', 'pavol@example.com');
+INSERT INTO reader (id, first_name, last_name, email) VALUES (7, 'Juraj', 'Siedmy', 'juraj@example.com');
 -- Book
 INSERT INTO book (id, name, author) VALUES (1, 'Starec a more', 'Ernest Hemingway');
 INSERT INTO book (id, name, author) VALUES (2, 'Rómeo a Júlia', 'William Shakespeare');

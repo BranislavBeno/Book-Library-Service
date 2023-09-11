@@ -1,6 +1,6 @@
 package com.book.library.dto;
 
-public record ReaderDto(int id, String firstName, String lastName) implements DataTransferObject {
+public record ReaderDto(int id, String firstName, String lastName, String email) implements DataTransferObject {
 
     @Override
     public String toString() {

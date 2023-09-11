@@ -5,6 +5,7 @@ CREATE TABLE reader (
   id INTEGER NOT NULL,
    first_name VARCHAR(255),
    last_name VARCHAR(255),
+   email VARCHAR(255),
    CONSTRAINT pk_reader PRIMARY KEY (id)
 );
 
