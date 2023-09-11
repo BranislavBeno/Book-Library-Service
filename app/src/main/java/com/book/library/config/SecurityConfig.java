@@ -53,9 +53,9 @@ public class SecurityConfig {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .securityMatcher("/api/v1/books/**")
-                .authorizeHttpRequests(
-                        auth -> auth.requestMatchers("/api/v1/books/**").authenticated())
+                .securityMatcher("/api/v1/books/**", "/api/v1/reader/**")
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/books/**", "/api/v1/reader/**")
+                        .authenticated())
                 .oauth2Login(oauth2 -> new OAuth2LoginConfigurer<>())
                 .exceptionHandling(exception -> exception.accessDeniedHandler(new UserForbiddenErrorHandler()));
 

@@ -1,4 +1,4 @@
-package com.book.library.book;
+package com.book.library.controller;
 
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,7 +11,7 @@ import org.testcontainers.utility.DockerImageName;
 
 @SpringBootTest(properties = "spring.flyway.locations=classpath:/db/migration/postgresql")
 @AutoConfigureMockMvc
-abstract class AbstractControllerTest {
+public abstract class AbstractControllerTest {
 
     @ServiceConnection
     private static final PostgreSQLContainer<?> REPOSITORY_CONTAINER =
