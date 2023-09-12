@@ -31,12 +31,13 @@ abstract class AbstractBookController {
     AvailableBookDto updateBook(AvailableBookDto dto) {
         Book book = service.findBook(dto.getId());
 
-        if (book != null) {
-            book.setName(dto.getName());
-            book.setAuthor(dto.getAuthor());
-        } else {
-            book = toBookEntity(dto);
+        if (book == null) {
+            book = new Book();
         }
+
+        book.setId(dto.getId());
+        book.setName(dto.getName());
+        book.setAuthor(dto.getAuthor());
 
         AvailableBookDto bookDto = new AvailableBookDto(service.saveBook(book));
 
@@ -79,14 +80,5 @@ abstract class AbstractBookController {
         LOGGER.info(message);
 
         return bookDto;
-    }
-
-    private Book toBookEntity(AvailableBookDto dto) {
-        var book = new Book();
-        book.setId(dto.getId());
-        book.setName(dto.getName());
-        book.setAuthor(dto.getAuthor());
-
-        return book;
     }
 }
