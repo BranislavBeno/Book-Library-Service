@@ -64,9 +64,53 @@ class ReaderRestControllerTest extends AbstractControllerTest {
                         "email": "john"
                         }""";
 
+        private static final String BAD_REQUEST_BODY_4 =
+                """
+                        {
+                        "id": "1",
+                        "firstName": "",
+                        "lastName": "Doe",
+                        "email": "john@example.com"
+                        }""";
+
+        private static final String BAD_REQUEST_BODY_5 =
+                """
+                        {
+                        "id": "1",
+                        "firstName": "John",
+                        "lastName": "",
+                        "email": "john@example.com"
+                        }""";
+
+        private static final String BAD_REQUEST_BODY_6 =
+                """
+                        {
+                        "id": "1",
+                        "firstName": "John",
+                        "lastName": "Doe",
+                        "email": "john"
+                        }""";
+        private static final String BAD_REQUEST_BODY_7 =
+                """
+                        {
+                        "id": "100",
+                        "firstName": "John",
+                        "lastName": "Doe",
+                        "email": "john@example.com"
+                        }""";
+
         private static final String REQUEST_BODY_1 =
                 """
                         {
+                        "firstName": "John",
+                        "lastName": "Doe",
+                        "email": "john@example.com"
+                        }""";
+
+        private static final String REQUEST_BODY_2 =
+                """
+                        {
+                        "id": "1",
                         "firstName": "John",
                         "lastName": "Doe",
                         "email": "john@example.com"
@@ -112,7 +156,7 @@ class ReaderRestControllerTest extends AbstractControllerTest {
 
         @ParameterizedTest
         @MethodSource("creationRequests")
-        void testAddingBook(String body, ResultMatcher status) throws Exception {
+        void testAddingReader(String body, ResultMatcher status) throws Exception {
             this.mockMvc
                     .perform(post("/api/v1/reader/add")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -128,6 +172,66 @@ class ReaderRestControllerTest extends AbstractControllerTest {
                     Arguments.of(BAD_REQUEST_BODY_2, status().isBadRequest()),
                     Arguments.of(BAD_REQUEST_BODY_3, status().isBadRequest()),
                     Arguments.of(REQUEST_BODY_1, status().isOk()));
+        }
+
+        @Test
+        void testForbidUpdatingReader() throws Exception {
+            this.mockMvc
+                    .perform(put("/api/v1/reader/update")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(REQUEST_BODY_2)
+                            .with(csrf())
+                            .with(oidcLogin()))
+                    .andExpect(status().isForbidden());
+        }
+
+        @ParameterizedTest
+        @MethodSource("updateRequests")
+        void testUpdatingReader(String body, ResultMatcher status) throws Exception {
+            this.mockMvc
+                    .perform(put("/api/v1/reader/update")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(body)
+                            .with(csrf())
+                            .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                    .andExpect(status);
+        }
+
+        private static Stream<Arguments> updateRequests() {
+            return Stream.of(
+                    Arguments.of(BAD_REQUEST_BODY_4, status().isBadRequest()),
+                    Arguments.of(BAD_REQUEST_BODY_5, status().isBadRequest()),
+                    Arguments.of(BAD_REQUEST_BODY_6, status().isBadRequest()),
+                    Arguments.of(BAD_REQUEST_BODY_7, status().isNotFound()),
+                    Arguments.of(REQUEST_BODY_2, status().isOk()));
+        }
+
+        @Test
+        void testForbidDeletingReader() throws Exception {
+            this.mockMvc
+                    .perform(delete("/api/v1/reader/delete")
+                            .param("readerId", "1")
+                            .with(csrf())
+                            .with(oidcLogin()))
+                    .andExpect(status().isForbidden());
+        }
+
+        @ParameterizedTest
+        @MethodSource("deleteRequests")
+        void testDeletingReader(String id, ResultMatcher status) throws Exception {
+            this.mockMvc
+                    .perform(delete("/api/v1/reader/delete")
+                            .param("readerId", id)
+                            .with(csrf())
+                            .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                    .andExpect(status);
+        }
+
+        private static Stream<Arguments> deleteRequests() {
+            return Stream.of(
+                    Arguments.of("10", status().isNotFound()),
+                    Arguments.of("1", status().isForbidden()),
+                    Arguments.of("7", status().isOk()));
         }
     }
 

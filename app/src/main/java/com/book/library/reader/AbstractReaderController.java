@@ -3,6 +3,7 @@ package com.book.library.reader;
 import com.book.library.dto.ReaderDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 
 abstract class AbstractReaderController {
 
@@ -32,6 +33,19 @@ abstract class AbstractReaderController {
         LOGGER.info(message);
 
         return readerDto;
+    }
+
+    void deleteReader(int id) {
+        try {
+            service.deleteReader(id);
+            String message = "Reader with id='%d' deleted successfully.".formatted(id);
+            LOGGER.info(message);
+        } catch (DataIntegrityViolationException e) {
+            String message =
+                    "Reader with id='%d' can't be deleted due to he/she still has borrowed books.".formatted(id);
+            LOGGER.error(message);
+            throw new ReaderDeletionException(message);
+        }
     }
 
     ReaderService getService() {
