@@ -5,7 +5,7 @@
 <nav aria-label="Page navigation" th:fragment="pagination-nav(pageLink)" th:if="${pageNumbers.size() > 1}">
     <ul class="pagination justify-content-center">
         <li class="page-item" th:each="pageNumber : ${pageNumbers}">
-            <a class="page-link" th:href="@{${pageLink}(page=${pageNumber - 1})}" th:text=${pageNumber}></a>
+            <a class="page-link" th:href="@{${pageLink}(page=${pageNumber - 1})}" th:text="${pageNumber}"></a>
         </li>
     </ul>
 </nav>
@@ -20,6 +20,8 @@
                th:href="@{/borrowed}">Show borrowed books</a>
             <a id="addBookButton" class="list-group-item list-group-item-action"
                th:href="@{/addBook}" sec:authorize="hasRole('ROLE_ADMIN')">Add new book</a>
+            <a id="readersButton" class="list-group-item list-group-item-action"
+               th:href="@{/reader/all}" sec:authorize="hasRole('ROLE_ADMIN')">Show readers</a>
         </div>
     </div>
 </div>

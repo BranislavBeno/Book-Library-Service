@@ -1,10 +1,9 @@
 package com.book.library.book;
 
+import com.book.library.controller.ViewController;
 import com.book.library.dto.*;
 import jakarta.validation.Valid;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-public class BookController extends AbstractBookController {
+public class BookController extends AbstractBookController implements ViewController {
 
     private static final String FORBIDDEN_ATTR = "forbidden";
     private static final String FOUND_ATTR = "found";
@@ -156,20 +155,4 @@ public class BookController extends AbstractBookController {
 
         return "borrow-book";
     }
-
-    private List<Integer> providePageNumbers(int totalPages) {
-        if (totalPages > 0) {
-            return IntStream.rangeClosed(1, totalPages).boxed().toList();
-        }
-
-        return Collections.emptyList();
-    }
-
-    private <T extends DataTransferObject> PageData<T> providePageData(Page<T> page) {
-        List<Integer> pageNumbers = providePageNumbers(page.getTotalPages());
-
-        return new PageData<>(page, pageNumbers);
-    }
-
-    private record PageData<T extends DataTransferObject>(Page<T> dtoPage, List<Integer> pageNumbers) {}
 }

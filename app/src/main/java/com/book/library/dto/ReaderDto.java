@@ -60,8 +60,12 @@ public final class ReaderDto implements DataTransferObject {
         this.email = email;
     }
 
+    public String readerName() {
+        return "%s %s".formatted(firstName, lastName);
+    }
+
     @Override
     public String toString() {
-        return "%s %s".formatted(firstName, lastName);
+        return "Reader[id=%d, name='%s', email='%s']".formatted(id, readerName(), email);
     }
 }
