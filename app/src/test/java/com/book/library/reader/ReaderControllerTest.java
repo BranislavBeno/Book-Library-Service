@@ -4,8 +4,9 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 import com.book.library.controller.AbstractControllerTest;
 import org.junit.jupiter.api.Nested;
@@ -50,6 +51,60 @@ class ReaderControllerTest extends AbstractControllerTest {
                     .andExpect(MockMvcResultMatchers.view().name("all-readers"))
                     .andExpect(MockMvcResultMatchers.model().attribute("found", true))
                     .andExpect(MockMvcResultMatchers.model().attributeExists("readers", "pageNumbers"));
+        }
+
+        @Test
+        void testForbidShowingAddReaderForm() throws Exception {
+            this.mockMvc
+                    .perform(MockMvcRequestBuilders.get("/reader/show-add").with(oidcLogin()))
+                    .andExpect(status().isForbidden());
+        }
+
+        @Test
+        void testShowingAddReaderForm() throws Exception {
+            this.mockMvc
+                    .perform(MockMvcRequestBuilders.get("/reader/show-add")
+                            .with(csrf())
+                            .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.view().name("save-reader"))
+                    .andExpect(MockMvcResultMatchers.model().attributeExists("readerDto"));
+        }
+
+        @Test
+        void testForbidSavingReader() throws Exception {
+            this.mockMvc
+                    .perform(MockMvcRequestBuilders.post("/reader/save").with(oidcLogin()))
+                    .andExpect(status().isForbidden());
+        }
+
+        @ParameterizedTest
+        @CsvSource({"'',Doe,john@example.com", "John,'',john@example.com", "John,Doe,''", "John,Doe,john"})
+        void testRejectingSavingReader(String firstName, String lastName, String email) throws Exception {
+            this.mockMvc
+                    .perform(post("/reader/save")
+                            .param("firstName", firstName)
+                            .param("lastName", lastName)
+                            .param("email", email)
+                            .with(csrf())
+                            .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                    .andExpect(status().isOk())
+                    .andExpect(view().name("save-reader"))
+                    .andExpect(model().hasErrors())
+                    .andExpect(model().attributeHasErrors("readerDto"));
+        }
+
+        @Test
+        void testSavingReader() throws Exception {
+            this.mockMvc
+                    .perform(post("/reader/save")
+                            .param("firstName", "John")
+                            .param("lastName", "Doe")
+                            .param("email", "john@example.com")
+                            .with(csrf())
+                            .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                    .andExpect(status().is3xxRedirection())
+                    .andExpect(header().string("Location", "/reader/all"));
         }
 
         @Test
