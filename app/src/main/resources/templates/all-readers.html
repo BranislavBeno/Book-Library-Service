@@ -39,8 +39,8 @@
                                 <td th:text="${item.readerName()}"></td>
                                 <td th:text="${item.email}"></td>
                                 <td>
-                                    <div th:replace="~{fragments/button :: button-update}"></div>
-                                    <div th:replace="~{fragments/button :: button-delete(pageLink='/reader/delete',identifier='readerId')}"></div>
+                                    <div th:replace="~{fragments/button :: button-update(pageLink='/reader/show-update', identifier='readerId')}"></div>
+                                    <div th:replace="~{fragments/button :: button-delete(pageLink='/reader/delete', identifier='readerId')}"></div>
                                 </td>
                             </tr>
                             </tbody>

@@ -45,7 +45,7 @@
                                     data-bs-placement="right" title="Available"></td>
                                 <td class="table-success" th:if="${!item.borrowed}"
                                     sec:authorize="hasRole('ROLE_ADMIN')">
-                                    <div th:replace="~{fragments/button :: button-update}"></div>
+                                    <div th:replace="~{fragments/button :: button-update(pageLink='/updateBook', identifier='bookId')}"></div>
                                     <div th:replace="~{fragments/button :: button-delete(pageLink='/delete', identifier='bookId')}"></div>
                                 </td>
                                 <td class="table-danger" th:if="${item.borrowed}" th:text="${item.name}"
@@ -56,7 +56,7 @@
                                     data-bs-placement="right" title="Borrowed"></td>
                                 <td class="table-danger" th:if="${item.borrowed}"
                                     sec:authorize="hasRole('ROLE_ADMIN')">
-                                    <div th:replace="~{fragments/button :: button-update}"></div>
+                                    <div th:replace="~{fragments/button :: button-update(pageLink='/updateBook', identifier='bookId')}"></div>
                                     <div th:replace="~{fragments/button :: button-delete(pageLink='/delete', identifier='bookId')}"></div>
                                 </td>
                             </tr>

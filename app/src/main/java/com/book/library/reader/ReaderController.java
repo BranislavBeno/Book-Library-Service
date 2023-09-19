@@ -53,6 +53,14 @@ public class ReaderController extends AbstractReaderController implements ViewCo
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/show-update")
+    public String updateReader(@RequestParam("readerId") int id, Model model) {
+        model.addAttribute("readerDto", findReader(id));
+
+        return SAVE_READER_PAGE;
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/save")
     public String save(@Valid ReaderDto readerDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

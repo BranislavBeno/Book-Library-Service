@@ -1,6 +1,7 @@
 package com.book.library.reader;
 
 import com.book.library.dto.ReaderDto;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -13,6 +14,12 @@ abstract class AbstractReaderController {
 
     AbstractReaderController(ReaderService service) {
         this.service = service;
+    }
+
+    ReaderDto findReader(int id) {
+        Reader reader = service.findReader(id);
+
+        return new ReaderDto(Objects.requireNonNullElseGet(reader, Reader::new));
     }
 
     ReaderDto updateReader(ReaderDto dto) {
