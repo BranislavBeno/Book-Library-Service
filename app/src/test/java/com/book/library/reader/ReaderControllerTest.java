@@ -72,6 +72,25 @@ class ReaderControllerTest extends AbstractControllerTest {
         }
 
         @Test
+        void testForbidShowingUpdateReaderForm() throws Exception {
+            this.mockMvc
+                    .perform(MockMvcRequestBuilders.get("/reader/show-update").with(oidcLogin()))
+                    .andExpect(status().isForbidden());
+        }
+
+        @Test
+        void testShowingUpdateReaderForm() throws Exception {
+            this.mockMvc
+                    .perform(MockMvcRequestBuilders.get("/reader/show-update")
+                            .param("readerId", "1")
+                            .with(csrf())
+                            .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.view().name("save-reader"))
+                    .andExpect(MockMvcResultMatchers.model().attributeExists("readerDto"));
+        }
+
+        @Test
         void testForbidSavingReader() throws Exception {
             this.mockMvc
                     .perform(MockMvcRequestBuilders.post("/reader/save").with(oidcLogin()))
