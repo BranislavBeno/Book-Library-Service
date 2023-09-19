@@ -7,10 +7,12 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 @SpringBootTest(properties = "spring.flyway.locations=classpath:/db/migration/postgresql")
 @AutoConfigureMockMvc
+@Testcontainers(disabledWithoutDocker = true)
 public abstract class AbstractControllerTest {
 
     @ServiceConnection
