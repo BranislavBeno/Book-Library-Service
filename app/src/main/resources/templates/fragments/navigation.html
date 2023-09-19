@@ -22,6 +22,8 @@
                th:href="@{/addBook}" sec:authorize="hasRole('ROLE_ADMIN')">Add new book</a>
             <a id="readersButton" class="list-group-item list-group-item-action"
                th:href="@{/reader/all}" sec:authorize="hasRole('ROLE_ADMIN')">Show readers</a>
+            <a id="addReaderButton" class="list-group-item list-group-item-action"
+               th:href="@{/reader/show-add}" sec:authorize="hasRole('ROLE_ADMIN')">Add new reader</a>
         </div>
     </div>
 </div>

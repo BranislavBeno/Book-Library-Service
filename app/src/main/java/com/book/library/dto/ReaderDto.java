@@ -7,15 +7,13 @@ import jakarta.validation.constraints.NotEmpty;
 public final class ReaderDto implements DataTransferObject {
 
     private int id;
+    private @NotEmpty String firstName;
+    private @NotEmpty String lastName;
+    private @NotEmpty @Email String email;
 
-    @NotEmpty
-    private String firstName;
-
-    @NotEmpty
-    private String lastName;
-
-    @Email
-    private String email;
+    public ReaderDto() {
+        this(0, "", "", "");
+    }
 
     public ReaderDto(Reader reader) {
         this(reader.getId(), reader.getFirstName(), reader.getLastName(), reader.getEmail());

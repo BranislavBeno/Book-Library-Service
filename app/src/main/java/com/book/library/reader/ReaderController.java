@@ -2,15 +2,14 @@ package com.book.library.reader;
 
 import com.book.library.controller.ViewController;
 import com.book.library.dto.ReaderDto;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -22,6 +21,7 @@ public class ReaderController extends AbstractReaderController implements ViewCo
     private static final String FOUND_ATTR = "found";
     private static final String READERS_ATTR = "readers";
     private static final String PAGE_NUMBERS_ATTR = "pageNumbers";
+    private static final String SAVE_READER_PAGE = "save-reader";
 
     ReaderController(@Autowired ReaderService service) {
         super(service);
@@ -42,6 +42,26 @@ public class ReaderController extends AbstractReaderController implements ViewCo
         model.addAttribute(PAGE_NUMBERS_ATTR, pageData.pageNumbers());
 
         return "all-readers";
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/show-add")
+    public String addReader(Model model) {
+        model.addAttribute("readerDto", new ReaderDto());
+
+        return SAVE_READER_PAGE;
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/save")
+    public String save(@Valid ReaderDto readerDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return SAVE_READER_PAGE;
+        }
+
+        updateReader(readerDto);
+
+        return "redirect:/reader/all";
     }
 
     @GetMapping("/delete")
