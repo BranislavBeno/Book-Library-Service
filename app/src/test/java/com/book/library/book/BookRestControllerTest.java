@@ -97,7 +97,7 @@ class BookRestControllerTest extends AbstractControllerTest {
         @CsvSource(value = {"all,1,1", "all,2,0", "available,0,2", "borrowed,0,4"})
         void testFindAll(String endpoint, String page, int size) throws Exception {
             this.mockMvc
-                    .perform(get("/api/v1/books/" + endpoint)
+                    .perform(get("/api/v1/book/" + endpoint)
                             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
                             .param("page", page)
                             .with(oidcLogin()))
@@ -112,7 +112,7 @@ class BookRestControllerTest extends AbstractControllerTest {
         @MethodSource("creationRequests")
         void testAddingBook(String body, ResultMatcher status) throws Exception {
             this.mockMvc
-                    .perform(post("/api/v1/books/add")
+                    .perform(post("/api/v1/book/add")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(body)
                             .with(csrf())
@@ -132,7 +132,7 @@ class BookRestControllerTest extends AbstractControllerTest {
         @MethodSource("updateRequests")
         void testUpdatingBook(String body, ResultMatcher status) throws Exception {
             this.mockMvc
-                    .perform(put("/api/v1/books/update")
+                    .perform(put("/api/v1/book/update")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(body)
                             .with(csrf())
@@ -153,7 +153,7 @@ class BookRestControllerTest extends AbstractControllerTest {
         @MethodSource("borrowRequests")
         void testBorrowingBook(String body, ResultMatcher status) throws Exception {
             this.mockMvc
-                    .perform(put("/api/v1/books/borrow")
+                    .perform(put("/api/v1/book/borrow")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(body)
                             .with(csrf())
@@ -172,7 +172,7 @@ class BookRestControllerTest extends AbstractControllerTest {
         @MethodSource("availRequests")
         void testAvailingBook(String id, ResultMatcher status) throws Exception {
             this.mockMvc
-                    .perform(put("/api/v1/books/avail")
+                    .perform(put("/api/v1/book/avail")
                             .param("bookId", id)
                             .with(csrf())
                             .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
@@ -187,7 +187,7 @@ class BookRestControllerTest extends AbstractControllerTest {
         @MethodSource("deleteRequests")
         void testDeletingBook(String id, ResultMatcher status) throws Exception {
             this.mockMvc
-                    .perform(delete("/api/v1/books/delete")
+                    .perform(delete("/api/v1/book/delete")
                             .param("bookId", id)
                             .with(csrf())
                             .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
@@ -204,7 +204,7 @@ class BookRestControllerTest extends AbstractControllerTest {
         @Test
         void testForbidAddingBook() throws Exception {
             this.mockMvc
-                    .perform(put("/api/v1/books/add")
+                    .perform(put("/api/v1/book/add")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(REQUEST_BODY_1)
                             .with(csrf())
@@ -215,7 +215,7 @@ class BookRestControllerTest extends AbstractControllerTest {
         @Test
         void testForbidUpdatingBook() throws Exception {
             this.mockMvc
-                    .perform(put("/api/v1/books/update")
+                    .perform(put("/api/v1/book/update")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(REQUEST_BODY_1)
                             .with(csrf())
@@ -226,7 +226,7 @@ class BookRestControllerTest extends AbstractControllerTest {
         @Test
         void testForbidBorrowingBook() throws Exception {
             this.mockMvc
-                    .perform(put("/api/v1/books/borrow")
+                    .perform(put("/api/v1/book/borrow")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(REQUEST_BODY_2)
                             .with(csrf())
@@ -237,7 +237,7 @@ class BookRestControllerTest extends AbstractControllerTest {
         @Test
         void testForbidAvailingBook() throws Exception {
             this.mockMvc
-                    .perform(put("/api/v1/books/avail")
+                    .perform(put("/api/v1/book/avail")
                             .param("bookId", "1")
                             .with(csrf())
                             .with(oidcLogin()))
@@ -247,7 +247,7 @@ class BookRestControllerTest extends AbstractControllerTest {
         @Test
         void testForbidDeletingBook() throws Exception {
             this.mockMvc
-                    .perform(delete("/api/v1/books/delete")
+                    .perform(delete("/api/v1/book/delete")
                             .param("bookId", "1")
                             .with(csrf())
                             .with(oidcLogin()))
@@ -265,7 +265,7 @@ class BookRestControllerTest extends AbstractControllerTest {
         @CsvSource(value = {"all,0,0", "available,0,0", "borrowed,0,0"})
         void testFindAll(String endpoint, String page, int size) throws Exception {
             this.mockMvc
-                    .perform(get("/api/v1/books/" + endpoint)
+                    .perform(get("/api/v1/book/" + endpoint)
                             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
                             .param("page", page)
                             .with(oidcLogin()))

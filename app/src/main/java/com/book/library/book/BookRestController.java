@@ -16,7 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/books")
+@RequestMapping("/api/v1/book")
 public class BookRestController extends AbstractBookController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookRestController.class);

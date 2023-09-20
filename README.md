@@ -57,10 +57,10 @@ For sending requests and receiving responses use `Postman`, `curl` or web browse
 #### API description
 Following endpoints are available for usage:
 
-- **GET /api/v1/books/all?page={pageNumber}** - returns required page from a list of all books or empty list when no book was found.
-- **GET /api/v1/books/available?page={pageNumber}** - returns required page from a list of available books or empty list when no book was found.
-- **GET /api/v1/books/borrowed?page={pageNumber}** - returns required page from a list of borrowed books or empty list when no book was found.
-- **POST /api/v1/books/add** - adds a new book into the library.  
+- **GET /api/v1/book/all?page={pageNumber}** - returns required page from a list of all books or empty list when no book was found.
+- **GET /api/v1/book/available?page={pageNumber}** - returns required page from a list of available books or empty list when no book was found.
+- **GET /api/v1/book/borrowed?page={pageNumber}** - returns required page from a list of borrowed books or empty list when no book was found.
+- **POST /api/v1/book/add** - adds a new book into the library.  
 > Input is validated. Book author can't be empty. Book name can't be empty or longer than 15 signs.
 
   Request body example for a new book adding:
@@ -70,7 +70,7 @@ Following endpoints are available for usage:
      "author": "John Doe"
   }
   ```
-- **PUT /api/v1/books/update** - updates book data. Operation is refused when a book with given ID doesn't exist.  
+- **PUT /api/v1/book/update** - updates book data. Operation is refused when a book with given ID doesn't exist.  
 > Input is validated. Book author can't be empty. Book name can't be empty or longer than 15 signs.
 
   Request body example for existing book updating:
@@ -81,9 +81,9 @@ Following endpoints are available for usage:
      "author": "John Doe"
   }
   ```
-- **DELETE /api/v1/books/delete?bookId={id}** - deletes book with given ID. Operation is refused when a book with given ID doesn't exist.  
-- **PUT /api/v1/books/avail?bookId={id}** - makes an available book with given ID. Operation is refused when a book with given ID doesn't exist.  
-- **PUT /api/v1/books/borrow** - borrows the book. Operation is refused when a book with given ID doesn't exist.  
+- **DELETE /api/v1/book/delete?bookId={id}** - deletes book with given ID. Operation is refused when a book with given ID doesn't exist.  
+- **PUT /api/v1/book/avail?bookId={id}** - makes an available book with given ID. Operation is refused when a book with given ID doesn't exist.  
+- **PUT /api/v1/book/borrow** - borrows the book. Operation is refused when a book with given ID doesn't exist.  
 > Input is validated. The Date of borrow can't be later than today.
 
   Request body example for book borrowing:
