@@ -84,12 +84,13 @@ class BookControllerTest extends AbstractControllerTest {
                     .andExpect(MockMvcResultMatchers.model().attributeExists("borrowedDto"));
         }
 
-        @Test
-        void testRejectingSavingBook() throws Exception {
+        @ParameterizedTest
+        @CsvSource({"'',John Doe", "Very long book name,John Doe", "Book name,''"})
+        void testRejectingSavingBook(String name, String author) throws Exception {
             this.mockMvc
                     .perform(post("/save")
-                            .param("name", "Very long book name")
-                            .param("author", "John Doe")
+                            .param("name", name)
+                            .param("author", author)
                             .with(csrf())
                             .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                     .andExpect(status().isOk())
@@ -136,6 +137,20 @@ class BookControllerTest extends AbstractControllerTest {
                     .andExpect(view().name("borrow-book"))
                     .andExpect(model().hasErrors())
                     .andExpect(model().attributeHasErrors("borrowedDto"));
+        }
+
+        @ParameterizedTest
+        @CsvSource({"1,1", "10,1", "4,10"})
+        void testRefusingBorrowingBook(String bookId, String readerId) throws Exception {
+            this.mockMvc
+                    .perform(post("/borrow")
+                            .param("bookId", bookId)
+                            .param("readerId", readerId)
+                            .param("from", "2023-01-05")
+                            .with(csrf())
+                            .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                    .andExpect(status().is3xxRedirection())
+                    .andExpect(view().name("redirect:/available"));
         }
 
         @Test

@@ -7,13 +7,8 @@ import jakarta.validation.constraints.Size;
 public final class AvailableBookDto implements DataTransferObject {
 
     private int id;
-
-    @NotEmpty
-    @Size(max = 15, message = "Book name too long.")
-    private String name;
-
-    @NotEmpty
-    private String author;
+    private @NotEmpty @Size(max = 15, message = "Book name too long.") String name;
+    private @NotEmpty String author;
 
     public AvailableBookDto(int id, String name, String author) {
         this.id = id;

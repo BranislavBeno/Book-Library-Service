@@ -7,9 +7,7 @@ public final class BorrowedDto {
 
     private int bookId;
     private int readerId;
-
-    @PastOrPresent(message = "Borrow date can't be later than today.")
-    private LocalDate from;
+    private @PastOrPresent(message = "Borrow date can't be later than today.") LocalDate from;
 
     public BorrowedDto() {
         this(0, 0);
