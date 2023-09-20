@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk-alpine:20 AS build
+FROM azul/zulu-openjdk-alpine:21 AS build
 RUN mkdir /project
 COPY . /project
 WORKDIR /project
@@ -7,7 +7,7 @@ RUN chmod +x gradlew && ./gradlew app:build -x app:test && cp app/build/libs/boo
 # extrect layered jar file
 RUN java -Djarmode=layertools -jar book-library-service.jar extract
 
-FROM azul/zulu-openjdk-alpine:20-jre
+FROM azul/zulu-openjdk-alpine:21-jre
 # install dumb-init
 RUN apk add --no-cache dumb-init=1.2.5-r2
 
