@@ -1,13 +1,8 @@
 package com.book.library.repository;
 
-import java.util.Optional;
-import java.util.function.Consumer;
-import org.junit.jupiter.api.Assertions;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
@@ -15,7 +10,7 @@ import org.testcontainers.utility.DockerImageName;
 @DataJpaTest(properties = "spring.flyway.locations=classpath:/db/migration/postgresql")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers(disabledWithoutDocker = true)
-public abstract class BaseRepositoryTest<T> {
+public abstract class BaseTestRepository {
 
     @ServiceConnection
     private static final PostgreSQLContainer<?> REPOSITORY_CONTAINER =
@@ -23,16 +18,5 @@ public abstract class BaseRepositoryTest<T> {
 
     static {
         REPOSITORY_CONTAINER.start();
-    }
-
-    protected abstract JpaRepository<T, Integer> getRepository();
-
-    protected void assertEntity(int id, Consumer<T> consumer) {
-        Optional<T> reader = getRepository().findById(id);
-        reader.ifPresentOrElse(consumer, () -> Assertions.fail("Entity not found"));
-    }
-
-    protected static PageRequest getPageRequest() {
-        return PageRequest.of(0, 5);
     }
 }

@@ -17,7 +17,6 @@ testcontainers-common = { module = "org.testcontainers:testcontainers" }
 testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter" }
 testcontainers-postgresql = { module = "org.testcontainers:postgresql" }
 testcontainers-keycloak = { module = "com.github.dasniko:testcontainers-keycloak", version = "3.0.0" }
-database-h2 = { module = "com.h2database:h2" }
 database-postgresql = { module = "org.postgresql:postgresql" }
 flyway-core = { module = "org.flywaydb:flyway-core" }
 jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version = "2.15.2" }

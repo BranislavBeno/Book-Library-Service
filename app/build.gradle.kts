@@ -36,7 +36,6 @@ dependencies {
     implementation(platform(libs.spring.cloud.aws.bom))
     implementation(libs.spring.cloud.aws.starter)
     implementation(libs.aws.sdk.cognito.idp)
-    runtimeOnly(libs.database.h2)
     runtimeOnly(libs.database.postgresql)
     testImplementation(libs.spring.boot.starter.test)
     testImplementation(libs.spring.boot.testcontainers)

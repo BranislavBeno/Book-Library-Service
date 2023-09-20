@@ -1,7 +1,7 @@
 package com.book.library.reader;
 
 import com.book.library.dto.ReaderDto;
-import com.book.library.repository.BaseRepositoryTest;
+import com.book.library.repository.AbstractTestRepository;
 import jakarta.validation.constraints.NotNull;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql(scripts = "/sql/init_db.sql")
-class ReaderRepositoryTest extends BaseRepositoryTest<Reader> implements WithAssertions {
+class ReaderRepositoryTest extends AbstractTestRepository<Reader> implements WithAssertions {
 
     @Autowired
     private ReaderRepository repository;

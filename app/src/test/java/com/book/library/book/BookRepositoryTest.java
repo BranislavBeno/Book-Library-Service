@@ -1,6 +1,6 @@
 package com.book.library.book;
 
-import com.book.library.repository.BaseRepositoryTest;
+import com.book.library.repository.AbstractTestRepository;
 import jakarta.validation.constraints.NotNull;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql(scripts = "/sql/init_db.sql")
-class BookRepositoryTest extends BaseRepositoryTest<Book> implements WithAssertions {
+class BookRepositoryTest extends AbstractTestRepository<Book> implements WithAssertions {
 
     @Autowired
     private BookRepository repository;

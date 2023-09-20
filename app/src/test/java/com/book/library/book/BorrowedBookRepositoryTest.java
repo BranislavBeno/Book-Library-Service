@@ -4,7 +4,7 @@ import com.book.library.dto.AvailableBookDto;
 import com.book.library.dto.BorrowedBookDto;
 import com.book.library.reader.Reader;
 import com.book.library.reader.ReaderRepository;
-import com.book.library.repository.BaseRepositoryTest;
+import com.book.library.repository.AbstractTestRepository;
 import java.time.LocalDate;
 import java.util.Optional;
 import org.assertj.core.api.WithAssertions;
@@ -16,7 +16,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql(scripts = "/sql/init_db.sql")
-class BorrowedBookRepositoryTest extends BaseRepositoryTest<BorrowedBook> implements WithAssertions {
+class BorrowedBookRepositoryTest extends AbstractTestRepository<BorrowedBook> implements WithAssertions {
 
     @Autowired
     private BookRepository bookRepository;
