@@ -76,12 +76,12 @@ Following endpoints are available for usage:
   Request body example for existing book updating:
   ```json
   {
-     "id": 1,
+     "id": "1",
      "name": "My memories",
      "author": "John Doe"
   }
   ```
-- **DELETE /api/v1/book/delete?bookId={id}** - deletes book with given ID. Operation is refused when a book with given ID doesn't exist.  
+- **DELETE /api/v1/book/delete?bookId={id}** - deletes book with given ID. Operation is refused when a book with given ID doesn't exist or when book is still borrowed.  
 - **PUT /api/v1/book/avail?bookId={id}** - makes an available book with given ID. Operation is refused when a book with given ID doesn't exist.  
 - **PUT /api/v1/book/borrow** - borrows the book. Operation is refused when a book with given ID doesn't exist.  
 > Input is validated. The Date of borrow can't be later than today.
@@ -89,8 +89,33 @@ Following endpoints are available for usage:
   Request body example for book borrowing:
   ```json
   {
-     "bookId": 1,
-     "readerId": 1,
+     "bookId": "1",
+     "readerId": "1",
      "from": "2023-01-05"
   }
   ```
+- **GET /api/v1/reader/all?page={pageNumber}** - returns required page from a list of all readers or empty list when no reader was found.
+- **POST /api/v1/reader/add** - adds a new reader into the registry.
+> Input is validated. Reader's first name and last name can't be empty.
+
+  Request body example for a new reader adding:
+  ```json
+  {
+     "firstName": "John",
+     "lastName": "Doe",
+     "email": "john@example.com"
+  }
+  ```
+- **PUT /api/v1/reader/update** - updates reader's data. Operation is refused when a reader with given ID doesn't exist.
+> Input is validated. Reader's first name and last name can't be empty.
+
+Request body example for existing reader updating:
+  ```json
+  {
+     "id": "1",
+     "firstName": "John",
+     "lastName": "Doe",
+     "email": "john@example.com"
+  }
+  ```
+- **DELETE /api/v1/reader/delete?readerId={id}** - deletes reader with given ID. Operation is refused when a reader with given ID doesn't exist or when reader has still borrowed any book.
