@@ -17,7 +17,7 @@
                     <h5>Borrow book</h5>
                 </div>
                 <div class="card-body">
-                    <form class="row g-2" th:method="POST" th:object="${borrowedDto}" th:action="@{/borrow}">
+                    <form class="row g-2" th:method="POST" th:object="${borrowedDto}" th:action="@{/book/borrow}">
                         <input type="hidden" th:field="*{bookId}"/>
                         <div class="col-12">
                             <label class="form-check-label" for="readerSelect">

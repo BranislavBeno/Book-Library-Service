@@ -12,14 +12,14 @@
 <div th:fragment="toggle-pane" class="col-md-2">
     <div class="card">
         <div class="list-group list-group-flush">
-            <a id="allBooksButton" class="list-group-item list-group-item-action" th:href="@{/books}">Show all
+            <a id="allBooksButton" class="list-group-item list-group-item-action" th:href="@{/book/all}">Show all
                 books</a>
             <a id="availableBooksButton" class="list-group-item list-group-item-action"
-               th:href="@{/available}">Show available books</a>
+               th:href="@{/book/available}">Show available books</a>
             <a id="borrowedBooksButton" class="list-group-item list-group-item-action"
-               th:href="@{/borrowed}">Show borrowed books</a>
+               th:href="@{/book/borrowed}">Show borrowed books</a>
             <a id="addBookButton" class="list-group-item list-group-item-action"
-               th:href="@{/addBook}" sec:authorize="hasRole('ROLE_ADMIN')">Add new book</a>
+               th:href="@{/book/show-add}" sec:authorize="hasRole('ROLE_ADMIN')">Add new book</a>
             <a id="readersButton" class="list-group-item list-group-item-action"
                th:href="@{/reader/all}" sec:authorize="hasRole('ROLE_ADMIN')">Show readers</a>
             <a id="addReaderButton" class="list-group-item list-group-item-action"

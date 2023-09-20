@@ -35,10 +35,10 @@ class BookControllerTest extends AbstractControllerTest {
         @ParameterizedTest
         @CsvSource(
                 value = {
-                    "/books,all-books,1,true",
-                    "/books,all-books,2,false",
-                    "/available,available-books,0,true",
-                    "/borrowed,borrowed-books,0,true"
+                    "/book/all,all-books,1,true",
+                    "/book/all,all-books,2,false",
+                    "/book/available,available-books,0,true",
+                    "/book/borrowed,borrowed-books,0,true"
                 })
         void testShowingBookList(String url, String viewName, String page, boolean found) throws Exception {
             this.mockMvc
@@ -52,7 +52,7 @@ class BookControllerTest extends AbstractControllerTest {
         @Test
         void testShowAddBookForm() throws Exception {
             this.mockMvc
-                    .perform(MockMvcRequestBuilders.get("/addBook")
+                    .perform(MockMvcRequestBuilders.get("/book/show-add")
                             .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.view().name("save-book"))
@@ -62,7 +62,7 @@ class BookControllerTest extends AbstractControllerTest {
         @Test
         void testShowUpdateBookForm() throws Exception {
             this.mockMvc
-                    .perform(MockMvcRequestBuilders.get("/updateBook")
+                    .perform(MockMvcRequestBuilders.get("/book/show-update")
                             .param("bookId", "1")
                             .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                     .andExpect(MockMvcResultMatchers.status().isOk())
@@ -73,7 +73,7 @@ class BookControllerTest extends AbstractControllerTest {
         @Test
         void testShowBorrowBookForm() throws Exception {
             this.mockMvc
-                    .perform(MockMvcRequestBuilders.get("/borrowBook")
+                    .perform(MockMvcRequestBuilders.get("/book/show-borrow")
                             .param("bookId", "1")
                             .param("readerId", "1")
                             .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
@@ -88,7 +88,7 @@ class BookControllerTest extends AbstractControllerTest {
         @CsvSource({"'',John Doe", "Very long book name,John Doe", "Book name,''"})
         void testRejectingSavingBook(String name, String author) throws Exception {
             this.mockMvc
-                    .perform(post("/save")
+                    .perform(post("/book/save")
                             .param("name", name)
                             .param("author", author)
                             .with(csrf())
@@ -102,24 +102,24 @@ class BookControllerTest extends AbstractControllerTest {
         @Test
         void testSavingBook() throws Exception {
             this.mockMvc
-                    .perform(post("/save")
+                    .perform(post("/book/save")
                             .param("name", "Book name")
                             .param("author", "John Doe")
                             .with(csrf())
                             .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                     .andExpect(status().is3xxRedirection())
-                    .andExpect(header().string("Location", "/books"));
+                    .andExpect(header().string("Location", "/book/all"));
         }
 
         @Test
         void testAvailingBook() throws Exception {
             this.mockMvc
-                    .perform(get("/avail")
+                    .perform(get("/book/avail")
                             .param("bookId", "1")
                             .with(csrf())
                             .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                     .andExpect(status().is3xxRedirection())
-                    .andExpect(header().string("Location", "/borrowed"));
+                    .andExpect(header().string("Location", "/book/borrowed"));
         }
 
         @Test
@@ -127,7 +127,7 @@ class BookControllerTest extends AbstractControllerTest {
             String date = BookUtils.getTomorrowDate().toString();
 
             this.mockMvc
-                    .perform(post("/borrow")
+                    .perform(post("/book/borrow")
                             .param("bookId", "4")
                             .param("readerId", "1")
                             .param("from", date)
@@ -143,53 +143,53 @@ class BookControllerTest extends AbstractControllerTest {
         @CsvSource({"1,1", "10,1", "4,10"})
         void testRefusingBorrowingBook(String bookId, String readerId) throws Exception {
             this.mockMvc
-                    .perform(post("/borrow")
+                    .perform(post("/book/borrow")
                             .param("bookId", bookId)
                             .param("readerId", readerId)
                             .param("from", "2023-01-05")
                             .with(csrf())
                             .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                     .andExpect(status().is3xxRedirection())
-                    .andExpect(view().name("redirect:/available"));
+                    .andExpect(view().name("redirect:/book/available"));
         }
 
         @Test
         void testBorrowingBook() throws Exception {
             this.mockMvc
-                    .perform(post("/borrow")
+                    .perform(post("/book/borrow")
                             .param("bookId", "4")
                             .param("readerId", "1")
                             .param("from", "2023-01-05")
                             .with(csrf())
                             .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                     .andExpect(status().is3xxRedirection())
-                    .andExpect(header().string("Location", "/available"));
+                    .andExpect(header().string("Location", "/book/available"));
         }
 
         @ParameterizedTest
         @CsvSource(value = {"1,true", "4,false"})
         void testDeletingBook(String bookId, boolean forbidden) throws Exception {
             this.mockMvc
-                    .perform(get("/delete")
+                    .perform(get("/book/delete")
                             .param("bookId", bookId)
                             .with(csrf())
                             .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                     .andExpect(status().is3xxRedirection())
-                    .andExpect(header().string("Location", "/books"))
+                    .andExpect(header().string("Location", "/book/all"))
                     .andExpect(MockMvcResultMatchers.flash().attribute("forbidden", forbidden));
         }
 
         @Test
         void testForbidShowAddBookForm() throws Exception {
             this.mockMvc
-                    .perform(MockMvcRequestBuilders.get("/addBook").with(oidcLogin()))
+                    .perform(MockMvcRequestBuilders.get("/book/show-add").with(oidcLogin()))
                     .andExpect(MockMvcResultMatchers.status().isForbidden());
         }
 
         @Test
         void testForbidShowUpdateBookForm() throws Exception {
             this.mockMvc
-                    .perform(MockMvcRequestBuilders.get("/updateBook")
+                    .perform(MockMvcRequestBuilders.get("/book/show-update")
                             .param("bookId", "1")
                             .with(oidcLogin()))
                     .andExpect(MockMvcResultMatchers.status().isForbidden());
@@ -198,7 +198,7 @@ class BookControllerTest extends AbstractControllerTest {
         @Test
         void testForbidShowBorrowBookForm() throws Exception {
             this.mockMvc
-                    .perform(MockMvcRequestBuilders.get("/borrowBook")
+                    .perform(MockMvcRequestBuilders.get("/book/show-borrow")
                             .param("bookId", "1")
                             .with(oidcLogin()))
                     .andExpect(MockMvcResultMatchers.status().isForbidden());
@@ -207,7 +207,7 @@ class BookControllerTest extends AbstractControllerTest {
         @Test
         void testForbidSavingBook() throws Exception {
             this.mockMvc
-                    .perform(post("/save")
+                    .perform(post("/book/save")
                             .param("name", "Book name")
                             .param("author", "John Doe")
                             .with(csrf())
@@ -218,14 +218,18 @@ class BookControllerTest extends AbstractControllerTest {
         @Test
         void testForbidAvailingBook() throws Exception {
             this.mockMvc
-                    .perform(get("/avail").param("bookId", "1").with(csrf()).with(oidcLogin()))
+                    .perform(
+                            get("/book/avail").param("bookId", "1").with(csrf()).with(oidcLogin()))
                     .andExpect(status().isForbidden());
         }
 
         @Test
         void testForbidDeletingBook() throws Exception {
             this.mockMvc
-                    .perform(get("/delete").param("bookId", "1").with(csrf()).with(oidcLogin()))
+                    .perform(get("/book/delete")
+                            .param("bookId", "1")
+                            .with(csrf())
+                            .with(oidcLogin()))
                     .andExpect(status().isForbidden());
         }
     }
@@ -237,7 +241,7 @@ class BookControllerTest extends AbstractControllerTest {
         private MockMvc mockMvc;
 
         @ParameterizedTest
-        @CsvSource(value = {"/books,all-books", "/available,available-books", "/borrowed,borrowed-books"})
+        @CsvSource(value = {"/book/all,all-books", "/book/available,available-books", "/book/borrowed,borrowed-books"})
         void testShowingEmptyBookList(String url, String viewName) throws Exception {
             this.mockMvc
                     .perform(MockMvcRequestBuilders.get(url).with(oidcLogin()))

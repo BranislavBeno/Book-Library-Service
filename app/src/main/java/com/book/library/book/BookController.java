@@ -10,13 +10,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
+@RequestMapping("/book")
 public class BookController extends AbstractBookController implements ViewController {
 
     private static final String FORBIDDEN_ATTR = "forbidden";
@@ -34,7 +32,7 @@ public class BookController extends AbstractBookController implements ViewContro
         return false;
     }
 
-    @GetMapping("/books")
+    @GetMapping("/all")
     public String showBooks(
             @RequestParam(name = "page", defaultValue = "0") int page,
             Model model,
@@ -75,7 +73,7 @@ public class BookController extends AbstractBookController implements ViewContro
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/addBook")
+    @GetMapping("/show-add")
     public String addBook(Model model) {
         model.addAttribute("availableBookDto", new AvailableBookDto());
 
@@ -83,7 +81,7 @@ public class BookController extends AbstractBookController implements ViewContro
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/updateBook")
+    @GetMapping("/show-update")
     public String updateBook(@RequestParam("bookId") int id, Model model) {
         model.addAttribute("availableBookDto", findBook(id));
 
@@ -99,7 +97,7 @@ public class BookController extends AbstractBookController implements ViewContro
 
         updateBook(availableBookDto);
 
-        return "redirect:/books";
+        return "redirect:/book/all";
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -112,7 +110,7 @@ public class BookController extends AbstractBookController implements ViewContro
             attributes.addFlashAttribute(FORBIDDEN_ATTR, true);
         }
 
-        return "redirect:/books";
+        return "redirect:/book/all";
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -120,11 +118,11 @@ public class BookController extends AbstractBookController implements ViewContro
     public String avail(@RequestParam("bookId") int id) {
         availBook(id);
 
-        return "redirect:/borrowed";
+        return "redirect:/book/borrowed";
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/borrowBook")
+    @GetMapping("/show-borrow")
     public String borrowBook(
             @RequestParam("bookId") int bookId,
             @RequestParam(name = "readerId", defaultValue = "1") int readerId,
@@ -143,7 +141,7 @@ public class BookController extends AbstractBookController implements ViewContro
 
         borrowBook(borrowedDto);
 
-        return "redirect:/available";
+        return "redirect:/book/available";
     }
 
     private String callBorrowTemplate(Model model, BorrowedDto borrowedDto) {

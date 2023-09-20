@@ -40,7 +40,7 @@
                                 <td th:text="${item.readerName()}"></td>
                                 <td th:text="${item.borrowedOn}"></td>
                                 <td sec:authorize="hasRole('ROLE_ADMIN')">
-                                    <a th:href="@{/avail(bookId=${item.id})}"
+                                    <a th:href="@{/book/avail(bookId=${item.id})}"
                                        class="btn btn-info btn-sm"
                                        onclick="if (!(confirm('Are you sure you want to return this book?'))) return false">
                                         Return
@@ -49,7 +49,7 @@
                             </tr>
                             </tbody>
                         </table>
-                        <div th:replace="~{fragments/navigation :: pagination-nav(pageLink='/borrowed')}"></div>
+                        <div th:replace="~{fragments/navigation :: pagination-nav(pageLink='/book/borrowed')}"></div>
                     </div>
                 </div>
             </div>
