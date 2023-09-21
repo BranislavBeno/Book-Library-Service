@@ -11,10 +11,6 @@ FROM azul/zulu-openjdk-alpine:20-jre
 # install dumb-init
 RUN apk add --no-cache dumb-init=1.2.5-r2
 
-RUN mkdir /database
-WORKDIR /database
-COPY --from=build /project/database/ ./
-
 # add specific non root user for running application
 RUN addgroup --system javauser && adduser -S -s /bin/false -G javauser javauser
 # set work directory
