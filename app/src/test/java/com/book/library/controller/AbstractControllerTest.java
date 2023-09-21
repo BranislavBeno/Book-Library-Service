@@ -17,7 +17,7 @@ public abstract class AbstractControllerTest {
 
     @ServiceConnection
     private static final PostgreSQLContainer<?> REPOSITORY_CONTAINER =
-            new PostgreSQLContainer<>(DockerImageName.parse("postgres:12.16"));
+            new PostgreSQLContainer<>(DockerImageName.parse("postgres:16.0"));
 
     private static final KeycloakContainer KEYCLOAK_CONTAINER;
 
