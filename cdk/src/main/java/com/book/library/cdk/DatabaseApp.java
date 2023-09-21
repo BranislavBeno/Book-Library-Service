@@ -33,7 +33,7 @@ public class DatabaseApp {
                 databaseStack,
                 "Database",
                 appEnvironment,
-                new PostgresDatabase.DatabaseInputParameters().withDockerImageVersion("postgres:12.15"));
+                new PostgresDatabase.DatabaseInputParameters().withDockerImageVersion("postgres:12.16"));
 
         app.synth();
     }

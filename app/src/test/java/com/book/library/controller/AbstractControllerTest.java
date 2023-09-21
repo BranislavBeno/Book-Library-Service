@@ -17,14 +17,14 @@ public abstract class AbstractControllerTest {
 
     @ServiceConnection
     private static final PostgreSQLContainer<?> REPOSITORY_CONTAINER =
-            new PostgreSQLContainer<>(DockerImageName.parse("postgres:12.15"));
+            new PostgreSQLContainer<>(DockerImageName.parse("postgres:12.16"));
 
     private static final KeycloakContainer KEYCLOAK_CONTAINER;
 
     static {
         REPOSITORY_CONTAINER.start();
 
-        KEYCLOAK_CONTAINER = new KeycloakContainer(DockerImageName.parse("quay.io/keycloak/keycloak:22.0.1")
+        KEYCLOAK_CONTAINER = new KeycloakContainer(DockerImageName.parse("quay.io/keycloak/keycloak:22.0.3")
                         .asCanonicalNameString())
                 .withRealmImportFile("keycloak/stratospheric-realm.json");
         KEYCLOAK_CONTAINER.start();
