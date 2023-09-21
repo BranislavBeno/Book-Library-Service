@@ -244,12 +244,12 @@ public class PostgresDatabase extends Construct {
         private static final int STORAGE_IN_GB = 20;
         private static final String INSTANCE_CLASS = "db.t2.micro";
         private String engine = "postgres";
-        private String version = "12.15";
+        private String version = "16.0";
 
         /**
          * The docker image version of the Postgres database.
          * <p>
-         * Default: "postgres:16.0".
+         * Default: "16.0".
          */
         public DatabaseInputParameters withDockerImageVersion(String dockerVersion) {
             Objects.requireNonNull(dockerVersion);
