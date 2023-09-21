@@ -37,17 +37,23 @@ Users with different roles are allowed only to watch/fetch listed data.
 > - username=mike (password=MikePass, role=user)
 
 ### Web UI usage
+
+![](docs/images/basic_view.png)
+
 To start the application open terminal, change a path to project root folder and run `./gradlew :app:bootTestRun`.  
 After the application starts, click on http://localhost:8080/  
 To log in use link `Sign in` on top of the page.
 
-After successful login, web UI offers three types of view:
+After successful login, web UI offers the following types of view:
 1. _*All books*_. Borrowed are highlighted red, available green. This view allows book data updating or book removal from the library.  
    Book data updating doesn't allow borrow or rent book.
 2. _*Available books*_. This view allows a book borrowing.
 3. _*Borrowed books*_.  This view allows a book returning.
 
-The main page offers also to add a book into the library.
+For the user with admin rights, the main page offers also:
+- adding a new book into the library.
+- viewing and updating existing readers.
+- adding a new reader into the registry.
 
 ### REST API usage
 For sending requests and receiving responses use `Postman`, `curl` or web browser.
