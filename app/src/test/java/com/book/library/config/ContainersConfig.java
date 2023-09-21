@@ -16,7 +16,7 @@ public class ContainersConfig {
     @ServiceConnection
     @RestartScope
     public PostgreSQLContainer<?> postgresSqlContainer() {
-        return new PostgreSQLContainer<>("postgres:12.16");
+        return new PostgreSQLContainer<>("postgres:16.0");
     }
 
     @Bean
