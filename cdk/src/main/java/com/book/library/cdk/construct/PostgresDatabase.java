@@ -249,7 +249,7 @@ public class PostgresDatabase extends Construct {
         /**
          * The docker image version of the Postgres database.
          * <p>
-         * Default: "postgres:12.15".
+         * Default: "postgres:12.16".
          */
         public DatabaseInputParameters withDockerImageVersion(String dockerVersion) {
             Objects.requireNonNull(dockerVersion);
