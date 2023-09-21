@@ -17,7 +17,7 @@
                     <h5>Save book</h5>
                 </div>
                 <div class="card-body">
-                    <form class="row g-2" th:method="POST" th:object="${availableBookDto}" th:action="@{/save}">
+                    <form class="row g-2" th:method="POST" th:object="${availableBookDto}" th:action="@{/book/save}">
                         <input type="hidden" th:field="*{id}"/>
                         <div class="col-12">
                             <input id="bookName" class="form-control" type="text" placeholder="Book name"

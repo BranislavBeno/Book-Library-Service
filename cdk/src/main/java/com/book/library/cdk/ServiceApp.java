@@ -2,10 +2,12 @@ package com.book.library.cdk;
 
 import com.book.library.cdk.construct.ApplicationEnvironment;
 import com.book.library.cdk.construct.Network;
+import com.book.library.cdk.construct.PostgresDatabase;
 import com.book.library.cdk.construct.Service;
 import com.book.library.cdk.stack.CognitoStack;
 import com.book.library.cdk.util.CdkUtil;
 import com.book.library.cdk.util.Validations;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,9 @@ import software.amazon.awscdk.Stack;
 import software.amazon.awscdk.StackProps;
 import software.amazon.awscdk.services.iam.Effect;
 import software.amazon.awscdk.services.iam.PolicyStatement;
+import software.amazon.awscdk.services.secretsmanager.ISecret;
+import software.amazon.awscdk.services.secretsmanager.Secret;
+import software.constructs.Construct;
 
 public class ServiceApp {
 
@@ -53,19 +58,26 @@ public class ServiceApp {
                         .build());
 
         var dockerImageSource = new Service.DockerImageSource(dockerRepositoryName, dockerImageTag);
+
+        var databaseOutputParameters =
+                PostgresDatabase.getOutputParametersFromParameterStore(parametersStack, appEnvironment);
+
         var cognitoOutputParameters =
                 CognitoStack.getOutputParametersFromParameterStore(parametersStack, appEnvironment);
+
         var serviceInputParameters = new Service.ServiceInputParameters(
-                        dockerImageSource, environmentVariables(springProfile, cognitoOutputParameters))
+                        dockerImageSource,
+                        Collections.singletonList(databaseOutputParameters.databaseSecurityGroupId()),
+                        environmentVariables(
+                                serviceStack, databaseOutputParameters, cognitoOutputParameters, springProfile))
                 .withHealthCheckPath("/actuator/info")
                 .withHealthCheckIntervalSeconds(30)
                 .withStickySessionsEnabled(true)
                 .withTaskRolePolicyStatements(List.of(PolicyStatement.Builder.create()
                         .sid("AllowCreatingUsers")
                         .effect(Effect.ALLOW)
-                        .resources(List.of(String.format(
-                                "arn:aws:cognito-idp:%s:%s:userpool/%s",
-                                region, accountId, cognitoOutputParameters.userPoolId())))
+                        .resources(List.of("arn:aws:cognito-idp:%s:%s:userpool/%s"
+                                .formatted(region, accountId, cognitoOutputParameters.userPoolId())))
                         .actions(List.of("cognito-idp:AdminCreateUser"))
                         .build()));
 
@@ -82,10 +94,30 @@ public class ServiceApp {
         app.synth();
     }
 
-    static Map<String, String> environmentVariables(
-            String springProfile, CognitoStack.CognitoOutputParameters cognitoOutputParameters) {
+    private static Map<String, String> environmentVariables(
+            Construct scope,
+            PostgresDatabase.DatabaseOutputParameters databaseOutputParameters,
+            CognitoStack.CognitoOutputParameters cognitoOutputParameters,
+            String springProfile) {
         Map<String, String> vars = new HashMap<>();
+
+        String databaseSecretArn = databaseOutputParameters.databaseSecretArn();
+        ISecret databaseSecret = Secret.fromSecretCompleteArn(scope, "databaseSecret", databaseSecretArn);
+
         vars.put("SPRING_PROFILES_ACTIVE", springProfile);
+        vars.put(
+                "SPRING_DATASOURCE_URL",
+                "jdbc:postgresql://%s:%s/%s"
+                        .formatted(
+                                databaseOutputParameters.endpointAddress(),
+                                databaseOutputParameters.endpointPort(),
+                                databaseOutputParameters.dbName()));
+        vars.put(
+                "SPRING_DATASOURCE_USERNAME",
+                databaseSecret.secretValueFromJson("username").toString());
+        vars.put(
+                "SPRING_DATASOURCE_PASSWORD",
+                databaseSecret.secretValueFromJson("password").toString());
         vars.put("COGNITO_CLIENT_ID", cognitoOutputParameters.userPoolClientId());
         vars.put("COGNITO_CLIENT_SECRET", cognitoOutputParameters.userPoolClientSecret());
         vars.put("COGNITO_USER_POOL_ID", cognitoOutputParameters.userPoolId());

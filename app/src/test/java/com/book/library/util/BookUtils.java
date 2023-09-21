@@ -1,8 +1,5 @@
 package com.book.library.util;
 
-import com.book.library.domain.Book;
-import com.book.library.domain.Borrowed;
-import com.book.library.dto.AvailableBookDto;
 import com.book.library.dto.BorrowedDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -13,26 +10,11 @@ public final class BookUtils {
 
     private BookUtils() {}
 
-    public static Book createBook() {
-        Book book = new Book();
-        book.setId(1);
-        book.setName("Hamlet");
-        book.setAuthor("William Shakespeare");
-        Borrowed borrowed = new Borrowed("Peter", "Pavol", LocalDate.of(2023, 1, 4));
-        book.setBorrowed(borrowed);
-
-        return book;
-    }
-
-    public static AvailableBookDto createAvailableDto() {
-        return new AvailableBookDto(1, "Hamlet", "William Shakespeare");
-    }
-
     public static String createNonValidBorrowRequest() {
-        return createNonValidRequest(new BorrowedDto(4, "John", "Doe", getTomorrowsDate()));
+        return createNonValidRequest(new BorrowedDto(4, 1, getTomorrowDate()));
     }
 
-    public static LocalDate getTomorrowsDate() {
+    public static LocalDate getTomorrowDate() {
         return LocalDate.now().plusDays(1);
     }
 

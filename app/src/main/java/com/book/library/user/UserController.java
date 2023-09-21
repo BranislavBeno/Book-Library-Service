@@ -25,7 +25,7 @@ public class UserController {
     private static final String USER_ATTR = "user";
     private static final String CHANGE_PASSWD_ATTR = "changePassword";
     private static final String REGISTER_PAGE = "register";
-    private static final String LOGIN_PAGE = "login";
+    private static final String BASIC_PAGE = "index";
     private static final String CHANGE_PASSWD_PAGE = "change-password";
 
     private final UserService userService;
@@ -62,7 +62,7 @@ public class UserController {
                             + "Please check your email inbox for further instructions.");
             redirectAttributes.addFlashAttribute(MESSAGE_TYPE_ATTR, "success");
 
-            return "redirect:/login";
+            return "redirect:/";
 
         } catch (Exception exception) {
 
@@ -74,20 +74,20 @@ public class UserController {
         }
     }
 
-    @GetMapping("/login")
+    @GetMapping("/")
     public String getLoginView(Model model) {
         model.addAttribute(USER_ATTR, new User());
 
-        return LOGIN_PAGE;
+        return BASIC_PAGE;
     }
 
-    @PostMapping("/login")
+    @PostMapping("/")
     public String loginUser(
             @Valid User user, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute(USER_ATTR, user);
 
-            return LOGIN_PAGE;
+            return BASIC_PAGE;
         }
 
         try {
@@ -122,7 +122,7 @@ public class UserController {
             model.addAttribute(MESSAGE_ATTR, exception.getMessage());
             model.addAttribute(MESSAGE_TYPE_ATTR, DANGER_ATTR);
 
-            return LOGIN_PAGE;
+            return BASIC_PAGE;
         }
     }
 
@@ -159,7 +159,7 @@ public class UserController {
             redirectAttributes.addFlashAttribute(MESSAGE_ATTR, "Password was changed successfully.");
             redirectAttributes.addFlashAttribute(MESSAGE_TYPE_ATTR, "success");
 
-            return "redirect:/login";
+            return "redirect:/";
 
         } catch (Exception exception) {
 

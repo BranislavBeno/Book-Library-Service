@@ -33,7 +33,7 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private static final String LOGIN_URL = "/login";
+    private static final String LOGIN_URL = "/";
 
     private final LogoutSuccessHandler logoutSuccessHandler;
 
@@ -53,9 +53,9 @@ public class SecurityConfig {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .securityMatcher("/api/v1/books/**")
-                .authorizeHttpRequests(
-                        auth -> auth.requestMatchers("/api/v1/books/**").authenticated())
+                .securityMatcher("/api/v1/book/**", "/api/v1/reader/**")
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/book/**", "/api/v1/reader/**")
+                        .authenticated())
                 .oauth2Login(oauth2 -> new OAuth2LoginConfigurer<>())
                 .exceptionHandling(exception -> exception.accessDeniedHandler(new UserForbiddenErrorHandler()));
 
@@ -73,7 +73,7 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest()
                         .authenticated())
-                .oauth2Login(oauth2 -> oauth2.loginPage(LOGIN_URL).defaultSuccessUrl("/?page=0"))
+                .oauth2Login(oauth2 -> oauth2.loginPage(LOGIN_URL).defaultSuccessUrl("/book/all?page=0", true))
                 .logout(logout -> logout.logoutSuccessHandler(logoutSuccessHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                         .maximumSessions(1));

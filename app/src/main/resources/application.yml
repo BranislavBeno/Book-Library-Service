@@ -1,13 +1,4 @@
-logging:
-  level:
-    com:
-      book:
-        library:
-          user: DEBUG
-
 book:
-  repository:
-    path: ../database/Library.xml
   service:
     page:
       size: 5
@@ -35,6 +26,10 @@ spring:
     aws:
       region:
         static: eu-central-1
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
 
 custom:
   invitation-codes: DUKE, STRATOSPHERIC

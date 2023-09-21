@@ -168,11 +168,14 @@ public class Service extends Construct {
                         .logConfiguration(CfnTaskDefinition.LogConfigurationProperty.builder()
                                 .logDriver("awslogs")
                                 .options(Map.of(
-                                        "awslogs-group", logGroup.getLogGroupName(),
-                                        "awslogs-region", Objects.requireNonNull(awsEnvironment.getRegion()),
-                                        "awslogs-stream-prefix", applicationEnvironment.prefix("stream"),
+                                        "awslogs-group",
+                                        logGroup.getLogGroupName(),
+                                        "awslogs-region",
+                                        Objects.requireNonNull(awsEnvironment.getRegion()),
+                                        "awslogs-stream-prefix",
+                                        applicationEnvironment.prefix("stream"),
                                         "awslogs-datetime-format",
-                                                ServiceInputParameters.PARAMETER_AWS_LOGS_DATE_TIME_FORMAT))
+                                        ServiceInputParameters.PARAMETER_AWS_LOGS_DATE_TIME_FORMAT))
                                 .build())
                         .portMappings(singletonList(CfnTaskDefinition.PortMappingProperty.builder()
                                 .containerPort(ServiceInputParameters.PARAMETER_CONTAINER_PORT)
@@ -322,13 +325,17 @@ public class Service extends Construct {
          * Knobs and dials you can configure to run a Docker image in an ECS service. The default values are set in a way
          * to work out of the box with a Spring Boot application.
          *
-         * @param dockerImageSource        the source from where to load the Docker image that we want to deploy.
-         * @param environmentVariables     the environment variables provided to the Java runtime within the Docker containers.
+         * @param dockerImageSource                     the source from where to load the Docker image that we want to deploy.
+         * @param securityGroupIdsToGrantIngressFromEcs Ids of the security groups that the ECS containers should be granted access to.
+         * @param environmentVariables                  the environment variables provided to the Java runtime within the Docker containers.
          */
-        public ServiceInputParameters(DockerImageSource dockerImageSource, Map<String, String> environmentVariables) {
-            this.dockerImageSource = dockerImageSource;
-            this.environmentVariables = environmentVariables;
-            this.securityGroupIdsToGrantIngressFromEcs = Collections.emptyList();
+        public ServiceInputParameters(
+                DockerImageSource dockerImageSource,
+                List<String> securityGroupIdsToGrantIngressFromEcs,
+                Map<String, String> environmentVariables) {
+            this.dockerImageSource = Objects.requireNonNull(dockerImageSource);
+            this.securityGroupIdsToGrantIngressFromEcs = Objects.requireNonNull(securityGroupIdsToGrantIngressFromEcs);
+            this.environmentVariables = Objects.requireNonNull(environmentVariables);
         }
 
         /**
@@ -351,13 +358,14 @@ public class Service extends Construct {
 
         /**
          * The list of PolicyStatement objects that define which operations this service can perform on other
-         * AWS resources (for example ALLOW sqs:GetQueueUrl for all SQS queues).
+         * AWS resources (for example, ALLOW sqs:GetQueueUrl for all SQS queues).
          * Default: none (empty list).
          */
         public ServiceInputParameters withTaskRolePolicyStatements(List<PolicyStatement> taskRolePolicyStatements) {
             this.taskRolePolicyStatements = taskRolePolicyStatements;
             return this;
         }
+
         /**
          * Disable or enable sticky sessions for the load balancer.
          * <p>

@@ -6,20 +6,20 @@ import java.time.LocalDate;
 public final class BorrowedDto {
 
     private int bookId;
-    private String firstName;
-    private String lastName;
-
-    @PastOrPresent(message = "Borrow date can't be later than today.")
-    private LocalDate from;
+    private int readerId;
+    private @PastOrPresent(message = "Borrow date can't be later than today.") LocalDate from;
 
     public BorrowedDto() {
-        this(0, "", "", null);
+        this(0, 0);
     }
 
-    public BorrowedDto(int bookId, String firstName, String lastName, LocalDate from) {
+    public BorrowedDto(int bookId, int readerId) {
+        this(bookId, readerId, LocalDate.now());
+    }
+
+    public BorrowedDto(int bookId, int readerId, LocalDate from) {
         this.bookId = bookId;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.readerId = readerId;
         this.from = from;
     }
 
@@ -31,20 +31,12 @@ public final class BorrowedDto {
         this.bookId = bookId;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public int getReaderId() {
+        return readerId;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setReaderId(int readerId) {
+        this.readerId = readerId;
     }
 
     public LocalDate getFrom() {

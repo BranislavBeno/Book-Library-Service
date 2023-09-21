@@ -3,12 +3,21 @@ package com.book.library.config;
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import org.springframework.boot.devtools.restart.RestartScope;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.DynamicPropertyRegistry;
+import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
 @TestConfiguration(proxyBeanMethods = false)
 public class ContainersConfig {
+
+    @Bean
+    @ServiceConnection
+    @RestartScope
+    public PostgreSQLContainer<?> postgresSqlContainer() {
+        return new PostgreSQLContainer<>("postgres:12.15");
+    }
 
     @Bean
     @RestartScope

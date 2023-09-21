@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/basic-layout}"
+      xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Library service</title>
+</head>
+<body>
+<section layout:fragment="basic-content">
+    <div class="row">
+        <div th:replace="~{fragments/navigation :: toggle-pane}"></div>
+        <div class="col-sm-10">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Save reader</h5>
+                </div>
+                <div class="card-body">
+                    <form class="row g-2" th:method="POST" th:object="${readerDto}" th:action="@{/reader/save}">
+                        <input type="hidden" th:field="*{id}"/>
+                        <div class="col-12">
+                            <input id="firstName" class="form-control" type="text" placeholder="First name"
+                                   aria-label="First name" aria-describedby="firstNameHelp" th:field="*{firstName}"
+                                   th:classappend="${#fields.hasErrors('firstName')}? 'is-invalid'">
+                            <div>
+                                <small id="firstNameHelp" class="form-text text-muted">
+                                    First name can't be empty.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <input id="lastName" class="form-control" type="text" placeholder="Last name"
+                                   aria-label="Last name" aria-describedby="lastNameHelp" th:field="*{lastName}"
+                                   th:classappend="${#fields.hasErrors('lastName')}? 'is-invalid'">
+                            <div>
+                                <small id="lastNameHelp" class="form-text text-muted">
+                                    Last name can't be empty.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <input id="email" class="form-control" type="email" placeholder="Email"
+                                   aria-label="Email" aria-describedby="emailHelp" th:field="*{email}"
+                                   th:classappend="${#fields.hasErrors('email')}? 'is-invalid'">
+                            <div>
+                                <small id="emailHelp" class="form-text text-muted">
+                                    Required is valid e-mail address.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

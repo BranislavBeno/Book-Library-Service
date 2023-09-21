@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/basic-layout}"
+      xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Library service</title>
+</head>
+<body>
+<section layout:fragment="basic-content">
+    <div class="row">
+        <div th:replace="~{fragments/navigation :: toggle-pane}"></div>
+        <div class="col-sm-10">
+            <div class="card">
+                <div class="card-header">
+                    <h5>All readers</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger" role="alert" th:if="${forbidden}">
+                        <strong>Error:</strong>
+                        <span>Reader can't be deleted due to he/she still has borrowed books.</span>
+                    </div>
+                    <div class="alert alert-warning" role="alert" th:if="${!found}">
+                        <strong>Warning:</strong>
+                        <span>No readers have been found.</span>
+                    </div>
+                    <div th:if="${found}">
+                        <table aria-label="All readers" class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">E-mail</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="item : ${readers.content}">
+                                <td th:text="${item.readerName()}"></td>
+                                <td th:text="${item.email}"></td>
+                                <td>
+                                    <div th:replace="~{fragments/button :: button-update(pageLink='/reader/show-update', identifier='readerId')}"></div>
+                                    <div th:replace="~{fragments/button :: button-delete(pageLink='/reader/delete', identifier='readerId')}"></div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div th:replace="~{fragments/navigation :: pagination-nav(pageLink='/reader/all')}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
