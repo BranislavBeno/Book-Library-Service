@@ -5,12 +5,10 @@ import com.book.library.cdk.construct.Network;
 import com.book.library.cdk.construct.PostgresDatabase;
 import com.book.library.cdk.construct.Service;
 import com.book.library.cdk.stack.CognitoStack;
+import com.book.library.cdk.stack.MessagingStack;
 import com.book.library.cdk.util.CdkUtil;
 import com.book.library.cdk.util.Validations;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import software.amazon.awscdk.App;
 import software.amazon.awscdk.Environment;
 import software.amazon.awscdk.Stack;
@@ -65,6 +63,9 @@ public class ServiceApp {
         var cognitoOutputParameters =
                 CognitoStack.getOutputParametersFromParameterStore(parametersStack, appEnvironment);
 
+        var messagingOutputParameters =
+                MessagingStack.getOutputParametersFromParameterStore(parametersStack, appEnvironment);
+
         var serviceInputParameters = new Service.ServiceInputParameters(
                         dockerImageSource,
                         Collections.singletonList(databaseOutputParameters.databaseSecurityGroupId()),
@@ -73,13 +74,30 @@ public class ServiceApp {
                 .withHealthCheckPath("/actuator/info")
                 .withHealthCheckIntervalSeconds(30)
                 .withStickySessionsEnabled(true)
-                .withTaskRolePolicyStatements(List.of(PolicyStatement.Builder.create()
-                        .sid("AllowCreatingUsers")
-                        .effect(Effect.ALLOW)
-                        .resources(List.of("arn:aws:cognito-idp:%s:%s:userpool/%s"
-                                .formatted(region, accountId, cognitoOutputParameters.userPoolId())))
-                        .actions(List.of("cognito-idp:AdminCreateUser"))
-                        .build()));
+                .withTaskRolePolicyStatements(List.of(
+                        PolicyStatement.Builder.create()
+                                .sid("AllowCreatingUsers")
+                                .effect(Effect.ALLOW)
+                                .resources(List.of("arn:aws:cognito-idp:%s:%s:userpool/%s"
+                                        .formatted(region, accountId, cognitoOutputParameters.userPoolId())))
+                                .actions(List.of("cognito-idp:AdminCreateUser"))
+                                .build(),
+                        PolicyStatement.Builder.create()
+                                .sid("AllowSQSAccess")
+                                .effect(Effect.ALLOW)
+                                .resources(List.of("arn:aws:sqs:%s:%s:%s"
+                                        .formatted(region, accountId, messagingOutputParameters.sharingQueueName())))
+                                .actions(Arrays.asList(
+                                        "sqs:DeleteMessage",
+                                        "sqs:GetQueueUrl",
+                                        "sqs:ListDeadLetterSourceQueues",
+                                        "sqs:ListQueues",
+                                        "sqs:ListQueueTags",
+                                        "sqs:ReceiveMessage",
+                                        "sqs:SendMessage",
+                                        "sqs:ChangeMessageVisibility",
+                                        "sqs:GetQueueAttributes"))
+                                .build()));
 
         var networkOutputParameters = Network.getOutputParametersFromParameterStore(serviceStack, appEnvironment);
 
