@@ -70,7 +70,11 @@ public class ServiceApp {
                         dockerImageSource,
                         Collections.singletonList(databaseOutputParameters.databaseSecurityGroupId()),
                         environmentVariables(
-                                serviceStack, databaseOutputParameters, cognitoOutputParameters, springProfile))
+                                serviceStack,
+                                databaseOutputParameters,
+                                cognitoOutputParameters,
+                                messagingOutputParameters,
+                                springProfile))
                 .withHealthCheckPath("/actuator/info")
                 .withHealthCheckIntervalSeconds(30)
                 .withStickySessionsEnabled(true)
@@ -116,6 +120,7 @@ public class ServiceApp {
             Construct scope,
             PostgresDatabase.DatabaseOutputParameters databaseOutputParameters,
             CognitoStack.CognitoOutputParameters cognitoOutputParameters,
+            MessagingStack.MessagingOutputParameters messagingOutputParameters,
             String springProfile) {
         Map<String, String> vars = new HashMap<>();
 
@@ -141,6 +146,7 @@ public class ServiceApp {
         vars.put("COGNITO_USER_POOL_ID", cognitoOutputParameters.userPoolId());
         vars.put("COGNITO_LOGOUT_URL", cognitoOutputParameters.logoutUrl());
         vars.put("COGNITO_PROVIDER_URL", cognitoOutputParameters.providerUrl());
+        vars.put("BLS_SHARING_QUEUE_NAME", messagingOutputParameters.sharingQueueName());
 
         return vars;
     }
