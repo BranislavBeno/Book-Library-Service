@@ -33,3 +33,4 @@ spring:
 
 custom:
   invitation-codes: DUKE, STRATOSPHERIC
+  sharing-queue: bls-book-sharing

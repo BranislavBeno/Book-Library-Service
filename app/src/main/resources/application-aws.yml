@@ -20,3 +20,4 @@ spring:
 
 custom:
   use-cognito-as-identity-provider: true
+  sharing-queue: ${BLS_SHARING_QUEUE_NAME}

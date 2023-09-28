@@ -65,7 +65,7 @@ public final class MessagingStack extends Stack {
                 + MessagingStack.PARAMETER_SHARING_QUEUE_NAME;
     }
 
-    public static String getTodoSharingQueueName(Construct scope, ApplicationEnvironment applicationEnvironment) {
+    public static String getSharingQueueName(Construct scope, ApplicationEnvironment applicationEnvironment) {
         return StringParameter.fromStringParameterName(
                         scope, PARAMETER_SHARING_QUEUE_NAME, createParameterName(applicationEnvironment))
                 .getStringValue();
@@ -73,7 +73,7 @@ public final class MessagingStack extends Stack {
 
     public static MessagingOutputParameters getOutputParametersFromParameterStore(
             Construct scope, ApplicationEnvironment applicationEnvironment) {
-        return new MessagingOutputParameters(getTodoSharingQueueName(scope, applicationEnvironment));
+        return new MessagingOutputParameters(getSharingQueueName(scope, applicationEnvironment));
     }
 
     public record MessagingOutputParameters(String sharingQueueName) {}

@@ -35,6 +35,7 @@ dependencies {
     implementation(libs.flyway.core)
     implementation(platform(libs.spring.cloud.aws.bom))
     implementation(libs.spring.cloud.aws.starter)
+    implementation(libs.spring.cloud.aws.sqs)
     implementation(libs.aws.sdk.cognito.idp)
     runtimeOnly(libs.database.postgresql)
     testImplementation(libs.spring.boot.starter.test)
@@ -45,6 +46,7 @@ dependencies {
     testImplementation(libs.testcontainers.common)
     testImplementation(libs.testcontainers.junit.jupiter)
     testImplementation(libs.testcontainers.postgresql)
+    testImplementation(libs.testcontainers.localstack)
     testImplementation(libs.testcontainers.keycloak)
     testCompileOnly(libs.spring.boot.devtools)
 }
