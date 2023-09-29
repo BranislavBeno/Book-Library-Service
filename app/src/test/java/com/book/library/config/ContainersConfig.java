@@ -1,19 +1,23 @@
 package com.book.library.config;
 
 import dasniko.testcontainers.keycloak.KeycloakContainer;
+import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.devtools.restart.RestartScope;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.DynamicPropertyRegistry;
-import org.testcontainers.containers.BindMode;
+import org.testcontainers.containers.Container;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.localstack.LocalStackContainer;
-import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
 
 @TestConfiguration(proxyBeanMethods = false)
 public class ContainersConfig {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContainersConfig.class);
 
     @Bean
     @ServiceConnection
@@ -41,16 +45,20 @@ public class ContainersConfig {
 
     @Bean
     @RestartScope
-    public LocalStackContainer localStackContainer(DynamicPropertyRegistry registry) {
-        try (var container = new LocalStackContainer(DockerImageName.parse("localstack/localstack-full:1.4.0"))) {
-            container.withClasspathResourceMapping("/localstack", "/docker-entrypoint-initaws.d", BindMode.READ_ONLY)
-                    .withEnv("USE_SINGLE_REGION", "true")
-                    .withEnv("DEFAULT_REGION", "eu-central-1")
-                    .withServices(LocalStackContainer.Service.SQS)
-                    .waitingFor(Wait.forLogMessage(".*Initialized\\.\n", 1));
+    public LocalStackContainer localStackContainer(DynamicPropertyRegistry registry)
+            throws IOException, InterruptedException {
+        try (var container = new LocalStackContainer(DockerImageName.parse("localstack/localstack:2.3.0"))) {
+            container.withServices(LocalStackContainer.Service.SQS);
             container.start();
 
-            registry.add("spring.cloud.aws.endpoint", () -> container.getEndpointOverride(LocalStackContainer.Service.SQS).toString());
+            Container.ExecResult createQueue =
+                    container.execInContainer("awslocal", "sqs", "create-queue", "--queue-name", "bls-book-sharing");
+            LOGGER.info("SQS queue creation finished with exit code {}.", createQueue.getExitCode());
+            LOGGER.info(createQueue.getStdout());
+
+            registry.add("spring.cloud.aws.endpoint", () -> container
+                    .getEndpointOverride(LocalStackContainer.Service.SQS)
+                    .toString());
             registry.add("spring.cloud.aws.region.static", container::getRegion);
             registry.add("spring.cloud.aws.credentials.access-key", container::getAccessKey);
             registry.add("spring.cloud.aws.credentials.secret-key", container::getSecretKey);
