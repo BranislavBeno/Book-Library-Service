@@ -23,7 +23,7 @@
     "service:destroy": "cdk destroy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.ServiceApp\" --force --require-approval never --all"
   },
   "devDependencies": {
-    "aws-cdk": "2.98.0"
+    "aws-cdk": "2.99.0"
   },
   "engines": {
     "node": ">=16"
