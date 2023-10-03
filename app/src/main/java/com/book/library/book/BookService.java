@@ -92,8 +92,16 @@ public record BookService(
         int id = book.getId();
         String name = book.getName();
         String author = book.getAuthor();
-        boolean borrowed = book.getBorrowed() != null && book.getBorrowed().getBorrowedOn() != null;
+        boolean borrowed = false;
 
-        return new AnyBookDto(id, name, author, borrowed);
+        List<ReaderDto> offered = readerRepository.findAllReaders();
+        Reader reader = book.getBorrowed() != null ? book.getBorrowed().getReader() : null;
+        if (reader != null) {
+            borrowed = true;
+            ReaderDto readerDto = new ReaderDto(reader);
+            offered.remove(readerDto);
+        }
+
+        return new AnyBookDto(id, name, author, borrowed, offered);
     }
 }
