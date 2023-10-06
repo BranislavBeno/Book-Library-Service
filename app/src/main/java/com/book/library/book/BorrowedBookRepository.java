@@ -10,7 +10,7 @@ public interface BorrowedBookRepository extends JpaRepository<BorrowedBook, Inte
 
     @Query(
             """
-            SELECT new com.book.library.dto.BorrowedBookDto(bb.id, bb.borrowedOn, b.name, b.author, r.firstName, r.lastName)
+            SELECT new com.book.library.dto.BorrowedBookDto(bb.id, bb.borrowedOn, b.name, b.author, r.id, r.firstName, r.lastName)
             FROM BorrowedBook bb
             JOIN bb.book b
             JOIN bb.reader r""")

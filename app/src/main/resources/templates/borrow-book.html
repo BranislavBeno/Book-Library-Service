@@ -24,7 +24,7 @@
                                 Select reader
                             </label>
                             <select class="form-select" id="readerSelect" th:field="*{readerId}">
-                                <option th:each="item : ${readers}" th:value="${item.id}" th:text="${item.toString()}"></option>
+                                <option th:each="item : ${readers}" th:value="${item.id}" th:text="${item.readerName()}"></option>
                             </select>
                         </div>
                         <div class="col-12">

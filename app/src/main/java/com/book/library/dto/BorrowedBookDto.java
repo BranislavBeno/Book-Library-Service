@@ -4,7 +4,7 @@ import com.book.library.book.BorrowedBook;
 import java.time.LocalDate;
 
 public record BorrowedBookDto(
-        int id, LocalDate borrowedOn, String name, String author, String firstName, String lastName)
+        int id, LocalDate borrowedOn, String name, String author, int readerId, String firstName, String lastName)
         implements DataTransferObject {
 
     public BorrowedBookDto(BorrowedBook book) {
@@ -13,6 +13,7 @@ public record BorrowedBookDto(
                 book.getBorrowedOn(),
                 book.getBook().getName(),
                 book.getBook().getAuthor(),
+                book.getReader().getId(),
                 book.getReader().getFirstName(),
                 book.getReader().getLastName());
     }

@@ -92,17 +92,8 @@ public record BookService(
         int id = book.getId();
         String name = book.getName();
         String author = book.getAuthor();
+        boolean borrowed = book.getBorrowed() != null && book.getBorrowed().getBorrowedOn() != null;
 
-        List<ReaderDto> offered = readerRepository.findAllReaders();
-        Reader reader = book.getBorrowed() != null ? book.getBorrowed().getReader() : null;
-        if (reader != null) {
-            ReaderDto dto = new ReaderDto(reader);
-            List<ReaderDto> reduced =
-                    offered.stream().filter(r -> r.getId() != dto.getId()).toList();
-
-            return new AnyBookDto(id, name, author, true, reduced);
-        }
-
-        return new AnyBookDto(id, name, author, false, offered);
+        return new AnyBookDto(id, name, author, borrowed);
     }
 }

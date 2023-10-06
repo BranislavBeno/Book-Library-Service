@@ -4,6 +4,8 @@ import com.book.library.controller.ViewController;
 import com.book.library.dto.*;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -64,10 +66,12 @@ public class BookController extends AbstractBookController implements ViewContro
     public String showBorrowedBooks(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         Page<BorrowedBookDto> bookPage = getService().findBorrowedBooks(page);
         PageData<BorrowedBookDto> pageData = providePageData(bookPage);
+        Map<Integer, List<ReaderDto>> map = mapOffered(bookPage);
 
         model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
         model.addAttribute(BOOKS_ATTR, pageData.dtoPage());
         model.addAttribute(PAGE_NUMBERS_ATTR, pageData.pageNumbers());
+        model.addAttribute("offered", map);
 
         return "borrowed-books";
     }
@@ -152,5 +156,19 @@ public class BookController extends AbstractBookController implements ViewContro
         model.addAttribute("borrowedDto", borrowedDto);
 
         return "borrow-book";
+    }
+
+    private Map<Integer, List<ReaderDto>> mapOffered(Page<BorrowedBookDto> bookPage) {
+        List<ReaderDto> readers = getService().findAllReaders();
+        record OfferedData(int bookId, List<ReaderDto> offered) {}
+
+        return bookPage.getContent().stream()
+                .<OfferedData>mapMulti((book, consumer) -> {
+                    List<ReaderDto> offered = readers.stream()
+                            .filter(reader -> reader.getId() != book.readerId())
+                            .toList();
+                    consumer.accept(new OfferedData(book.id(), offered));
+                })
+                .collect(Collectors.toMap(o -> o.bookId, o -> o.offered));
     }
 }
