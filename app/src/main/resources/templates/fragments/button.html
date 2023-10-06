@@ -8,24 +8,4 @@
 </a>
 <a th:fragment="button-update(pageLink, identifier)" th:href="@{${pageLink}(${identifier}=${item.id})}"
    class="btn btn-info btn-sm">Update</a>
-<div  th:fragment="button-share" class="dropdown d-inline-block">
-    <button class="btn btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="fas fa-share"></i>
-    </button>
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-              <span class="dropdown-item" th:if="${item.offered().isEmpty()}">
-                No offered available
-              </span>
-        <form th:method="POST"
-              th:each="reader : ${item.offered()}"
-              th:action="@{/todo/{todoId}/collaborations/{collaboratorId}(todoId=${todo.id}, collaboratorId=${collaborator.id})}">
-            <button
-                    th:text="${reader.readerName()}"
-                    type="submit"
-                    name="submit"
-                    class="dropdown-item">
-            </button>
-        </form>
-    </div>
-</div>
 </html>
