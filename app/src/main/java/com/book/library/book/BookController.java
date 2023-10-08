@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -63,10 +64,10 @@ public class BookController extends AbstractBookController implements ViewContro
     @GetMapping("/borrowed")
     public String showBorrowedBooks(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         Page<BorrowedBookDto> bookPage = getService().findBorrowedBooks(page);
-        PageData<BorrowedBookDto> pageData = providePageData(bookPage);
-        setOffered(bookPage);
+        Page<BorrowedBookExtendedDto> extendedPage = extendPage(bookPage);
+        PageData<BorrowedBookExtendedDto> pageData = providePageData(extendedPage);
 
-        model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
+        model.addAttribute(FOUND_ATTR, !extendedPage.isEmpty());
         model.addAttribute(BOOKS_ATTR, pageData.dtoPage());
         model.addAttribute(PAGE_NUMBERS_ATTR, pageData.pageNumbers());
 
@@ -145,6 +146,26 @@ public class BookController extends AbstractBookController implements ViewContro
         return "redirect:/book/available";
     }
 
+    @PostMapping("/{bookId}/recommendations/{readerId}")
+    public String shareTodoWithCollaborator(
+            @PathVariable("bookId") Long bookId,
+            @PathVariable("readerId") Long readerId,
+            RedirectAttributes redirectAttributes) {
+        //        String recommencedTo = getService().recommendBookTo(bookId, readerId);
+        String recommencedTo = "kukuk";
+        System.out.println(recommencedTo);
+
+        redirectAttributes.addFlashAttribute(
+                "message",
+                String.format(
+                        "You successfully recommended book to other reader %s. "
+                                + "Once the reader accepts the recommendation, you'll see her/him as a recommenced on the book.",
+                        recommencedTo));
+        redirectAttributes.addFlashAttribute("messageType", "success");
+
+        return "redirect:/book/borrowed";
+    }
+
     private String callBorrowTemplate(Model model, BorrowedDto borrowedDto) {
         List<ReaderDto> readers = getService().findAllReaders();
 
@@ -155,12 +176,17 @@ public class BookController extends AbstractBookController implements ViewContro
         return "borrow-book";
     }
 
-    private void setOffered(Page<BorrowedBookDto> bookPage) {
+    private Page<BorrowedBookExtendedDto> extendPage(Page<BorrowedBookDto> bookPage) {
         List<ReaderDto> readers = getService().findAllReaders();
-        bookPage.getContent().forEach(b -> {
-            List<ReaderDto> offered =
-                    readers.stream().filter(r -> r.getId() != b.readerId()).toList();
-            b.setOffered(offered);
-        });
+        List<BorrowedBookExtendedDto> list = bookPage.getContent().stream()
+                .map(b -> {
+                    List<ReaderDto> candidates = readers.stream()
+                            .filter(r -> r.getId() != b.readerId())
+                            .toList();
+                    return new BorrowedBookExtendedDto(b, candidates);
+                })
+                .toList();
+
+        return new PageImpl<>(list, bookPage.getPageable(), bookPage.getTotalElements());
     }
 }

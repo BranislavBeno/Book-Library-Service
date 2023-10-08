@@ -1,3 +1,4 @@
 package com.book.library.dto;
 
-public sealed interface DataTransferObject permits AnyBookDto, AvailableBookDto, BorrowedBookDto, ReaderDto {}
+public sealed interface DataTransferObject
+        permits AnyBookDto, AvailableBookDto, BorrowedBookDto, BorrowedBookExtendedDto, ReaderDto {}
