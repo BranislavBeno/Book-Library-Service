@@ -55,7 +55,7 @@
                                                 No one to offer</span>
                                             <form th:method="POST"
                                                   th:each="reader : ${item.candidates}"
-                                                  th:acon="@{/book/{bookId}/recommendations/{readerId}(bookId=${item.id}, readerId=${reader.id})}">
+                                                  th:action="@{/book/{bookId}/recommend/{readerId}(bookId=${item.id}, readerId=${reader.id})}">
                                                 <button
                                                         th:text="${reader.readerName()}"
                                                         type="submit"

@@ -146,26 +146,6 @@ public class BookController extends AbstractBookController implements ViewContro
         return "redirect:/book/available";
     }
 
-    @PostMapping("/{bookId}/recommendations/{readerId}")
-    public String shareTodoWithCollaborator(
-            @PathVariable("bookId") Long bookId,
-            @PathVariable("readerId") Long readerId,
-            RedirectAttributes redirectAttributes) {
-        //        String recommencedTo = getService().recommendBookTo(bookId, readerId);
-        String recommencedTo = "kukuk";
-        System.out.println(recommencedTo);
-
-        redirectAttributes.addFlashAttribute(
-                "message",
-                String.format(
-                        "You successfully recommended book to other reader %s. "
-                                + "Once the reader accepts the recommendation, you'll see her/him as a recommenced on the book.",
-                        recommencedTo));
-        redirectAttributes.addFlashAttribute("messageType", "success");
-
-        return "redirect:/book/borrowed";
-    }
-
     private String callBorrowTemplate(Model model, BorrowedDto borrowedDto) {
         List<ReaderDto> readers = getService().findAllReaders();
 

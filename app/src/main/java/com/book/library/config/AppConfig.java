@@ -5,6 +5,7 @@ import com.book.library.book.BookService;
 import com.book.library.book.BorrowedBookRepository;
 import com.book.library.reader.ReaderRepository;
 import com.book.library.reader.ReaderService;
+import com.book.library.recommendation.BookRecommendationService;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +35,12 @@ public class AppConfig {
     public ReaderService readerService(
             @Autowired ReaderRepository readerRepository, @Value("${book.service.page.size:20}") int pageSize) {
         return new ReaderService(readerRepository, pageSize);
+    }
+
+    @Bean
+    public BookRecommendationService bookRecommendationService(
+            @Autowired BorrowedBookRepository borrowedBookRepository, @Autowired ReaderRepository readerRepository) {
+        return new BookRecommendationService(borrowedBookRepository, readerRepository);
     }
 
     @Bean

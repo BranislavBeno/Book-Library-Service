@@ -11,8 +11,8 @@ public abstract class AbstractTestRepository<T> extends BaseTestRepository {
     protected abstract JpaRepository<T, Integer> getRepository();
 
     protected void assertEntity(int id, Consumer<T> consumer) {
-        Optional<T> reader = getRepository().findById(id);
-        reader.ifPresentOrElse(consumer, () -> Assertions.fail("Entity not found"));
+        Optional<T> entity = getRepository().findById(id);
+        entity.ifPresentOrElse(consumer, () -> Assertions.fail("Entity not found"));
     }
 
     protected static PageRequest getPageRequest() {
