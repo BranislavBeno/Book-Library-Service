@@ -18,3 +18,5 @@ INSERT INTO borrowed_book (id, borrowed_on, book_id, reader_id) VALUES (1, '2016
 INSERT INTO borrowed_book (id, borrowed_on, book_id, reader_id) VALUES (2, '2018-06-16', 2, 2);
 INSERT INTO borrowed_book (id, borrowed_on, book_id, reader_id) VALUES (3, '2017-02-01', 3, 3);
 INSERT INTO borrowed_book (id, borrowed_on, book_id, reader_id) VALUES (4, '2009-10-25', 5, 4);
+--- Book recommendation request
+INSERT INTO book_recommendation_request (id, token, book_id, recommenced_id) VALUES (1, 'token', 1, 2);

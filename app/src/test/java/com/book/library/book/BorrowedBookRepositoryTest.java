@@ -49,6 +49,7 @@ class BorrowedBookRepositoryTest extends AbstractTestRepository<BorrowedBook> im
                 .findRecommendedBookByBorrowedBookId(4)
                 .ifPresentOrElse(
                         b -> {
+                            assertThat(b.bookId()).isEqualTo(5);
                             assertThat(b.book()).isEqualTo("Hamlet from William Shakespeare");
                             assertThat(b.readerName()).isEqualTo("Jozef Štvrtý");
                             assertThat(b.readerEmail()).isEqualTo("jozef@example.com");

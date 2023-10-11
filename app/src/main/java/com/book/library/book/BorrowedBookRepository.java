@@ -12,17 +12,17 @@ public interface BorrowedBookRepository extends JpaRepository<BorrowedBook, Inte
 
     @Query(
             """
-            SELECT new com.book.library.dto.BorrowedBookDto(bb.id, bb.borrowedOn, b.name, b.author, r.id, r.firstName, r.lastName)
-            FROM BorrowedBook bb
-            JOIN bb.book b
-            JOIN bb.reader r""")
+                    SELECT new com.book.library.dto.BorrowedBookDto(bb.id, bb.borrowedOn, b.name, b.author, r.id, r.firstName, r.lastName)
+                    FROM BorrowedBook bb
+                    JOIN bb.book b
+                    JOIN bb.reader r""")
     Page<BorrowedBookDto> findAllBorrowedBooks(Pageable pageable);
 
     @Query(
             """
-            SELECT new com.book.library.dto.RecommendedBookDto(b.name, b.author, r.firstName, r.lastName, r.email)
-            FROM BorrowedBook bb
-            JOIN bb.reader r
-            JOIN bb.book b WHERE bb.id = :id""")
-    Optional<RecommendedBookDto> findRecommendedBookByBorrowedBookId(long id);
+                    SELECT new com.book.library.dto.RecommendedBookDto(b.id,b.name, b.author, r.firstName, r.lastName, r.email)
+                    FROM BorrowedBook bb
+                    JOIN bb.reader r
+                    JOIN bb.book b WHERE bb.id = :id""")
+    Optional<RecommendedBookDto> findRecommendedBookByBorrowedBookId(int id);
 }

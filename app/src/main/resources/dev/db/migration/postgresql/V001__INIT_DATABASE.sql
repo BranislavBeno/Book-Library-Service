@@ -46,13 +46,13 @@ CREATE TABLE book_recommendation_request
 (
     id             INTEGER NOT NULL,
     token          VARCHAR(255),
-    recommenced_id INTEGER,
     book_id        INTEGER,
+    recommenced_id INTEGER,
     CONSTRAINT pk_book_recommendation_request PRIMARY KEY (id)
 );
 
 ALTER TABLE book_recommendation_request
-    ADD CONSTRAINT FK_BOOK_RECOMMENDATION_REQUEST_ON_READER FOREIGN KEY (recommenced_id) REFERENCES reader (id);
+    ADD CONSTRAINT FK_BOOK_RECOMMENDATION_REQUEST_ON_BOOK FOREIGN KEY (book_id) REFERENCES book (id);
 
 ALTER TABLE book_recommendation_request
-    ADD CONSTRAINT FK_BOOK_RECOMMENDATION_REQUEST_ON_BOOK FOREIGN KEY (book_id) REFERENCES book (id);
+    ADD CONSTRAINT FK_BOOK_RECOMMENDATION_REQUEST_ON_READER FOREIGN KEY (recommenced_id) REFERENCES reader (id);

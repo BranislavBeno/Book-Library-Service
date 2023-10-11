@@ -10,7 +10,7 @@ public record BookRecommendationService(BorrowedBookRepository bookRepository, R
     private static final String INVALID_BOOK_ID = "Invalid book id: ";
     private static final String INVALID_READER_ID = "Invalid reader id: ";
 
-    public String recommendBookTo(Long bookId, Long readerId) {
+    public String recommendBookTo(int bookId, int readerId) {
         RecommendedBookDto bookDto = bookRepository
                 .findRecommendedBookByBorrowedBookId(bookId)
                 .orElseThrow(() -> new IllegalArgumentException(INVALID_BOOK_ID + bookId));
