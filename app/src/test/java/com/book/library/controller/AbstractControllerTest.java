@@ -24,7 +24,7 @@ public abstract class AbstractControllerTest {
     static {
         REPOSITORY_CONTAINER.start();
 
-        KEYCLOAK_CONTAINER = new KeycloakContainer(DockerImageName.parse("quay.io/keycloak/keycloak:22.0.3")
+        KEYCLOAK_CONTAINER = new KeycloakContainer(DockerImageName.parse("quay.io/keycloak/keycloak:22.0.4")
                         .asCanonicalNameString())
                 .withRealmImportFile("keycloak/stratospheric-realm.json");
         KEYCLOAK_CONTAINER.start();

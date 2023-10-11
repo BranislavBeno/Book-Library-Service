@@ -12,7 +12,7 @@ spring-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools
 spring-boot-testcontainers = { module = "org.springframework.boot:spring-boot-testcontainers" }
 spring-security-test = { module = "org.springframework.security:spring-security-test" }
 micrometer-observation-test = { module = "io.micrometer:micrometer-observation-test" }
-testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version = "1.19.0" }
+testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version = "1.19.1" }
 testcontainers-common = { module = "org.testcontainers:testcontainers" }
 testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter" }
 testcontainers-postgresql = { module = "org.testcontainers:postgresql" }
@@ -30,7 +30,7 @@ problem-spring-web = { module = "org.zalando:problem-spring-web", version = "0.2
 spring-cloud-aws-bom = { module = "io.awspring.cloud:spring-cloud-aws-dependencies", version = "3.0.2" }
 spring-cloud-aws-starter = { module = "io.awspring.cloud:spring-cloud-aws-starter" }
 aws-sdk-cognito-idp = { module = "software.amazon.awssdk:cognitoidentityprovider" }
-aws-cdk-lib = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.99.0" }
+aws-cdk-lib = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.100.0" }
 # code quality
 palantir-javaformat = { module = "com.palantir.javaformat:palantir-java-format", version = "2.38.0" }
 # gradle plugins
