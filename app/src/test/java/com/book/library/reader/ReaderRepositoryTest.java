@@ -37,6 +37,18 @@ class ReaderRepositoryTest extends AbstractTestRepository<Reader> implements Wit
     }
 
     @Test
+    void testFindReaderById() {
+        repository
+                .findReaderById(1)
+                .ifPresentOrElse(
+                        r -> {
+                            assertThat(r.readerName()).isEqualTo("Ján Prvý");
+                            assertThat(r.getEmail()).isEqualTo("jan@example.com");
+                        },
+                        () -> fail("Reader not found"));
+    }
+
+    @Test
     void testDeleteById() {
         assertThat(repository.findAll()).hasSize(7);
 

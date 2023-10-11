@@ -1,6 +1,9 @@
 package com.book.library.book;
 
+import com.book.library.recommendation.BookRecommendationRequest;
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Book {
@@ -17,6 +20,10 @@ public class Book {
 
     @OneToOne(mappedBy = "book")
     private BorrowedBook borrowed;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "book_id")
+    private List<BookRecommendationRequest> collaborationRequests = new ArrayList<>();
 
     public BorrowedBook getBorrowed() {
         return borrowed;
@@ -48,5 +55,13 @@ public class Book {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public List<BookRecommendationRequest> getCollaborationRequests() {
+        return collaborationRequests;
+    }
+
+    public void setCollaborationRequests(List<BookRecommendationRequest> collaborationRequests) {
+        this.collaborationRequests = collaborationRequests;
     }
 }

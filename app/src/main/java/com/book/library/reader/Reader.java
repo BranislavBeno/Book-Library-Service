@@ -1,7 +1,9 @@
 package com.book.library.reader;
 
 import com.book.library.book.BorrowedBook;
+import com.book.library.recommendation.BookRecommendationRequest;
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,6 +23,9 @@ public class Reader {
 
     @OneToMany(mappedBy = "reader")
     private List<BorrowedBook> borrowedBooks;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "recommenced")
+    private List<BookRecommendationRequest> bookRecommendationRequests = new ArrayList<>();
 
     public int getId() {
         return id;
@@ -60,5 +65,13 @@ public class Reader {
 
     public void setBorrowedBooks(List<BorrowedBook> borrowedBooks) {
         this.borrowedBooks = borrowedBooks;
+    }
+
+    public List<BookRecommendationRequest> getBookRecommendationRequests() {
+        return bookRecommendationRequests;
+    }
+
+    public void setBookRecommendationRequests(List<BookRecommendationRequest> bookRecommendationRequests) {
+        this.bookRecommendationRequests = bookRecommendationRequests;
     }
 }
