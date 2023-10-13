@@ -19,7 +19,7 @@ testcontainers-postgresql = { module = "org.testcontainers:postgresql" }
 testcontainers-keycloak = { module = "com.github.dasniko:testcontainers-keycloak", version = "3.0.0" }
 database-postgresql = { module = "org.postgresql:postgresql" }
 flyway-core = { module = "org.flywaydb:flyway-core" }
-jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version = "2.15.2" }
+jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version = "2.15.3" }
 jackson-dataformat-xml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml" }
 thymeleaf-layout-dialect = { module = "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect", version = "3.3.0" }
 thymeleaf-spring-security = { module = "org.thymeleaf.extras:thymeleaf-extras-springsecurity6", version = "3.1.2.RELEASE" }
