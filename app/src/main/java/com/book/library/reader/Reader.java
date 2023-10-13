@@ -74,4 +74,8 @@ public class Reader {
     public void setBookRecommendationRequests(List<BookRecommendationRequest> bookRecommendationRequests) {
         this.bookRecommendationRequests = bookRecommendationRequests;
     }
+
+    public String fullName() {
+        return "%s %s".formatted(firstName, lastName);
+    }
 }

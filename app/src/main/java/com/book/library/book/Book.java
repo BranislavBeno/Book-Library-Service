@@ -23,7 +23,7 @@ public class Book {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "book_id")
-    private List<BookRecommendationRequest> collaborationRequests = new ArrayList<>();
+    private List<BookRecommendationRequest> recommendationRequests = new ArrayList<>();
 
     public BorrowedBook getBorrowed() {
         return borrowed;
@@ -57,11 +57,15 @@ public class Book {
         this.author = author;
     }
 
-    public List<BookRecommendationRequest> getCollaborationRequests() {
-        return collaborationRequests;
+    public List<BookRecommendationRequest> getRecommendationRequests() {
+        return recommendationRequests;
     }
 
-    public void setCollaborationRequests(List<BookRecommendationRequest> collaborationRequests) {
-        this.collaborationRequests = collaborationRequests;
+    public void setRecommendationRequests(List<BookRecommendationRequest> recommendationRequests) {
+        this.recommendationRequests = recommendationRequests;
+    }
+
+    public String bookInfo() {
+        return "%s written by %s".formatted(name, author);
     }
 }

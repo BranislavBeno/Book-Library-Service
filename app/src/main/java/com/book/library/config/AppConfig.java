@@ -5,6 +5,7 @@ import com.book.library.book.BookService;
 import com.book.library.book.BorrowedBookRepository;
 import com.book.library.reader.ReaderRepository;
 import com.book.library.reader.ReaderService;
+import com.book.library.recommendation.BookRecommendationRequestRepository;
 import com.book.library.recommendation.BookRecommendationService;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,14 +39,20 @@ public class AppConfig {
     }
 
     @Bean
-    public BookRecommendationService bookRecommendationService(
-            @Autowired BorrowedBookRepository borrowedBookRepository, @Autowired ReaderRepository readerRepository) {
-        return new BookRecommendationService(borrowedBookRepository, readerRepository);
+    public SqsTemplate sqsTemplate(SqsAsyncClient sqsAsyncClient) {
+        return SqsTemplate.newTemplate(sqsAsyncClient);
     }
 
     @Bean
-    public SqsTemplate sqsTemplate(SqsAsyncClient sqsAsyncClient) {
-        return SqsTemplate.newTemplate(sqsAsyncClient);
+    public BookRecommendationService bookRecommendationService(
+            @Autowired BorrowedBookRepository borrowedBookRepository,
+            @Autowired BookRepository bookRepository,
+            @Autowired ReaderRepository readerRepository,
+            @Autowired BookRecommendationRequestRepository requestRepository,
+            @Autowired SqsTemplate sqsTemplate,
+            @Value("${custom.sharing-queue}") String queueName) {
+        return new BookRecommendationService(
+                borrowedBookRepository, bookRepository, readerRepository, requestRepository, sqsTemplate, queueName);
     }
 
     @Bean
