@@ -37,6 +37,7 @@ dependencies {
     implementation(libs.spring.cloud.aws.sqs)
     implementation(libs.aws.sdk.cognito.idp)
     runtimeOnly(libs.database.postgresql)
+    testImplementation(libs.spring.cloud.aws.dynamodb)
     testImplementation(libs.spring.boot.starter.test)
     testImplementation(libs.spring.boot.testcontainers)
     testImplementation(libs.spring.security.test)
@@ -47,6 +48,7 @@ dependencies {
     testImplementation(libs.testcontainers.postgresql)
     testImplementation(libs.testcontainers.localstack)
     testImplementation(libs.testcontainers.keycloak)
+    testImplementation(libs.org.awaitility)
     testCompileOnly(libs.spring.boot.devtools)
 }
 

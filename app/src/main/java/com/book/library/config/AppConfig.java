@@ -5,6 +5,7 @@ import com.book.library.book.BookService;
 import com.book.library.book.BorrowedBookRepository;
 import com.book.library.reader.ReaderRepository;
 import com.book.library.reader.ReaderService;
+import com.book.library.recommendation.BookRecommendationListener;
 import com.book.library.recommendation.BookRecommendationRequestRepository;
 import com.book.library.recommendation.BookRecommendationService;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
@@ -53,6 +54,11 @@ public class AppConfig {
             @Value("${custom.sharing-queue}") String queueName) {
         return new BookRecommendationService(
                 borrowedBookRepository, bookRepository, readerRepository, requestRepository, sqsTemplate, queueName);
+    }
+
+    @Bean
+    public BookRecommendationListener bookRecommendationListener(@Autowired BookRecommendationService service) {
+        return new BookRecommendationListener(service);
     }
 
     @Bean

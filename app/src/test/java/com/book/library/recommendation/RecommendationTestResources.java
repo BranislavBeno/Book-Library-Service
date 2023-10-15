@@ -1,13 +1,14 @@
 package com.book.library.recommendation;
 
-import static org.testcontainers.containers.localstack.LocalStackContainer.Service.SQS;
-
 import dasniko.testcontainers.keycloak.KeycloakContainer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.jdbc.Sql;
+import org.testcontainers.containers.Container;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -17,6 +18,8 @@ import org.testcontainers.utility.DockerImageName;
 @Testcontainers(disabledWithoutDocker = true)
 @Sql(scripts = "/sql/init_db.sql")
 abstract class RecommendationTestResources {
+
+    private static final Logger LOG = LoggerFactory.getLogger(RecommendationTestResources.class);
 
     @ServiceConnection
     private static final PostgreSQLContainer<?> REPOSITORY_CONTAINER =
@@ -35,12 +38,31 @@ abstract class RecommendationTestResources {
                 .withRealmImportFile("keycloak/stratospheric-realm.json");
         KEYCLOAK_CONTAINER.start();
 
-        LOCAL_STACK_CONTAINER.withServices(SQS);
+        LOCAL_STACK_CONTAINER.withServices(LocalStackContainer.Service.SQS);
+        LOCAL_STACK_CONTAINER.withServices(LocalStackContainer.Service.DYNAMODB);
         LOCAL_STACK_CONTAINER.start();
 
         try {
-            LOCAL_STACK_CONTAINER.execInContainer(
+            Container.ExecResult createQueue = LOCAL_STACK_CONTAINER.execInContainer(
                     "awslocal", "sqs", "create-queue", "--queue-name", "bls-book-sharing");
+            LOG.info("SQS queue creation finished with exit code {}.", createQueue.getExitCode());
+            LOG.info(createQueue.getStdout());
+
+            Container.ExecResult createDynamoDb = LOCAL_STACK_CONTAINER.execInContainer(
+                    "awslocal",
+                    "dynamodb",
+                    "create-table",
+                    "--table-name",
+                    "Notifications",
+                    "--attribute-definitions",
+                    "AttributeName=notificationId,AttributeType=S",
+                    "--key-schema",
+                    "AttributeName=notificationId,KeyType=HASH",
+                    "--provisioned-throughput",
+                    "ReadCapacityUnits=5,WriteCapacityUnits=5");
+            LOG.info("DynamoDB creation finished with exit code {}.", createDynamoDb.getExitCode());
+            LOG.info(createDynamoDb.getStdout());
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -54,7 +76,12 @@ abstract class RecommendationTestResources {
                 "spring.security.oauth2.client.provider.cognito.issuerUri",
                 () -> KEYCLOAK_CONTAINER.getAuthServerUrl() + "/realms/stratospheric");
 
-        registry.add("spring.cloud.aws.sqs.endpoint", () -> LOCAL_STACK_CONTAINER.getEndpointOverride(SQS));
+        registry.add(
+                "spring.cloud.aws.sqs.endpoint",
+                () -> LOCAL_STACK_CONTAINER.getEndpointOverride(LocalStackContainer.Service.SQS));
+        registry.add(
+                "spring.cloud.aws.dynamodb.endpoint",
+                () -> LOCAL_STACK_CONTAINER.getEndpointOverride(LocalStackContainer.Service.DYNAMODB));
         registry.add("spring.cloud.aws.region.static", LOCAL_STACK_CONTAINER::getRegion);
         registry.add("spring.cloud.aws.credentials.access-key", LOCAL_STACK_CONTAINER::getAccessKey);
         registry.add("spring.cloud.aws.credentials.secret-key", LOCAL_STACK_CONTAINER::getSecretKey);
