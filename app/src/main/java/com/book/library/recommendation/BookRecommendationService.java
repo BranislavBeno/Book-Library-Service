@@ -35,7 +35,7 @@ public record BookRecommendationService(
             return reader.fullName();
         }
 
-        LOG.info("About to recommend book with id {} with recommenced {}", bookId, readerId);
+        LOG.info("About to recommend book with id {} to reader with id {}", bookId, readerId);
 
         BookRecommendationRequest recommendation = new BookRecommendationRequest();
         String token = UUID.randomUUID().toString();
@@ -57,7 +57,7 @@ public record BookRecommendationService(
                 .orElseThrow(() -> new IllegalArgumentException(INVALID_READER_ID + readerId));
         Book book = borrowedBookRepository
                 .findRecommendedBookByBorrowedBookId(borrowedBookId)
-                .flatMap(b -> bookRepository.findById(b.bookId()))
+                .flatMap(b -> bookRepository.findBookById(b.bookId()))
                 .orElseThrow(() -> new IllegalArgumentException(INVALID_BOOK_ID + borrowedBookId));
 
         return new RequestParams(book, reader);
