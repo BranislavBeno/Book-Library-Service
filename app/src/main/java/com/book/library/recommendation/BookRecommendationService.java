@@ -3,9 +3,12 @@ package com.book.library.recommendation;
 import com.book.library.book.Book;
 import com.book.library.book.BookRepository;
 import com.book.library.book.BorrowedBookRepository;
+import com.book.library.dto.RecommendedBookDto;
 import com.book.library.reader.Reader;
 import com.book.library.reader.ReaderRepository;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,12 +58,26 @@ public record BookRecommendationService(
         Reader reader = readerRepository
                 .findById(readerId)
                 .orElseThrow(() -> new IllegalArgumentException(INVALID_READER_ID + readerId));
-        Book book = borrowedBookRepository
-                .findRecommendedBookByBorrowedBookId(borrowedBookId)
-                .flatMap(b -> bookRepository.findBookById(b.bookId()))
+        Optional<RecommendedBookDto> bookDto =
+                borrowedBookRepository.findRecommendedBookByBorrowedBookId(borrowedBookId);
+
+        Book book = bookDto.flatMap(this::getBook)
                 .orElseThrow(() -> new IllegalArgumentException(INVALID_BOOK_ID + borrowedBookId));
 
         return new RequestParams(book, reader);
+    }
+
+    private Optional<Book> getBook(RecommendedBookDto dto) {
+        int bookId = dto.bookId();
+        Optional<Book> book = bookRepository.findBookById(bookId);
+        if (book.isPresent()) {
+            return book;
+        }
+
+        return bookRepository.findById(bookId).map(b -> {
+            b.setRecommendationRequests(new ArrayList<>());
+            return b;
+        });
     }
 
     private record RequestParams(Book book, Reader reader) {}
