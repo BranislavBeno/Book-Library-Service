@@ -50,6 +50,7 @@ dependencies {
     testImplementation(libs.testcontainers.keycloak)
     testImplementation(libs.org.awaitility)
     testCompileOnly(libs.spring.boot.devtools)
+    testRuntimeOnly(libs.junit.platform.launcher)
 }
 
 val versionMajor = 0

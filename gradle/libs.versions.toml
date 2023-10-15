@@ -11,6 +11,7 @@ spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-star
 spring-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
 spring-boot-testcontainers = { module = "org.springframework.boot:spring-boot-testcontainers" }
 spring-security-test = { module = "org.springframework.security:spring-security-test" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 micrometer-observation-test = { module = "io.micrometer:micrometer-observation-test" }
 testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version = "1.19.1" }
 testcontainers-common = { module = "org.testcontainers:testcontainers" }
