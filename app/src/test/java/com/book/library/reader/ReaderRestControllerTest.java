@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.book.library.book.BookService;
 import com.book.library.book.EnableTestObservation;
-import com.book.library.controller.AbstractControllerTest;
+import com.book.library.controller.AbstractTestResources;
 import io.micrometer.observation.tck.TestObservationRegistry;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;
@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 @EnableTestObservation
-class ReaderRestControllerTest extends AbstractControllerTest {
+class ReaderRestControllerTest extends AbstractTestResources {
 
     @Autowired
     private BookService service;
