@@ -34,6 +34,7 @@ dependencies {
     implementation(libs.problem.spring.web)
     implementation(libs.flyway.core)
     implementation(platform(libs.spring.cloud.aws.bom))
+    implementation(libs.spring.cloud.aws.autoconfigure)
     implementation(libs.spring.cloud.aws.sqs)
     implementation(libs.aws.sdk.cognito.idp)
     runtimeOnly(libs.database.postgresql)
