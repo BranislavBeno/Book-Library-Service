@@ -8,6 +8,7 @@ import com.book.library.reader.ReaderService;
 import com.book.library.recommendation.BookRecommendationListener;
 import com.book.library.recommendation.BookRecommendationRequestRepository;
 import com.book.library.recommendation.BookRecommendationService;
+import com.book.library.recommendation.DefaultBookRecommendationListener;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,8 +58,9 @@ public class AppConfig {
     }
 
     @Bean
+    @ConditionalOnProperty(prefix = "custom", name = "use-real-sqs-listener", havingValue = "true")
     public BookRecommendationListener bookRecommendationListener(@Autowired BookRecommendationService service) {
-        return new BookRecommendationListener(service);
+        return new DefaultBookRecommendationListener(service);
     }
 
     @Bean

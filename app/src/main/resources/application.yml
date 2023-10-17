@@ -34,4 +34,5 @@ spring:
 custom:
   invitation-codes: DUKE, STRATOSPHERIC
   sharing-queue: bls-book-sharing
+  use-real-sqs-listener: true
   auto-confirm-collaborations: false

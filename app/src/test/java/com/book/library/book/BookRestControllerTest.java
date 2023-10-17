@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.book.library.controller.AbstractTestResources;
+import com.book.library.AbstractTestResources;
 import com.book.library.util.BookUtils;
 import io.micrometer.observation.tck.TestObservationRegistry;
 import java.util.stream.Stream;
@@ -25,6 +25,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+@SuppressWarnings("ALL")
 @EnableTestObservation
 class BookRestControllerTest extends AbstractTestResources {
 

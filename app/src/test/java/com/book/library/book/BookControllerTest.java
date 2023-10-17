@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.book.library.controller.AbstractTestResources;
+import com.book.library.AbstractTestResources;
 import com.book.library.util.BookUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,11 +19,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+@SuppressWarnings("ALL")
 class BookControllerTest extends AbstractTestResources {
 
     @Autowired
     private BookService service;
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Nested
     @Sql(scripts = "/sql/init_db.sql")
     @Sql(scripts = "/sql/clean_up_db.sql", executionPhase = AFTER_TEST_METHOD)

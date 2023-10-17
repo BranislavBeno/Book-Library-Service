@@ -1,4 +1,4 @@
-package com.book.library.controller;
+package com.book.library;
 
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import org.slf4j.Logger;
@@ -41,13 +41,29 @@ public abstract class AbstractTestResources {
         KEYCLOAK_CONTAINER.start();
 
         LOCAL_STACK_CONTAINER.withServices(LocalStackContainer.Service.SQS);
+        LOCAL_STACK_CONTAINER.withServices(LocalStackContainer.Service.DYNAMODB);
         LOCAL_STACK_CONTAINER.start();
 
         try {
             Container.ExecResult createQueue = LOCAL_STACK_CONTAINER.execInContainer(
-                    "awslocal", "sqs", "create-queue", "--queue-name", "bls-book-sharing");
+                    "awslocal", "sqs", "create-queue", "--queue-name", "testing-queue");
             LOG.info("SQS queue creation finished with exit code {}.", createQueue.getExitCode());
             LOG.info(createQueue.getStdout());
+
+            Container.ExecResult createDynamoDb = LOCAL_STACK_CONTAINER.execInContainer(
+                    "awslocal",
+                    "dynamodb",
+                    "create-table",
+                    "--table-name",
+                    "Notifications",
+                    "--attribute-definitions",
+                    "AttributeName=notificationId,AttributeType=S",
+                    "--key-schema",
+                    "AttributeName=notificationId,KeyType=HASH",
+                    "--provisioned-throughput",
+                    "ReadCapacityUnits=5,WriteCapacityUnits=5");
+            LOG.info("DynamoDB creation finished with exit code {}.", createDynamoDb.getExitCode());
+            LOG.info(createDynamoDb.getStdout());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -64,8 +80,13 @@ public abstract class AbstractTestResources {
         registry.add(
                 "spring.cloud.aws.sqs.endpoint",
                 () -> LOCAL_STACK_CONTAINER.getEndpointOverride(LocalStackContainer.Service.SQS));
+        registry.add(
+                "spring.cloud.aws.dynamodb.endpoint",
+                () -> LOCAL_STACK_CONTAINER.getEndpointOverride(LocalStackContainer.Service.DYNAMODB));
         registry.add("spring.cloud.aws.region.static", LOCAL_STACK_CONTAINER::getRegion);
         registry.add("spring.cloud.aws.credentials.access-key", LOCAL_STACK_CONTAINER::getAccessKey);
         registry.add("spring.cloud.aws.credentials.secret-key", LOCAL_STACK_CONTAINER::getSecretKey);
+        registry.add("custom.sharing-queue", () -> "testing-queue");
+        registry.add("custom.use-real-sqs-listener", () -> "false");
     }
 }
