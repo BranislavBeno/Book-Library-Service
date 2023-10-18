@@ -40,18 +40,23 @@ public record BookRecommendationService(
 
         LOG.info("About to recommend book with id {} to reader with id {}", bookId, readerId);
 
-        BookRecommendationRequest recommendation = new BookRecommendationRequest();
+        var recommendation = createBookRecommendationRequest(reader, book);
+        BookRecommendationRequest request = requestRepository.save(recommendation);
+        var notification = new BookRecommendationNotification(request);
+        sqsTemplate.send(bookRecommendationQueueName, notification);
+
+        return reader.fullName();
+    }
+
+    private static BookRecommendationRequest createBookRecommendationRequest(Reader reader, Book book) {
+        var recommendation = new BookRecommendationRequest();
         String token = UUID.randomUUID().toString();
         recommendation.setToken(token);
         recommendation.setRecommenced(reader);
         recommendation.setBook(book);
         book.getRecommendationRequests().add(recommendation);
 
-        requestRepository.save(recommendation);
-
-        sqsTemplate.send(bookRecommendationQueueName, new BookRecommendationNotification(recommendation));
-
-        return reader.fullName();
+        return recommendation;
     }
 
     private RequestParams getRequestParams(int borrowedBookId, int readerId) {

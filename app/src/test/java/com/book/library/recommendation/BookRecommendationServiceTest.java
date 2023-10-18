@@ -6,8 +6,10 @@ import com.book.library.book.BorrowedBookRepository;
 import com.book.library.dto.RecommendedBookDto;
 import com.book.library.reader.Reader;
 import com.book.library.reader.ReaderRepository;
+import io.awspring.cloud.sqs.operations.SendResult;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
 import java.util.Optional;
+import java.util.UUID;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,6 +44,9 @@ class BookRecommendationServiceTest implements WithAssertions {
 
     @Mock
     private RecommendedBookDto recommendedBookDto;
+
+    @Mock
+    private SendResult<BookRecommendationNotification> result;
 
     private BookRecommendationService service;
 
@@ -115,7 +120,7 @@ class BookRecommendationServiceTest implements WithAssertions {
     }
 
     @Test
-    void testBookWithRequestFound() {
+    void testAlreadyRecommendedBookWithRequestFound() {
         int readerId = 3;
         int bookId = 1;
         Mockito.when(readerRepository.findById(readerId)).thenReturn(Optional.of(reader));
@@ -135,7 +140,7 @@ class BookRecommendationServiceTest implements WithAssertions {
     }
 
     @Test
-    void testBookFound() {
+    void testAlreadyRecommendedBookFound() {
         int readerId = 3;
         int bookId = 1;
         Mockito.when(readerRepository.findById(readerId)).thenReturn(Optional.of(reader));
@@ -152,5 +157,43 @@ class BookRecommendationServiceTest implements WithAssertions {
         Mockito.verify(bookRepository).findById(recommendedBookDto.bookId());
         Mockito.verify(requestRepository).existsByBookAndRecommenced(book, reader);
         Mockito.verifyNoMoreInteractions(requestRepository);
+    }
+
+    @Test
+    void testNotYetRecommendedBookFound() {
+        int readerId = 3;
+        int bookId = 1;
+        var request = createRequest(reader, book);
+        var notification = new BookRecommendationNotification(request);
+        String queueName = service.bookRecommendationQueueName();
+
+        Mockito.when(readerRepository.findById(readerId)).thenReturn(Optional.of(reader));
+        Mockito.when(borrowedBookRepository.findRecommendedBookByBorrowedBookId(bookId))
+                .thenReturn(Optional.of(recommendedBookDto));
+        Mockito.when(bookRepository.findById(recommendedBookDto.bookId())).thenReturn(Optional.of(book));
+        Mockito.when(requestRepository.existsByBookAndRecommenced(book, reader)).thenReturn(false);
+        Mockito.when(requestRepository.save(Mockito.any(BookRecommendationRequest.class)))
+                .thenReturn(request);
+        Mockito.lenient().when(sqsTemplate.send(queueName, notification)).thenReturn(result);
+
+        service.recommendBookTo(bookId, readerId);
+
+        Mockito.verify(readerRepository).findById(readerId);
+        Mockito.verify(borrowedBookRepository).findRecommendedBookByBorrowedBookId(bookId);
+        Mockito.verify(bookRepository).findBookById(recommendedBookDto.bookId());
+        Mockito.verify(bookRepository).findById(recommendedBookDto.bookId());
+        Mockito.verify(requestRepository).existsByBookAndRecommenced(book, reader);
+        Mockito.verify(requestRepository).save(Mockito.any(BookRecommendationRequest.class));
+    }
+
+    private static BookRecommendationRequest createRequest(Reader reader, Book book) {
+        var request = new BookRecommendationRequest();
+        String token = UUID.randomUUID().toString();
+        request.setToken(token);
+        request.setRecommenced(reader);
+        request.setBook(book);
+        book.getRecommendationRequests().add(request);
+
+        return request;
     }
 }
