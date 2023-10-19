@@ -101,6 +101,13 @@ public class ServiceApp {
                                         "sqs:SendMessage",
                                         "sqs:ChangeMessageVisibility",
                                         "sqs:GetQueueAttributes"))
+                                .build(),
+                        PolicyStatement.Builder.create()
+                                .sid("AllowSendingEmails")
+                                .effect(Effect.ALLOW)
+                                .resources(List.of(String.format(
+                                        "arn:aws:ses:%s:%s:identity/b-l-s.click", region, accountId)))
+                                .actions(List.of("ses:SendEmail", "ses:SendRawEmail"))
                                 .build()));
 
         var networkOutputParameters = Network.getOutputParametersFromParameterStore(serviceStack, appEnvironment);
