@@ -25,8 +25,6 @@ dependencies {
     implementation(libs.spring.boot.starter.oauth2.resource.server)
     implementation(libs.spring.boot.starter.thymeleaf)
     implementation(libs.thymeleaf.spring.security)
-    implementation(platform(libs.jackson.bom))
-    implementation(libs.jackson.dataformat.xml)
     implementation(libs.thymeleaf.layout.dialect)
     implementation(libs.webjars.locator.core)
     implementation(libs.webjars.bootstrap)
