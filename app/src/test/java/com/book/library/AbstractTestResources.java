@@ -86,7 +86,7 @@ public abstract class AbstractTestResources {
         registry.add("spring.cloud.aws.region.static", LOCAL_STACK_CONTAINER::getRegion);
         registry.add("spring.cloud.aws.credentials.access-key", LOCAL_STACK_CONTAINER::getAccessKey);
         registry.add("spring.cloud.aws.credentials.secret-key", LOCAL_STACK_CONTAINER::getSecretKey);
-        registry.add("custom.sharing-queue", () -> "testing-queue");
+        registry.add("custom.recommendation-queue", () -> "testing-queue");
         registry.add("custom.use-real-sqs-listener", () -> "false");
     }
 }

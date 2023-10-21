@@ -35,6 +35,7 @@ dependencies {
     implementation(libs.flyway.core)
     implementation(platform(libs.spring.cloud.aws.bom))
     implementation(libs.spring.cloud.aws.sqs)
+    implementation(libs.spring.cloud.aws.ses)
     implementation(libs.aws.sdk.cognito.idp)
     runtimeOnly(libs.database.postgresql)
     testImplementation(libs.spring.cloud.aws.dynamodb)

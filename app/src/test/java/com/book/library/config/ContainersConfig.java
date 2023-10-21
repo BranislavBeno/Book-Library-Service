@@ -51,8 +51,8 @@ public class ContainersConfig {
             container.withServices(LocalStackContainer.Service.SQS);
             container.start();
 
-            Container.ExecResult createQueue =
-                    container.execInContainer("awslocal", "sqs", "create-queue", "--queue-name", "bls-book-sharing");
+            Container.ExecResult createQueue = container.execInContainer(
+                    "awslocal", "sqs", "create-queue", "--queue-name", "bls-book-recommendation");
             LOGGER.info("SQS queue creation finished with exit code {}.", createQueue.getExitCode());
             LOGGER.info(createQueue.getStdout());
 

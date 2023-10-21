@@ -27,5 +27,5 @@ jwt:
       principalAttribute: preferred_username
 
 custom:
-  auto-confirm-collaborations: true
+  auto-confirm-recommendations: true
   use-cognito-as-identity-provider: false

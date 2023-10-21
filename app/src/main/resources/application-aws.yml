@@ -19,5 +19,5 @@ spring:
           issuerUri: ${COGNITO_PROVIDER_URL}
 
 custom:
-  sharing-queue: ${BLS_SHARING_QUEUE_NAME}
+  recommendation-queue: ${BLS_RECOMMENDATION_QUEUE_NAME}
   use-cognito-as-identity-provider: true

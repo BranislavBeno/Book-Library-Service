@@ -33,6 +33,8 @@ spring:
 
 custom:
   invitation-codes: DUKE, STRATOSPHERIC
-  sharing-queue: bls-book-sharing
+  recommendation-queue: bls-book-recommendation
   use-real-sqs-listener: true
-  auto-confirm-collaborations: false
+  auto-confirm-recommendations: false
+  confirm-email-from-address: noreply@b-l-s.clic
+  external-url: https://app.b-l-s.click

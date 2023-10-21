@@ -18,7 +18,7 @@ public class BookRecommendationController {
     }
 
     @PostMapping("/{bookId}/recommend/{readerId}")
-    public String shareTodoWithCollaborator(
+    public String recommendBook(
             @PathVariable("bookId") int bookId,
             @PathVariable("readerId") int readerId,
             RedirectAttributes redirectAttributes) {

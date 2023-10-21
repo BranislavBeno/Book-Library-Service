@@ -13,7 +13,7 @@ public record TestBookRecommendationListener(BookRecommendationService service, 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultBookRecommendationListener.class);
 
     @Override
-    @SqsListener("${custom.sharing-queue}")
+    @SqsListener("${custom.recommendation-queue}")
     public void listenToMessages(BookRecommendationNotification notification) {
         LOG.info("Got message with payload: {}", notification);
 

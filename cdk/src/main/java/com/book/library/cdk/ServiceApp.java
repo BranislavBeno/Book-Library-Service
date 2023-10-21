@@ -90,7 +90,10 @@ public class ServiceApp {
                                 .sid("AllowSQSAccess")
                                 .effect(Effect.ALLOW)
                                 .resources(List.of("arn:aws:sqs:%s:%s:%s"
-                                        .formatted(region, accountId, messagingOutputParameters.sharingQueueName())))
+                                        .formatted(
+                                                region,
+                                                accountId,
+                                                messagingOutputParameters.recommendationQueueName())))
                                 .actions(Arrays.asList(
                                         "sqs:DeleteMessage",
                                         "sqs:GetQueueUrl",
@@ -105,8 +108,8 @@ public class ServiceApp {
                         PolicyStatement.Builder.create()
                                 .sid("AllowSendingEmails")
                                 .effect(Effect.ALLOW)
-                                .resources(List.of(String.format(
-                                        "arn:aws:ses:%s:%s:identity/b-l-s.click", region, accountId)))
+                                .resources(List.of(
+                                        String.format("arn:aws:ses:%s:%s:identity/b-l-s.click", region, accountId)))
                                 .actions(List.of("ses:SendEmail", "ses:SendRawEmail"))
                                 .build()));
 
@@ -153,7 +156,7 @@ public class ServiceApp {
         vars.put("COGNITO_USER_POOL_ID", cognitoOutputParameters.userPoolId());
         vars.put("COGNITO_LOGOUT_URL", cognitoOutputParameters.logoutUrl());
         vars.put("COGNITO_PROVIDER_URL", cognitoOutputParameters.providerUrl());
-        vars.put("BLS_SHARING_QUEUE_NAME", messagingOutputParameters.sharingQueueName());
+        vars.put("BLS_RECOMMENDATION_QUEUE_NAME", messagingOutputParameters.recommendationQueueName());
 
         return vars;
     }

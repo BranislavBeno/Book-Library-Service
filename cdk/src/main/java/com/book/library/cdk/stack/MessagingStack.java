@@ -14,7 +14,7 @@ import software.constructs.Construct;
 
 public final class MessagingStack extends Stack {
     private final ApplicationEnvironment appEnvironment;
-    private final IQueue sharingQueue;
+    private final IQueue recommendationQueue;
 
     public MessagingStack(
             final Construct scope,
@@ -31,17 +31,17 @@ public final class MessagingStack extends Stack {
 
         this.appEnvironment = appEnvironment;
 
-        IQueue sharingDlq = Queue.Builder.create(this, "blsSharingDlq")
-                .queueName(appEnvironment.prefix("bls-sharing-dead-letter-queue"))
+        IQueue recommendationDlq = Queue.Builder.create(this, "blsRecommendationDlq")
+                .queueName(appEnvironment.prefix("bls-recommendation-dead-letter-queue"))
                 .retentionPeriod(Duration.days(14))
                 .build();
 
-        this.sharingQueue = Queue.Builder.create(this, "blsSharingQueue")
-                .queueName(appEnvironment.prefix("bls-sharing-queue"))
+        this.recommendationQueue = Queue.Builder.create(this, "blsRecommendationQueue")
+                .queueName(appEnvironment.prefix("bls-recommendation-queue"))
                 .visibilityTimeout(Duration.seconds(30))
                 .retentionPeriod(Duration.days(14))
                 .deadLetterQueue(DeadLetterQueue.builder()
-                        .queue(sharingDlq)
+                        .queue(recommendationDlq)
                         .maxReceiveCount(3)
                         .build())
                 .build();
@@ -51,30 +51,30 @@ public final class MessagingStack extends Stack {
         appEnvironment.tag(this);
     }
 
-    private static final String PARAMETER_SHARING_QUEUE_NAME = "blsSharingQueueName";
+    private static final String PARAMETER_RECOMMENDATION_QUEUE_NAME = "blsRecommendationQueueName";
 
     private void createOutputParameters() {
-        StringParameter.Builder.create(this, PARAMETER_SHARING_QUEUE_NAME)
+        StringParameter.Builder.create(this, PARAMETER_RECOMMENDATION_QUEUE_NAME)
                 .parameterName(createParameterName(appEnvironment))
-                .stringValue(this.sharingQueue.getQueueName())
+                .stringValue(this.recommendationQueue.getQueueName())
                 .build();
     }
 
     private static String createParameterName(ApplicationEnvironment applicationEnvironment) {
         return applicationEnvironment.environmentName() + "-" + applicationEnvironment.applicationName() + "-Messaging-"
-                + MessagingStack.PARAMETER_SHARING_QUEUE_NAME;
+                + MessagingStack.PARAMETER_RECOMMENDATION_QUEUE_NAME;
     }
 
-    public static String getSharingQueueName(Construct scope, ApplicationEnvironment applicationEnvironment) {
+    public static String getRecommendationQueueName(Construct scope, ApplicationEnvironment applicationEnvironment) {
         return StringParameter.fromStringParameterName(
-                        scope, PARAMETER_SHARING_QUEUE_NAME, createParameterName(applicationEnvironment))
+                        scope, PARAMETER_RECOMMENDATION_QUEUE_NAME, createParameterName(applicationEnvironment))
                 .getStringValue();
     }
 
     public static MessagingOutputParameters getOutputParametersFromParameterStore(
             Construct scope, ApplicationEnvironment applicationEnvironment) {
-        return new MessagingOutputParameters(getSharingQueueName(scope, applicationEnvironment));
+        return new MessagingOutputParameters(getRecommendationQueueName(scope, applicationEnvironment));
     }
 
-    public record MessagingOutputParameters(String sharingQueueName) {}
+    public record MessagingOutputParameters(String recommendationQueueName) {}
 }
