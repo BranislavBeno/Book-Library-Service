@@ -27,4 +27,6 @@ public interface ReaderRepository extends JpaRepository<Reader, Integer> {
                     SELECT new com.book.library.dto.ReaderDto(r.id, r.firstName, r.lastName, r.email)
                     FROM Reader r WHERE r.id = :id""")
     Optional<ReaderDto> findReaderById(long id);
+
+    Optional<Reader> findByEmail(String email);
 }
