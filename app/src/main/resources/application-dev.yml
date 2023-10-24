@@ -29,3 +29,4 @@ jwt:
 custom:
   auto-confirm-recommendations: true
   use-cognito-as-identity-provider: false
+  external-url: http://localhost:8080

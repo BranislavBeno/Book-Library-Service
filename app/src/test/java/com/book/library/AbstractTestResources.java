@@ -40,8 +40,8 @@ public abstract class AbstractTestResources {
                 .withRealmImportFile("keycloak/stratospheric-realm.json");
         KEYCLOAK_CONTAINER.start();
 
-        LOCAL_STACK_CONTAINER.withServices(LocalStackContainer.Service.SQS);
-        LOCAL_STACK_CONTAINER.withServices(LocalStackContainer.Service.DYNAMODB);
+        LOCAL_STACK_CONTAINER.withServices(
+                LocalStackContainer.Service.SQS, LocalStackContainer.Service.SES, LocalStackContainer.Service.DYNAMODB);
         LOCAL_STACK_CONTAINER.start();
 
         try {

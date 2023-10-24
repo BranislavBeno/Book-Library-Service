@@ -48,7 +48,7 @@ public class ContainersConfig {
     public LocalStackContainer localStackContainer(DynamicPropertyRegistry registry)
             throws IOException, InterruptedException {
         try (var container = new LocalStackContainer(DockerImageName.parse("localstack/localstack:2.3.0"))) {
-            container.withServices(LocalStackContainer.Service.SQS);
+            container.withServices(LocalStackContainer.Service.SQS, LocalStackContainer.Service.SES);
             container.start();
 
             Container.ExecResult createQueue = container.execInContainer(
