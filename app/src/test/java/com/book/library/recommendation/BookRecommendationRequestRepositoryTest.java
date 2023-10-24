@@ -7,6 +7,7 @@ import com.book.library.reader.Reader;
 import com.book.library.reader.ReaderRepository;
 import com.book.library.repository.AbstractTestRepository;
 import org.assertj.core.api.WithAssertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,23 @@ class BookRecommendationRequestRepositoryTest extends AbstractTestRepository<Boo
         RequestParams params = getRequestParams(borrowedBookId, readerId);
         assertThat(requestRepository.existsByBookAndRecommenced(params.book, params.reader))
                 .isEqualTo(result);
+    }
+
+    @Test
+    void testFindRequest() {
+        BookRecommendationRequest request = requestRepository.findByBookIdAndRecommencedId(1, 2);
+        assertThat(request).isNotNull().satisfies(r -> {
+            assertThat(r.getId()).isEqualTo(1);
+            assertThat(r.getToken()).isNotBlank();
+            assertThat(r.getBook().bookInfo()).isEqualTo("Starec a more written by Ernest Hemingway");
+            assertThat(r.getRecommenced().fullName()).isEqualTo("Lukáš Druhý");
+        });
+    }
+
+    @Test
+    void testRequestNotFound() {
+        BookRecommendationRequest request = requestRepository.findByBookIdAndRecommencedId(2, 2);
+        assertThat(request).isNull();
     }
 
     @Override

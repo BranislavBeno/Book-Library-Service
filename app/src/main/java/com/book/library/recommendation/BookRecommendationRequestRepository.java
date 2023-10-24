@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface BookRecommendationRequestRepository extends JpaRepository<BookRecommendationRequest, Integer> {
 
     boolean existsByBookAndRecommenced(Book book, Reader recommenced);
+
+    BookRecommendationRequest findByBookIdAndRecommencedId(int bookId, int recommencedId);
 }
