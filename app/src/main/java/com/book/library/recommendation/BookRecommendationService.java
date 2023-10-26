@@ -24,6 +24,7 @@ public record BookRecommendationService(
     private static final Logger LOG = LoggerFactory.getLogger(BookRecommendationService.class);
     private static final String INVALID_BOOK_ID = "Invalid book id: ";
     private static final String INVALID_READER_ID = "Invalid reader id: ";
+    private static final String INVALID_READER_EMAIL = "Invalid reader email: ";
 
     public String recommendBookTo(int bookId, int readerId) {
         RequestParams params = getRequestParams(bookId, readerId);
@@ -46,6 +47,36 @@ public record BookRecommendationService(
         sqsTemplate.send(bookRecommendationQueueName, notification);
 
         return reader.fullName();
+    }
+
+    public boolean confirmRecommendation(String authenticatedReaderEmail, int bookId, int recommencedId, String token) {
+        Reader recommenced = readerRepository
+                .findByEmail(authenticatedReaderEmail)
+                .orElseThrow(() -> new IllegalArgumentException(INVALID_READER_EMAIL + authenticatedReaderEmail));
+
+        if (recommenced.getId() != recommencedId) {
+            return false;
+        }
+
+        BookRecommendationRequest request = requestRepository.findByBookIdAndRecommencedId(bookId, recommencedId);
+
+        LOG.info("Recommendation request: {}", request);
+
+        if (request == null || !request.getToken().equals(token)) {
+            return false;
+        }
+
+        LOG.info("Original recommendation token: {}", request.getToken());
+        LOG.info("Request token: {}", token);
+
+        Book book = bookRepository
+                .findById(bookId)
+                .orElseThrow(() -> new IllegalArgumentException(INVALID_BOOK_ID + bookId));
+        book.addRecommenced(recommenced);
+
+        requestRepository.delete(request);
+
+        return true;
     }
 
     private static BookRecommendationRequest createBookRecommendationRequest(Reader reader, Book book) {

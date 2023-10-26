@@ -21,6 +21,18 @@ CREATE TABLE book
     CONSTRAINT pk_book PRIMARY KEY (id)
 );
 
+CREATE TABLE book_recommendation
+(
+    book_id   INTEGER NOT NULL,
+    reader_id INTEGER NOT NULL
+);
+
+ALTER TABLE book_recommendation
+    ADD CONSTRAINT fk_boorec_on_book FOREIGN KEY (book_id) REFERENCES book (id);
+
+ALTER TABLE book_recommendation
+    ADD CONSTRAINT fk_boorec_on_reader FOREIGN KEY (reader_id) REFERENCES reader (id);
+
 -- Borrowed book
 CREATE SEQUENCE IF NOT EXISTS borrowed_book_seq START WITH 20 INCREMENT BY 1;
 
