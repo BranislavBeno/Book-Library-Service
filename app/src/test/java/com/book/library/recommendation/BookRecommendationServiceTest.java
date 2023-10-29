@@ -243,6 +243,57 @@ class BookRecommendationServiceTest implements WithAssertions {
         Mockito.verifyNoInteractions(bookRepository);
     }
 
+    @Test
+    void testRecommencedFoundWithMatchingIdWithNotMatchingRequest() {
+        String readerEmail = "dummy@b-l-s.click";
+        int readerId = 3;
+        int bookId = 1;
+        String token = "token1";
+        var request = Mockito.mock(BookRecommendationRequest.class);
+
+        Mockito.when(readerRepository.findByEmail(readerEmail)).thenReturn(Optional.of(reader));
+        Mockito.when(reader.getId()).thenReturn(3);
+        Mockito.when(requestRepository.findByBookIdAndRecommencedId(bookId, readerId))
+                .thenReturn(request);
+        Mockito.when(request.getToken()).thenReturn("token2");
+
+        boolean result = service.confirmRecommendation(readerEmail, bookId, readerId, token);
+
+        assertThat(result).isFalse();
+
+        Mockito.verify(readerRepository).findByEmail(readerEmail);
+        Mockito.verify(reader).getId();
+        Mockito.verify(requestRepository).findByBookIdAndRecommencedId(bookId, readerId);
+        Mockito.verifyNoInteractions(bookRepository);
+    }
+
+    @Test
+    void testRecommencedFoundWithMatchingIdWithMatchingRequest() {
+        String readerEmail = "dummy@b-l-s.click";
+        int readerId = 3;
+        int bookId = 1;
+        String token = "token";
+        var request = Mockito.mock(BookRecommendationRequest.class);
+
+        Mockito.when(readerRepository.findByEmail(readerEmail)).thenReturn(Optional.of(reader));
+        Mockito.when(reader.getId()).thenReturn(3);
+        Mockito.when(requestRepository.findByBookIdAndRecommencedId(bookId, readerId))
+                .thenReturn(request);
+        Mockito.when(request.getToken()).thenReturn("token");
+        Mockito.when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
+
+        boolean result = service.confirmRecommendation(readerEmail, bookId, readerId, token);
+
+        assertThat(result).isTrue();
+
+        Mockito.verify(readerRepository).findByEmail(readerEmail);
+        Mockito.verify(reader).getId();
+        Mockito.verify(requestRepository).findByBookIdAndRecommencedId(bookId, readerId);
+        Mockito.verify(bookRepository).findById(bookId);
+        Mockito.verify(book).addRecommenced(reader);
+        Mockito.verify(requestRepository).delete(request);
+    }
+
     private static BookRecommendationRequest createRequest(Reader reader, Book book) {
         var request = new BookRecommendationRequest();
         String token = UUID.randomUUID().toString();
