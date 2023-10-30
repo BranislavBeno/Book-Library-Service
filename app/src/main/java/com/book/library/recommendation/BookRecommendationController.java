@@ -24,15 +24,18 @@ public class BookRecommendationController {
             @PathVariable("bookId") int bookId,
             @PathVariable("readerId") int readerId,
             RedirectAttributes redirectAttributes) {
-        String recommencedTo = service.recommendBookTo(bookId, readerId);
+        try {
+            String recommencedTo = service.recommendBookTo(bookId, readerId);
 
-        redirectAttributes.addFlashAttribute(
-                MESSAGE_ATTR,
-                String.format(
-                        "You successfully recommended book to other reader %s. "
-                                + "Once the reader accepts the recommendation, you'll see her/him as a recommenced on the book.",
-                        recommencedTo));
-        redirectAttributes.addFlashAttribute(MESSAGE_TYPE_ATTR, "success");
+            redirectAttributes.addFlashAttribute(
+                    MESSAGE_ATTR, "You successfully recommended book to other reader %s.".formatted(recommencedTo));
+            redirectAttributes.addFlashAttribute(MESSAGE_TYPE_ATTR, "success");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute(
+                    MESSAGE_ATTR,
+                    "Request processing failed: Invalid book id: %d or reader id: %d.".formatted(bookId, readerId));
+            redirectAttributes.addFlashAttribute(MESSAGE_TYPE_ATTR, "failure");
+        }
 
         return "redirect:/book/borrowed";
     }

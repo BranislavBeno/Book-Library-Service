@@ -26,7 +26,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 
-@SuppressWarnings("ALL")
 @EnableTestObservation
 class ReaderRestControllerTest extends AbstractTestResources {
 
