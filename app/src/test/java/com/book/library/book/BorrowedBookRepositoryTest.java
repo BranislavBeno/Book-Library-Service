@@ -52,7 +52,7 @@ class BorrowedBookRepositoryTest extends AbstractTestRepository<BorrowedBook> im
                             assertThat(b.bookId()).isEqualTo(5);
                             assertThat(b.book()).isEqualTo("Hamlet from William Shakespeare");
                             assertThat(b.readerName()).isEqualTo("Jozef Štvrtý");
-                            assertThat(b.readerEmail()).isEqualTo("jozef@example.com");
+                            assertThat(b.readerEmail()).isEqualTo("jozef@b-l-s.click");
                         },
                         () -> Assertions.fail("Recommended book fetching failed"));
     }

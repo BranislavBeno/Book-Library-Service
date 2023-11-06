@@ -43,7 +43,7 @@ class ReaderRepositoryTest extends AbstractTestRepository<Reader> implements Wit
                 .ifPresentOrElse(
                         r -> {
                             assertThat(r.readerName()).isEqualTo("Ján Prvý");
-                            assertThat(r.getEmail()).isEqualTo("jan@example.com");
+                            assertThat(r.getEmail()).isEqualTo("jan@b-l-s.click");
                         },
                         () -> fail("Reader not found"));
     }
@@ -51,7 +51,7 @@ class ReaderRepositoryTest extends AbstractTestRepository<Reader> implements Wit
     @Test
     void testFindReaderByEmail() {
         repository
-                .findByEmail("juraj@example.com")
+                .findByEmail("juraj@b-l-s.click")
                 .ifPresentOrElse(
                         r -> {
                             assertThat(r.getId()).isEqualTo(7);

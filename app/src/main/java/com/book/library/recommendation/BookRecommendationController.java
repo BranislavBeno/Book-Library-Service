@@ -47,7 +47,8 @@ public class BookRecommendationController {
             @RequestParam("token") String token,
             @AuthenticationPrincipal OidcUser user,
             RedirectAttributes redirectAttributes) {
-        if (service.confirmRecommendation(user.getEmail(), bookId, readerId, token)) {
+        boolean confirmed = service.confirmRecommendation(user.getEmail(), bookId, readerId, token);
+        if (confirmed) {
             redirectAttributes.addFlashAttribute(MESSAGE_ATTR, "You've confirmed book recommendation.");
             redirectAttributes.addFlashAttribute(MESSAGE_TYPE_ATTR, "success");
         } else {

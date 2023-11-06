@@ -1,6 +1,7 @@
 package com.book.library;
 
 import dasniko.testcontainers.keycloak.KeycloakContainer;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -64,6 +65,20 @@ public abstract class AbstractTestResources {
                     "ReadCapacityUnits=5,WriteCapacityUnits=5");
             LOG.info("DynamoDB creation finished with exit code {}.", createDynamoDb.getExitCode());
             LOG.info(createDynamoDb.getStdout());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        List.of("duke@b-l-s.click", "mike@b-l-s.click", "jan@b-l-s.click", "lukas@b-l-s.click")
+                .forEach(AbstractTestResources::verifyEmail);
+    }
+
+    private static void verifyEmail(String email) {
+        try {
+            Container.ExecResult verifyEmail = LOCAL_STACK_CONTAINER.execInContainer(
+                    "awslocal", "ses", "verify-email-identity", "--email-address", email);
+            LOG.info("SES email verification of {} ended with exit code {}.", email, verifyEmail.getExitCode());
+            LOG.info(verifyEmail.getStdout());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
