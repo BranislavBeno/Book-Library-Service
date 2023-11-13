@@ -18,22 +18,22 @@ testcontainers-common = { module = "org.testcontainers:testcontainers" }
 testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter" }
 testcontainers-postgresql = { module = "org.testcontainers:postgresql" }
 testcontainers-localstack = { module = "org.testcontainers:localstack" }
-testcontainers-keycloak = { module = "com.github.dasniko:testcontainers-keycloak", version = "3.0.0" }
+testcontainers-keycloak = { module = "com.github.dasniko:testcontainers-keycloak", version = "3.1.0" }
 org-awaitility = { module = "org.awaitility:awaitility", version = "4.2.0" }
 database-postgresql = { module = "org.postgresql:postgresql" }
 flyway-core = { module = "org.flywaydb:flyway-core" }
 thymeleaf-layout-dialect = { module = "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect", version = "3.3.0" }
 thymeleaf-spring-security = { module = "org.thymeleaf.extras:thymeleaf-extras-springsecurity6", version = "3.1.2.RELEASE" }
-webjars-locator-core = { module = "org.webjars:webjars-locator-core", version = "0.54" }
+webjars-locator-core = { module = "org.webjars:webjars-locator-core", version = "0.55" }
 webjars-bootstrap = { module = "org.webjars:bootstrap", version = "5.3.2" }
 webjars-font-awesome = { module = "org.webjars:font-awesome", version = "6.4.2" }
 problem-spring-web = { module = "org.zalando:problem-spring-web", version = "0.29.1" }
-spring-cloud-aws-bom = { module = "io.awspring.cloud:spring-cloud-aws-dependencies", version = "3.0.2" }
+spring-cloud-aws-bom = { module = "io.awspring.cloud:spring-cloud-aws-dependencies", version = "3.0.3" }
 spring-cloud-aws-sqs = { module = "io.awspring.cloud:spring-cloud-aws-starter-sqs" }
 spring-cloud-aws-ses = { module = "io.awspring.cloud:spring-cloud-aws-starter-ses" }
 spring-cloud-aws-dynamodb = { module = "io.awspring.cloud:spring-cloud-aws-starter-dynamodb" }
 aws-sdk-cognito-idp = { module = "software.amazon.awssdk:cognitoidentityprovider" }
-aws-cdk-lib = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.103.1" }
+aws-cdk-lib = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.106.1" }
 # code quality
 palantir-javaformat = { module = "com.palantir.javaformat:palantir-java-format", version = "2.38.0" }
 # gradle plugins
