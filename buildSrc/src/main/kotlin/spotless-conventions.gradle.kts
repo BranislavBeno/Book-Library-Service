@@ -15,7 +15,7 @@ spotless {
         targetExclude("*/build/**/*.*")
     }
     kotlinGradle {
-        ktfmt().kotlinlangStyle()
+        ktfmt()
         target("*.gradle.kts")
         targetExclude("*/build/**/*.*")
     }
