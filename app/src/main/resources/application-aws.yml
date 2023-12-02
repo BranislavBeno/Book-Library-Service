@@ -17,6 +17,8 @@ spring:
       resourceServer:
         jwt:
           issuerUri: ${COGNITO_PROVIDER_URL}
+  flyway:
+    locations: 'classpath:/dev/db/migration/postgresql'
 
 custom:
   use-cognito-as-identity-provider: true
