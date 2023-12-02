@@ -78,7 +78,6 @@ public abstract class AbstractTestResources {
             Container.ExecResult verifyEmail = LOCAL_STACK_CONTAINER.execInContainer(
                     "awslocal", "ses", "verify-email-identity", "--email-address", email);
             LOG.info("SES email verification of {} ended with exit code {}.", email, verifyEmail.getExitCode());
-            LOG.info(verifyEmail.getStdout());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
