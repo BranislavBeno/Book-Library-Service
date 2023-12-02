@@ -10,7 +10,7 @@ import org.testcontainers.utility.DockerImageName;
 @DataJpaTest(properties = "spring.flyway.locations=classpath:/db/migration/postgresql")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers(disabledWithoutDocker = true)
-abstract class BaseTestRepository {
+public abstract class BaseTestRepository {
 
     @ServiceConnection
     private static final PostgreSQLContainer<?> REPOSITORY_CONTAINER =

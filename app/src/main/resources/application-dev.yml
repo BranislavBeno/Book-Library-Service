@@ -26,11 +26,7 @@ jwt:
     converter:
       principalAttribute: preferred_username
 
-cloud:
-  aws:
-    credentials:
-      access-key: foo
-      secret-key: bar
-
 custom:
+  auto-confirm-recommendations: true
   use-cognito-as-identity-provider: false
+  external-url: http://localhost:8080

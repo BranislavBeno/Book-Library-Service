@@ -44,6 +44,20 @@ class BorrowedBookRepositoryTest extends AbstractTestRepository<BorrowedBook> im
     }
 
     @Test
+    void testFindAnyBookByBorrowedBookId() {
+        repository
+                .findRecommendedBookByBorrowedBookId(4)
+                .ifPresentOrElse(
+                        b -> {
+                            assertThat(b.bookId()).isEqualTo(5);
+                            assertThat(b.book()).isEqualTo("Hamlet from William Shakespeare");
+                            assertThat(b.readerName()).isEqualTo("Jozef Štvrtý");
+                            assertThat(b.readerEmail()).isEqualTo("jozef@b-l-s.click");
+                        },
+                        () -> Assertions.fail("Recommended book fetching failed"));
+    }
+
+    @Test
     void testDeleteById() {
         repository.deleteById(1);
         Page<BorrowedBook> borrowedBooks = repository.findAll(getPageRequest());

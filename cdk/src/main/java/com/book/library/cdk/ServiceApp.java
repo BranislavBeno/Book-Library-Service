@@ -5,12 +5,10 @@ import com.book.library.cdk.construct.Network;
 import com.book.library.cdk.construct.PostgresDatabase;
 import com.book.library.cdk.construct.Service;
 import com.book.library.cdk.stack.CognitoStack;
+import com.book.library.cdk.stack.MessagingStack;
 import com.book.library.cdk.util.CdkUtil;
 import com.book.library.cdk.util.Validations;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import software.amazon.awscdk.App;
 import software.amazon.awscdk.Environment;
 import software.amazon.awscdk.Stack;
@@ -65,21 +63,55 @@ public class ServiceApp {
         var cognitoOutputParameters =
                 CognitoStack.getOutputParametersFromParameterStore(parametersStack, appEnvironment);
 
+        var messagingOutputParameters =
+                MessagingStack.getOutputParametersFromParameterStore(parametersStack, appEnvironment);
+
         var serviceInputParameters = new Service.ServiceInputParameters(
                         dockerImageSource,
                         Collections.singletonList(databaseOutputParameters.databaseSecurityGroupId()),
                         environmentVariables(
-                                serviceStack, databaseOutputParameters, cognitoOutputParameters, springProfile))
+                                serviceStack,
+                                databaseOutputParameters,
+                                cognitoOutputParameters,
+                                messagingOutputParameters,
+                                springProfile))
                 .withHealthCheckPath("/actuator/info")
                 .withHealthCheckIntervalSeconds(30)
                 .withStickySessionsEnabled(true)
-                .withTaskRolePolicyStatements(List.of(PolicyStatement.Builder.create()
-                        .sid("AllowCreatingUsers")
-                        .effect(Effect.ALLOW)
-                        .resources(List.of("arn:aws:cognito-idp:%s:%s:userpool/%s"
-                                .formatted(region, accountId, cognitoOutputParameters.userPoolId())))
-                        .actions(List.of("cognito-idp:AdminCreateUser"))
-                        .build()));
+                .withTaskRolePolicyStatements(List.of(
+                        PolicyStatement.Builder.create()
+                                .sid("AllowCreatingUsers")
+                                .effect(Effect.ALLOW)
+                                .resources(List.of("arn:aws:cognito-idp:%s:%s:userpool/%s"
+                                        .formatted(region, accountId, cognitoOutputParameters.userPoolId())))
+                                .actions(List.of("cognito-idp:AdminCreateUser"))
+                                .build(),
+                        PolicyStatement.Builder.create()
+                                .sid("AllowSQSAccess")
+                                .effect(Effect.ALLOW)
+                                .resources(List.of("arn:aws:sqs:%s:%s:%s"
+                                        .formatted(
+                                                region,
+                                                accountId,
+                                                messagingOutputParameters.recommendationQueueName())))
+                                .actions(Arrays.asList(
+                                        "sqs:DeleteMessage",
+                                        "sqs:GetQueueUrl",
+                                        "sqs:ListDeadLetterSourceQueues",
+                                        "sqs:ListQueues",
+                                        "sqs:ListQueueTags",
+                                        "sqs:ReceiveMessage",
+                                        "sqs:SendMessage",
+                                        "sqs:ChangeMessageVisibility",
+                                        "sqs:GetQueueAttributes"))
+                                .build(),
+                        PolicyStatement.Builder.create()
+                                .sid("AllowSendingEmails")
+                                .effect(Effect.ALLOW)
+                                .resources(List.of(
+                                        String.format("arn:aws:ses:%s:%s:identity/b-l-s.click", region, accountId)))
+                                .actions(List.of("ses:SendEmail", "ses:SendRawEmail"))
+                                .build()));
 
         var networkOutputParameters = Network.getOutputParametersFromParameterStore(serviceStack, appEnvironment);
 
@@ -98,6 +130,7 @@ public class ServiceApp {
             Construct scope,
             PostgresDatabase.DatabaseOutputParameters databaseOutputParameters,
             CognitoStack.CognitoOutputParameters cognitoOutputParameters,
+            MessagingStack.MessagingOutputParameters messagingOutputParameters,
             String springProfile) {
         Map<String, String> vars = new HashMap<>();
 
@@ -123,6 +156,7 @@ public class ServiceApp {
         vars.put("COGNITO_USER_POOL_ID", cognitoOutputParameters.userPoolId());
         vars.put("COGNITO_LOGOUT_URL", cognitoOutputParameters.logoutUrl());
         vars.put("COGNITO_PROVIDER_URL", cognitoOutputParameters.providerUrl());
+        vars.put("BLS_RECOMMENDATION_QUEUE_NAME", messagingOutputParameters.recommendationQueueName());
 
         return vars;
     }

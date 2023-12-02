@@ -21,4 +21,5 @@ spring:
     locations: 'classpath:/dev/db/migration/postgresql'
 
 custom:
+  recommendation-queue: ${BLS_RECOMMENDATION_QUEUE_NAME}
   use-cognito-as-identity-provider: true

@@ -1,16 +1,24 @@
 package com.book.library.config;
 
 import dasniko.testcontainers.keycloak.KeycloakContainer;
+import java.io.IOException;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.devtools.restart.RestartScope;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.DynamicPropertyRegistry;
+import org.testcontainers.containers.Container;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.utility.DockerImageName;
 
 @TestConfiguration(proxyBeanMethods = false)
 public class ContainersConfig {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContainersConfig.class);
 
     @Bean
     @ServiceConnection
@@ -34,5 +42,41 @@ public class ContainersConfig {
 
             return container;
         }
+    }
+
+    @Bean
+    @RestartScope
+    public LocalStackContainer localStackContainer(DynamicPropertyRegistry registry)
+            throws IOException, InterruptedException {
+        try (var container = new LocalStackContainer(DockerImageName.parse("localstack/localstack:2.3.0"))) {
+            container.withServices(LocalStackContainer.Service.SQS, LocalStackContainer.Service.SES);
+            container.start();
+
+            Container.ExecResult createQueue = container.execInContainer(
+                    "awslocal", "sqs", "create-queue", "--queue-name", "bls-book-recommendation");
+            LOGGER.info("SQS queue creation finished with exit code {}.", createQueue.getExitCode());
+            LOGGER.info(createQueue.getStdout());
+
+            List<String> emails =
+                    List.of("duke@b-l-s.click", "mike@b-l-s.click", "jan@b-l-s.click", "lukas@b-l-s.click");
+            for (String email : emails) {
+                verifyEmail(container, email);
+            }
+
+            registry.add("spring.cloud.aws.endpoint", () -> container
+                    .getEndpointOverride(LocalStackContainer.Service.SQS)
+                    .toString());
+            registry.add("spring.cloud.aws.region.static", container::getRegion);
+            registry.add("spring.cloud.aws.credentials.access-key", container::getAccessKey);
+            registry.add("spring.cloud.aws.credentials.secret-key", container::getSecretKey);
+
+            return container;
+        }
+    }
+
+    private void verifyEmail(Container<?> container, String email) throws IOException, InterruptedException {
+        Container.ExecResult verifyEmail =
+                container.execInContainer("awslocal", "ses", "verify-email-identity", "--email-address", email);
+        LOGGER.info("SES email verification of {} ended with exit code {}.", email, verifyEmail.getExitCode());
     }
 }
