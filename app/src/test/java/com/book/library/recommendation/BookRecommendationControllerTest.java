@@ -6,10 +6,7 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TES
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 
 import com.book.library.AbstractTestResources;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -52,11 +49,11 @@ class BookRecommendationControllerTest extends AbstractTestResources {
                 .andExpect(MockMvcResultMatchers.flash().attribute("messageType", "success"));
     }
 
-    @Disabled
-    @ParameterizedTest
-    @CsvSource({"mike@b-l-s.click,1,1,danger"})
-    void testBookRecommendationConfirmation(String email, int bookId, int readerId, String status) throws Exception {
-        Mockito.when(service.confirmRecommendation(email, bookId, readerId, "token"))
+    @Test
+    void testBookRecommendationConfirmation() throws Exception {
+        int bookId = 1;
+        int readerId = 1;
+        Mockito.when(service.confirmRecommendation("mike@b-l-s.click", bookId, readerId, "token"))
                 .thenReturn(true);
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/book/%d/recommend/%d/confirm".formatted(bookId, readerId))
@@ -65,6 +62,6 @@ class BookRecommendationControllerTest extends AbstractTestResources {
                         .param("token", "token"))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(header().string("Location", "/book/borrowed"))
-                .andExpect(MockMvcResultMatchers.flash().attribute("messageType", status));
+                .andExpect(MockMvcResultMatchers.flash().attribute("messageType", "danger"));
     }
 }
