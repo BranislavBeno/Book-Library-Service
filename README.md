@@ -3,7 +3,7 @@
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=BranislavBeno_BookLibraryService&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=BranislavBeno_BookLibraryService)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=BranislavBeno_BookLibraryService&metric=coverage)](https://sonarcloud.io/summary/new_code?id=BranislavBeno_BookLibraryService)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=BranislavBeno_BookLibraryService&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=BranislavBeno_BookLibraryService)  
-[![](https://img.shields.io/badge/Java-20-blue)](/app/build.gradle.kts)
+[![](https://img.shields.io/badge/Java-21-blue)](/app/build.gradle.kts)
 [![](https://img.shields.io/badge/Spring%20Boot-3.2.0-blue)](/app/build.gradle.kts)
 [![](https://img.shields.io/badge/Testcontainers-1.19.3-blue)](/app/build.gradle.kts)
 [![](https://img.shields.io/badge/Gradle-8.5-blue)](/gradle/wrapper/gradle-wrapper.properties)
