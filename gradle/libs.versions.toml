@@ -13,12 +13,12 @@ spring-boot-testcontainers = { module = "org.springframework.boot:spring-boot-te
 spring-security-test = { module = "org.springframework.security:spring-security-test" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 micrometer-observation-test = { module = "io.micrometer:micrometer-observation-test" }
-testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version = "1.19.2" }
+testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version = "1.19.3" }
 testcontainers-common = { module = "org.testcontainers:testcontainers" }
 testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter" }
 testcontainers-postgresql = { module = "org.testcontainers:postgresql" }
 testcontainers-localstack = { module = "org.testcontainers:localstack" }
-testcontainers-keycloak = { module = "com.github.dasniko:testcontainers-keycloak", version = "3.1.0" }
+testcontainers-keycloak = { module = "com.github.dasniko:testcontainers-keycloak", version = "3.2.0" }
 org-awaitility = { module = "org.awaitility:awaitility", version = "4.2.0" }
 database-postgresql = { module = "org.postgresql:postgresql" }
 flyway-core = { module = "org.flywaydb:flyway-core" }
@@ -33,12 +33,12 @@ spring-cloud-aws-sqs = { module = "io.awspring.cloud:spring-cloud-aws-starter-sq
 spring-cloud-aws-ses = { module = "io.awspring.cloud:spring-cloud-aws-starter-ses" }
 spring-cloud-aws-dynamodb = { module = "io.awspring.cloud:spring-cloud-aws-starter-dynamodb" }
 aws-sdk-cognito-idp = { module = "software.amazon.awssdk:cognitoidentityprovider" }
-aws-cdk-lib = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.110.0" }
+aws-cdk-lib = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.113.0" }
 # code quality
 palantir-javaformat = { module = "com.palantir.javaformat:palantir-java-format", version = "2.38.0" }
 # gradle plugins
-spring-boot = { module = "org.springframework.boot:spring-boot-gradle-plugin", version = "3.1.5" }
+spring-boot = { module = "org.springframework.boot:spring-boot-gradle-plugin", version = "3.2.0" }
 git-properties = { module = "com.gorylenko.gradle-git-properties:gradle-git-properties", version = "2.4.1" }
-diffplug-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "6.22.0" }
+diffplug-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "6.23.2" }
 sonarqube = { module = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin", version = "4.4.0.3356" }
 cyclonedx-sbom = { module = "org.cyclonedx:cyclonedx-gradle-plugin", version = "1.7.4" }
