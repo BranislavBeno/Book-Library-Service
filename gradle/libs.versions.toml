@@ -40,5 +40,5 @@ palantir-javaformat = { module = "com.palantir.javaformat:palantir-java-format",
 spring-boot = { module = "org.springframework.boot:spring-boot-gradle-plugin", version = "3.2.0" }
 git-properties = { module = "com.gorylenko.gradle-git-properties:gradle-git-properties", version = "2.4.1" }
 diffplug-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "6.23.2" }
-sonarqube = { module = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin", version = "4.4.0.3356" }
-cyclonedx-sbom = { module = "org.cyclonedx:cyclonedx-gradle-plugin", version = "1.7.4" }
+sonarqube = { module = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin", version = "4.4.1.3373" }
+cyclonedx-sbom = { module = "org.cyclonedx:cyclonedx-gradle-plugin", version = "1.8.1" }
