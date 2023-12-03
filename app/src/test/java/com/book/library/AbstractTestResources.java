@@ -26,7 +26,7 @@ public abstract class AbstractTestResources {
 
     @ServiceConnection
     private static final PostgreSQLContainer<?> REPOSITORY_CONTAINER =
-            new PostgreSQLContainer<>(DockerImageName.parse("postgres:15.4"));
+            new PostgreSQLContainer<>(DockerImageName.parse("postgres:16.1"));
 
     private static final KeycloakContainer KEYCLOAK_CONTAINER;
 
