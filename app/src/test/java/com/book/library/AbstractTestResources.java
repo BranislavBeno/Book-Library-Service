@@ -26,17 +26,17 @@ public abstract class AbstractTestResources {
 
     @ServiceConnection
     private static final PostgreSQLContainer<?> REPOSITORY_CONTAINER =
-            new PostgreSQLContainer<>(DockerImageName.parse("postgres:15.4"));
+            new PostgreSQLContainer<>(DockerImageName.parse("postgres:15.5"));
 
     private static final KeycloakContainer KEYCLOAK_CONTAINER;
 
     private static final LocalStackContainer LOCAL_STACK_CONTAINER =
-            new LocalStackContainer(DockerImageName.parse("localstack/localstack:2.3.0"));
+            new LocalStackContainer(DockerImageName.parse("localstack/localstack:2.3.2"));
 
     static {
         REPOSITORY_CONTAINER.start();
 
-        KEYCLOAK_CONTAINER = new KeycloakContainer(DockerImageName.parse("quay.io/keycloak/keycloak:22.0.4")
+        KEYCLOAK_CONTAINER = new KeycloakContainer(DockerImageName.parse("quay.io/keycloak/keycloak:22.0.5")
                         .asCanonicalNameString())
                 .withRealmImportFile("keycloak/stratospheric-realm.json");
         KEYCLOAK_CONTAINER.start();
