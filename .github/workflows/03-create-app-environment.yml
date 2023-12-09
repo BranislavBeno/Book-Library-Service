@@ -92,3 +92,29 @@ jobs:
       - name: Deploy Cognito stack
         working-directory: cdk
         run: npm run cognito:deploy -- -c environmentName=${{ github.event.inputs.environmentName }}
+
+  deploy-dynamo-db-stack:
+    name: Deploy the DynamoDB stack
+    runs-on: ubuntu-22.04
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'zulu'
+          cache: 'gradle'
+
+      - name: NPM install
+        working-directory: cdk
+        run: |
+          npm i -D aws-cdk@latest
+          rm -fr node_modules package-lock.json cdk.out
+          npm i
+
+      - name: Deploy DynamoDB stack
+        working-directory: cdk
+        run: npm run dynamo:deploy -- -c environmentName=${{ github.event.inputs.environmentName }}
