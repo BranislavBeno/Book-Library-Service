@@ -19,6 +19,8 @@ server:
       enabled: false
 
 spring:
+  application:
+    name: b-l-s-app
   mvc:
     problemdetails:
       enabled: true
@@ -32,6 +34,7 @@ spring:
     open-in-view: false
 
 custom:
+  environment: production
   invitation-codes: DUKE, STRATOSPHERIC
   recommendation-queue: bls-book-recommendation
   use-real-sqs-listener: true
