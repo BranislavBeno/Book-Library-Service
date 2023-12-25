@@ -66,6 +66,52 @@ public class ServiceApp {
         var messagingOutputParameters =
                 MessagingStack.getOutputParametersFromParameterStore(parametersStack, appEnvironment);
 
+        PolicyStatement allowCreatingUsers = PolicyStatement.Builder.create()
+                .sid("AllowCreatingUsers")
+                .effect(Effect.ALLOW)
+                .resources(List.of("arn:aws:cognito-idp:%s:%s:userpool/%s"
+                        .formatted(region, accountId, cognitoOutputParameters.userPoolId())))
+                .actions(List.of("cognito-idp:AdminCreateUser"))
+                .build();
+
+        PolicyStatement allowSQSAccess = PolicyStatement.Builder.create()
+                .sid("AllowSQSAccess")
+                .effect(Effect.ALLOW)
+                .resources(List.of("arn:aws:sqs:%s:%s:%s"
+                        .formatted(region, accountId, messagingOutputParameters.recommendationQueueName())))
+                .actions(Arrays.asList(
+                        "sqs:DeleteMessage",
+                        "sqs:GetQueueUrl",
+                        "sqs:ListDeadLetterSourceQueues",
+                        "sqs:ListQueues",
+                        "sqs:ListQueueTags",
+                        "sqs:ReceiveMessage",
+                        "sqs:SendMessage",
+                        "sqs:ChangeMessageVisibility",
+                        "sqs:GetQueueAttributes"))
+                .build();
+
+        PolicyStatement allowSendingEmails = PolicyStatement.Builder.create()
+                .sid("AllowSendingEmails")
+                .effect(Effect.ALLOW)
+                .resources(List.of(String.format("arn:aws:ses:%s:%s:identity/b-l-s.click", region, accountId)))
+                .actions(List.of("ses:SendEmail", "ses:SendRawEmail"))
+                .build();
+
+        PolicyStatement allowDynamoTableAccess = PolicyStatement.Builder.create()
+                .sid("AllowDynamoTableAccess")
+                .effect(Effect.ALLOW)
+                .resources(List.of(String.format(
+                        "arn:aws:dynamodb:%s:%s:table/%s", region, accountId, appEnvironment.prefix("breadcrumb"))))
+                .actions(List.of(
+                        "dynamodb:Scan",
+                        "dynamodb:Query",
+                        "dynamodb:PutItem",
+                        "dynamodb:GetItem",
+                        "dynamodb:BatchWriteItem",
+                        "dynamodb:BatchWriteGet"))
+                .build();
+
         var serviceInputParameters = new Service.ServiceInputParameters(
                         dockerImageSource,
                         Collections.singletonList(databaseOutputParameters.databaseSecurityGroupId()),
@@ -78,40 +124,8 @@ public class ServiceApp {
                 .withHealthCheckPath("/actuator/info")
                 .withHealthCheckIntervalSeconds(30)
                 .withStickySessionsEnabled(true)
-                .withTaskRolePolicyStatements(List.of(
-                        PolicyStatement.Builder.create()
-                                .sid("AllowCreatingUsers")
-                                .effect(Effect.ALLOW)
-                                .resources(List.of("arn:aws:cognito-idp:%s:%s:userpool/%s"
-                                        .formatted(region, accountId, cognitoOutputParameters.userPoolId())))
-                                .actions(List.of("cognito-idp:AdminCreateUser"))
-                                .build(),
-                        PolicyStatement.Builder.create()
-                                .sid("AllowSQSAccess")
-                                .effect(Effect.ALLOW)
-                                .resources(List.of("arn:aws:sqs:%s:%s:%s"
-                                        .formatted(
-                                                region,
-                                                accountId,
-                                                messagingOutputParameters.recommendationQueueName())))
-                                .actions(Arrays.asList(
-                                        "sqs:DeleteMessage",
-                                        "sqs:GetQueueUrl",
-                                        "sqs:ListDeadLetterSourceQueues",
-                                        "sqs:ListQueues",
-                                        "sqs:ListQueueTags",
-                                        "sqs:ReceiveMessage",
-                                        "sqs:SendMessage",
-                                        "sqs:ChangeMessageVisibility",
-                                        "sqs:GetQueueAttributes"))
-                                .build(),
-                        PolicyStatement.Builder.create()
-                                .sid("AllowSendingEmails")
-                                .effect(Effect.ALLOW)
-                                .resources(List.of(
-                                        String.format("arn:aws:ses:%s:%s:identity/b-l-s.click", region, accountId)))
-                                .actions(List.of("ses:SendEmail", "ses:SendRawEmail"))
-                                .build()));
+                .withTaskRolePolicyStatements(
+                        List.of(allowCreatingUsers, allowSQSAccess, allowSendingEmails, allowDynamoTableAccess));
 
         var networkOutputParameters = Network.getOutputParametersFromParameterStore(serviceStack, appEnvironment);
 
