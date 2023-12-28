@@ -57,6 +57,21 @@ public class ContainersConfig {
             LOGGER.info("SQS queue creation finished with exit code {}.", createQueue.getExitCode());
             LOGGER.info(createQueue.getStdout());
 
+            Container.ExecResult createTable = container.execInContainer(
+                    "awslocal",
+                    "dynamodb",
+                    "create-table",
+                    "--table-name",
+                    "local-todo-app-breadcrumb",
+                    "--attribute-definitions",
+                    "AttributeName=id,AttributeType=S",
+                    "--key-schema",
+                    "AttributeName=id,KeyType=HASH",
+                    "--provisioned-throughput",
+                    "ReadCapacityUnits=10,WriteCapacityUnits=10");
+            LOGGER.info("DynamoDB table creation finished with exit code {}.", createTable.getExitCode());
+            LOGGER.info(createTable.getStdout());
+
             List<String> emails =
                     List.of("duke@b-l-s.click", "mike@b-l-s.click", "jan@b-l-s.click", "lukas@b-l-s.click");
             for (String email : emails) {

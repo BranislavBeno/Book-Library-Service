@@ -51,7 +51,7 @@ public abstract class AbstractTestResources {
             LOG.info("SQS queue creation finished with exit code {}.", createQueue.getExitCode());
             LOG.info(createQueue.getStdout());
 
-            Container.ExecResult createDynamoDb = LOCAL_STACK_CONTAINER.execInContainer(
+            Container.ExecResult createNotificationTable = LOCAL_STACK_CONTAINER.execInContainer(
                     "awslocal",
                     "dynamodb",
                     "create-table",
@@ -63,8 +63,26 @@ public abstract class AbstractTestResources {
                     "AttributeName=notificationId,KeyType=HASH",
                     "--provisioned-throughput",
                     "ReadCapacityUnits=5,WriteCapacityUnits=5");
-            LOG.info("DynamoDB creation finished with exit code {}.", createDynamoDb.getExitCode());
-            LOG.info(createDynamoDb.getStdout());
+            LOG.info(
+                    "DynamoDB notification table creation finished with exit code {}.",
+                    createNotificationTable.getExitCode());
+            LOG.info(createNotificationTable.getStdout());
+
+            Container.ExecResult createTracingTable = LOCAL_STACK_CONTAINER.execInContainer(
+                    "awslocal",
+                    "dynamodb",
+                    "create-table",
+                    "--table-name",
+                    "local-todo-app-breadcrumb",
+                    "--attribute-definitions",
+                    "AttributeName=id,AttributeType=S",
+                    "--key-schema",
+                    "AttributeName=id,KeyType=HASH",
+                    "--provisioned-throughput",
+                    "ReadCapacityUnits=10,WriteCapacityUnits=10");
+            LOG.info("DynamoDB tracing table creation finished with exit code {}.", createTracingTable.getExitCode());
+            LOG.info(createTracingTable.getStdout());
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
