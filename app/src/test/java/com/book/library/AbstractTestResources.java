@@ -1,7 +1,7 @@
 package com.book.library;
 
 import dasniko.testcontainers.keycloak.KeycloakContainer;
-import java.util.List;
+import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -51,7 +51,7 @@ public abstract class AbstractTestResources {
             LOG.info("SQS queue creation finished with exit code {}.", createQueue.getExitCode());
             LOG.info(createQueue.getStdout());
 
-            Container.ExecResult createNotificationTable = LOCAL_STACK_CONTAINER.execInContainer(
+            Container.ExecResult notificationTable = LOCAL_STACK_CONTAINER.execInContainer(
                     "awslocal",
                     "dynamodb",
                     "create-table",
@@ -65,29 +65,35 @@ public abstract class AbstractTestResources {
                     "ReadCapacityUnits=5,WriteCapacityUnits=5");
             LOG.info(
                     "DynamoDB notification table creation finished with exit code {}.",
-                    createNotificationTable.getExitCode());
-            LOG.info(createNotificationTable.getStdout());
+                    notificationTable.getExitCode());
+            LOG.info(notificationTable.getStdout());
 
-            Container.ExecResult createTracingTable = LOCAL_STACK_CONTAINER.execInContainer(
+            Container.ExecResult tracingTable = LOCAL_STACK_CONTAINER.execInContainer(
                     "awslocal",
                     "dynamodb",
                     "create-table",
                     "--table-name",
-                    "local-todo-app-breadcrumb",
+                    "bls-local-breadcrumb",
                     "--attribute-definitions",
                     "AttributeName=id,AttributeType=S",
                     "--key-schema",
                     "AttributeName=id,KeyType=HASH",
                     "--provisioned-throughput",
                     "ReadCapacityUnits=10,WriteCapacityUnits=10");
-            LOG.info("DynamoDB tracing table creation finished with exit code {}.", createTracingTable.getExitCode());
-            LOG.info(createTracingTable.getStdout());
+            LOG.info("DynamoDB tracing table creation finished with exit code {}.", tracingTable.getExitCode());
+            LOG.info(tracingTable.getStdout());
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-        List.of("duke@b-l-s.click", "mike@b-l-s.click", "jan@b-l-s.click", "lukas@b-l-s.click")
+        Stream.of(
+                        "duke@b-l-s.click",
+                        "mike@b-l-s.click",
+                        "jan@b-l-s.click",
+                        "lukas@b-l-s.click",
+                        "info@b-l-s.click",
+                        "noreply@b-l-s.click")
                 .forEach(AbstractTestResources::verifyEmail);
     }
 

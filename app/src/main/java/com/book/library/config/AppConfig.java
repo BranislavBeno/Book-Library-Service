@@ -9,6 +9,7 @@ import com.book.library.recommendation.BookRecommendationListener;
 import com.book.library.recommendation.BookRecommendationRequestRepository;
 import com.book.library.recommendation.BookRecommendationService;
 import com.book.library.recommendation.DefaultBookRecommendationListener;
+import com.book.library.tracing.TraceDao;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,7 @@ import org.springframework.mail.MailSender;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.regions.providers.AwsRegionProvider;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.sqs.SqsAsyncClient;
 
 @Configuration
@@ -78,5 +80,11 @@ public class AppConfig {
                 .credentialsProvider(awsCredentialsProvider)
                 .region(regionProvider.getRegion())
                 .build();
+    }
+
+    @Bean
+    public TraceDao traceDao(
+            @Autowired DynamoDbClient dynamoDbClient, @Value("${custom.tracing-table}") String tableName) {
+        return new TraceDao(dynamoDbClient, tableName);
     }
 }

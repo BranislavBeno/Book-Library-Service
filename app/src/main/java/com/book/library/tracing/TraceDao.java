@@ -1,29 +1,28 @@
 package com.book.library.tracing;
 
-import io.awspring.cloud.dynamodb.DynamoDbTemplate;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
-import software.amazon.awssdk.enhanced.dynamodb.Expression;
-import software.amazon.awssdk.enhanced.dynamodb.Key;
-import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
-import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
-import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
+import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
+import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
+import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
-@Component
 public class TraceDao {
 
     private static final Logger LOG = LoggerFactory.getLogger(TraceDao.class);
 
-    private final DynamoDbTemplate dynamoDbTemplate;
+    private final DynamoDbTable<Breadcrumb> dynamoDbTable;
 
-    public TraceDao(DynamoDbTemplate dynamoDbTemplate) {
-        this.dynamoDbTemplate = dynamoDbTemplate;
+    public TraceDao(DynamoDbClient dynamoDbClient, String tableName) {
+        DynamoDbEnhancedClient enhancedClient =
+                DynamoDbEnhancedClient.builder().dynamoDbClient(dynamoDbClient).build();
+        this.dynamoDbTable = enhancedClient.table(tableName, TableSchema.fromBean(Breadcrumb.class));
     }
 
     @Async
@@ -35,52 +34,25 @@ public class TraceDao {
         breadcrumb.setUsername(tracingEvent.getUsername());
         breadcrumb.setTimestamp(ZonedDateTime.now().toString());
 
-        dynamoDbTemplate.save(breadcrumb);
+        dynamoDbTable.putItem(breadcrumb);
 
         LOG.info("Successfully stored breadcrumb trace");
     }
 
     public List<Breadcrumb> findAllEventsForUser(String username) {
-        var breadcrumb = new Breadcrumb();
-        breadcrumb.setUsername(username);
-
-        return dynamoDbTemplate
-                .query(
-                        QueryEnhancedRequest.builder()
-                                .queryConditional(QueryConditional.keyEqualTo(Key.builder()
-                                        .partitionValue(breadcrumb.getId())
-                                        .build()))
-                                .build(),
-                        Breadcrumb.class)
-                .items()
-                .stream()
+        return dynamoDbTable.scan().items().stream()
+                .filter(b -> b.getUsername().equals(username))
                 .toList();
     }
 
     public List<Breadcrumb> findUserTraceForLastTwoWeeks(String username) {
-        ZonedDateTime twoWeeksAgo = ZonedDateTime.now().minusWeeks(2);
+        var twoWeeksAgo = ZonedDateTime.now().minusWeeks(2);
 
-        var breadcrumb = new Breadcrumb();
-        breadcrumb.setUsername(username);
+        Predicate<Breadcrumb> predicate = b -> {
+            ZonedDateTime timestamp = ZonedDateTime.parse(b.getTimestamp());
+            return b.getUsername().equals(username) && twoWeeksAgo.isBefore(timestamp);
+        };
 
-        return dynamoDbTemplate
-                .query(
-                        QueryEnhancedRequest.builder()
-                                .queryConditional(QueryConditional.keyEqualTo(Key.builder()
-                                        .partitionValue(breadcrumb.getId())
-                                        .build()))
-                                .filterExpression(Expression.builder()
-                                        .expression("timestamp  > :twoWeeksAgo")
-                                        .putExpressionValue(
-                                                ":twoWeeksAgo",
-                                                AttributeValue.builder()
-                                                        .s(twoWeeksAgo.toString())
-                                                        .build())
-                                        .build())
-                                .build(),
-                        Breadcrumb.class)
-                .items()
-                .stream()
-                .toList();
+        return dynamoDbTable.scan().items().stream().filter(predicate).toList();
     }
 }
