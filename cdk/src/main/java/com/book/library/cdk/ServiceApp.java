@@ -98,11 +98,11 @@ public class ServiceApp {
                 .actions(List.of("ses:SendEmail", "ses:SendRawEmail"))
                 .build();
 
+        String tableName = appEnvironment.prefix("breadcrumb");
         PolicyStatement allowDynamoTableAccess = PolicyStatement.Builder.create()
                 .sid("AllowDynamoTableAccess")
                 .effect(Effect.ALLOW)
-                .resources(List.of(String.format(
-                        "arn:aws:dynamodb:%s:%s:table/%s", region, accountId, appEnvironment.prefix("breadcrumb"))))
+                .resources(List.of(String.format("arn:aws:dynamodb:%s:%s:table/%s", region, accountId, tableName)))
                 .actions(List.of(
                         "dynamodb:Scan",
                         "dynamodb:Query",
@@ -120,6 +120,7 @@ public class ServiceApp {
                                 databaseOutputParameters,
                                 cognitoOutputParameters,
                                 messagingOutputParameters,
+                                tableName,
                                 springProfile))
                 .withHealthCheckPath("/actuator/info")
                 .withHealthCheckIntervalSeconds(30)
@@ -145,6 +146,7 @@ public class ServiceApp {
             PostgresDatabase.DatabaseOutputParameters databaseOutputParameters,
             CognitoStack.CognitoOutputParameters cognitoOutputParameters,
             MessagingStack.MessagingOutputParameters messagingOutputParameters,
+            String tracingTableName,
             String springProfile) {
         Map<String, String> vars = new HashMap<>();
 
@@ -171,6 +173,7 @@ public class ServiceApp {
         vars.put("COGNITO_LOGOUT_URL", cognitoOutputParameters.logoutUrl());
         vars.put("COGNITO_PROVIDER_URL", cognitoOutputParameters.providerUrl());
         vars.put("BLS_RECOMMENDATION_QUEUE_NAME", messagingOutputParameters.recommendationQueueName());
+        vars.put("BLS_TRACING_TABLE", tracingTableName);
 
         return vars;
     }

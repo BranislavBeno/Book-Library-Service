@@ -29,11 +29,7 @@ public class DynamoDbApp {
                 "DynamoDbStack",
                 StackProps.builder().stackName(stackName).env(awsEnvironment).build());
 
-        new BreadcrumbsDynamoDbTable(
-                dynamoDbStack,
-                "BreadcrumbTable",
-                appEnvironment,
-                new BreadcrumbsDynamoDbTable.InputParameter("breadcrumb"));
+        new BreadcrumbsDynamoDbTable(dynamoDbStack, "BreadcrumbTable", appEnvironment.prefix("breadcrumb"));
 
         app.synth();
     }
