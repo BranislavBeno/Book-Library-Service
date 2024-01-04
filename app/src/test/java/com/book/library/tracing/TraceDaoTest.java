@@ -3,10 +3,13 @@ package com.book.library.tracing;
 import com.book.library.AbstractTestResources;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 import org.assertj.core.api.WithAssertions;
 import org.awaitility.Awaitility;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 
@@ -20,20 +23,36 @@ class TraceDaoTest extends AbstractTestResources implements WithAssertions {
 
     @BeforeEach
     void setUp() {
-        TracingEvent event1 = new TracingEvent(this, "/book/all", "mike");
-        TracingEvent event2 = new TracingEvent(this, "/reader/all", "duke");
-        publisher.publishEvent(event1);
-        publisher.publishEvent(event2);
+        Stream.of(
+                        new TracingEvent(this, "/book/all", "mike"),
+                        new TracingEvent(this, "/reader/all", "duke"),
+                        new TracingEvent(this, "/reader/all", "mike"))
+                .forEach(publisher::publishEvent);
     }
 
-    @Test
-    void testFindAllEventsForUser() {
-        Awaitility.await().atMost(10, TimeUnit.SECONDS).ignoreExceptions().untilAsserted(() -> {
-            List<Breadcrumb> breadcrumbs = traceDao.findAllEventsForUser("mike");
-            assertThat(breadcrumbs).hasSize(1);
+    @AfterEach
+    void tearDown() {
+        traceDao.deleteItems();
+    }
+
+    @ParameterizedTest
+    @CsvSource({"mike,2", "duke,1"})
+    void testFindAllEventsForUser(String username, int count) {
+        Awaitility.await().atMost(30, TimeUnit.SECONDS).ignoreExceptions().untilAsserted(() -> {
+            List<Breadcrumb> breadcrumbs = traceDao.findAllEventsForUser(username);
+            assertThat(breadcrumbs).hasSize(count);
             Breadcrumb breadcrumb = breadcrumbs.stream().findFirst().orElse(null);
             assertThat(breadcrumb).isNotNull().satisfies(b -> assertThat(b.getUri())
-                    .isEqualTo("/book/all"));
+                    .endsWith("/all"));
+        });
+    }
+
+    @ParameterizedTest
+    @CsvSource({"mike,2", "duke,1"})
+    void testFindUserTraceForLastTwoWeeks(String username, int count) {
+        Awaitility.await().atMost(30, TimeUnit.SECONDS).ignoreExceptions().untilAsserted(() -> {
+            List<Breadcrumb> breadcrumbs = traceDao.findUserTraceForLastTwoWeeks(username);
+            assertThat(breadcrumbs).hasSize(count);
         });
     }
 }

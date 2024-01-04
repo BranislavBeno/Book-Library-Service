@@ -4,6 +4,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
@@ -39,13 +40,11 @@ public class TraceDao {
         LOG.info("Successfully stored breadcrumb trace");
     }
 
-    public List<Breadcrumb> findAllEventsForUser(String username) {
-        return dynamoDbTable.scan().items().stream()
-                .filter(b -> b.getUsername().equals(username))
-                .toList();
+    List<Breadcrumb> findAllEventsForUser(String username) {
+        return getItems().filter(b -> b.getUsername().equals(username)).toList();
     }
 
-    public List<Breadcrumb> findUserTraceForLastTwoWeeks(String username) {
+    List<Breadcrumb> findUserTraceForLastTwoWeeks(String username) {
         var twoWeeksAgo = ZonedDateTime.now().minusWeeks(2);
 
         Predicate<Breadcrumb> predicate = b -> {
@@ -53,6 +52,14 @@ public class TraceDao {
             return b.getUsername().equals(username) && twoWeeksAgo.isBefore(timestamp);
         };
 
-        return dynamoDbTable.scan().items().stream().filter(predicate).toList();
+        return getItems().filter(predicate).toList();
+    }
+
+    void deleteItems() {
+        getItems().forEach(dynamoDbTable::deleteItem);
+    }
+
+    private Stream<Breadcrumb> getItems() {
+        return dynamoDbTable.scan().items().stream();
     }
 }
