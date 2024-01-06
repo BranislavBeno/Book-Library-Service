@@ -93,11 +93,9 @@ public class ContainersConfig {
             registry.add(
                     "spring.cloud.aws.dynamodb.endpoint",
                     () -> container.getEndpointOverride(LocalStackContainer.Service.DYNAMODB));
-            registry.add("spring.cloud.aws.dynamodb.table-prefix", () -> "b-l-s-app-local");
             registry.add("spring.cloud.aws.region.static", container::getRegion);
             registry.add("spring.cloud.aws.credentials.access-key", container::getAccessKey);
             registry.add("spring.cloud.aws.credentials.secret-key", container::getSecretKey);
-            registry.add("spring.cloud.aws.endpoint", container::getEndpoint);
 
             return container;
         }
