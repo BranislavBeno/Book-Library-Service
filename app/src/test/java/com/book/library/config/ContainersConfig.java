@@ -87,15 +87,16 @@ public class ContainersConfig {
                 verifyEmail(container, email);
             }
 
+            registry.add("spring.cloud.aws.region.static", container::getRegion);
+            registry.add("spring.cloud.aws.credentials.access-key", container::getAccessKey);
+            registry.add("spring.cloud.aws.credentials.secret-key", container::getSecretKey);
+            registry.add("spring.cloud.aws.endpoint", container::getEndpoint);
             registry.add(
                     "spring.cloud.aws.sqs.endpoint",
                     () -> container.getEndpointOverride(LocalStackContainer.Service.SQS));
             registry.add(
                     "spring.cloud.aws.dynamodb.endpoint",
                     () -> container.getEndpointOverride(LocalStackContainer.Service.DYNAMODB));
-            registry.add("spring.cloud.aws.region.static", container::getRegion);
-            registry.add("spring.cloud.aws.credentials.access-key", container::getAccessKey);
-            registry.add("spring.cloud.aws.credentials.secret-key", container::getSecretKey);
 
             return container;
         }
