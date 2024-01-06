@@ -1,29 +1,35 @@
 package com.book.library.cdk;
 
 import com.book.library.cdk.construct.ApplicationEnvironment;
-import com.book.library.cdk.stack.CognitoStack;
+import com.book.library.cdk.construct.BreadcrumbsDynamoDbTable;
 import com.book.library.cdk.util.CdkUtil;
 import com.book.library.cdk.util.Validations;
 import software.amazon.awscdk.App;
 import software.amazon.awscdk.Environment;
+import software.amazon.awscdk.Stack;
+import software.amazon.awscdk.StackProps;
 
-class CognitoApp {
-    public static void main(final String[] args) {
+public class DynamoDbApp {
+
+    public static void main(String[] args) {
         var app = new App();
 
         String accountId = Validations.requireNonEmpty(app, "accountId");
         String region = Validations.requireNonEmpty(app, "region");
         String environmentName = Validations.requireNonEmpty(app, "environmentName");
         String applicationName = Validations.requireNonEmpty(app, "applicationName");
-        String applicationUrl = Validations.requireNonEmpty(app, "applicationUrl");
-        String loginPageDomainPrefix = Validations.requireNonEmpty(app, "loginPageDomainPrefix");
 
         Environment awsEnvironment = CdkUtil.makeEnv(accountId, region);
-        var appEnvironment = new ApplicationEnvironment(applicationName, environmentName);
-        var inputParameters =
-                new CognitoStack.CognitoInputParameters(applicationName, applicationUrl, loginPageDomainPrefix);
 
-        new CognitoStack(app, "Cognito", awsEnvironment, appEnvironment, inputParameters);
+        var appEnvironment = new ApplicationEnvironment(applicationName, environmentName);
+
+        String stackName = CdkUtil.createStackName("dynamo-db", appEnvironment);
+        var dynamoDbStack = new Stack(
+                app,
+                "DynamoDbStack",
+                StackProps.builder().stackName(stackName).env(awsEnvironment).build());
+
+        new BreadcrumbsDynamoDbTable(dynamoDbStack, "BreadcrumbTable", appEnvironment.prefix("breadcrumb"));
 
         app.synth();
     }

@@ -22,4 +22,5 @@ spring:
 
 custom:
   recommendation-queue: ${BLS_RECOMMENDATION_QUEUE_NAME}
+  tracing-table: ${BLS_TRACING_TABLE}
   use-cognito-as-identity-provider: true

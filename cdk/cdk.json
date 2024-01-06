@@ -23,6 +23,7 @@
     "hostedZoneDomain": "b-l-s.click",
     "applicationDomain": "app.b-l-s.click",
     "applicationUrl": "https://app.b-l-s.click",
+    "confirmationEmail": "info@b-l-s.click",
     "loginPageDomainPrefix": "staging-b-l-s",
     "springProfile": "aws",
     "githubToken": "SECRET_OVERRIDDEN_BY_WORKFLOW",

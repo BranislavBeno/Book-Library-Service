@@ -32,9 +32,10 @@ spring:
     open-in-view: false
 
 custom:
-  invitation-codes: DUKE, STRATOSPHERIC
+  invitation-codes: DUKE, MIKE
   recommendation-queue: bls-book-recommendation
+  tracing-table: bls-local-breadcrumb
   use-real-sqs-listener: true
   auto-confirm-recommendations: false
-  confirm-email-from-address: noreply@b-l-s.clic
+  confirm-email-from-address: noreply@b-l-s.click
   external-url: https://app.b-l-s.click

@@ -13,6 +13,8 @@
     "database:destroy": "cdk destroy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.DatabaseApp\" --force --require-approval never",
     "domain:deploy": "cdk deploy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.DomainApp\" --require-approval never",
     "domain:destroy": "cdk destroy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.DomainApp\" --force --require-approval never",
+    "dynamo:deploy": "cdk deploy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.DynamoDbApp\" --require-approval never",
+    "dynamo:destroy": "cdk destroy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.DynamoDbApp\" --force --require-approval never",
     "messaging:deploy": "cdk deploy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.MessagingApp\" --require-approval never",
     "messaging:destroy": "cdk destroy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.MessagingApp\" --force --require-approval never",
     "network:deploy": "cdk deploy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.NetworkApp\" --require-approval never",

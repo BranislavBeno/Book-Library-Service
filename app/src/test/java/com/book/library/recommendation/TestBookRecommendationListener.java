@@ -29,7 +29,7 @@ public record TestBookRecommendationListener(BookRecommendationService service, 
     }
 
     private TestNotification toTestNotification(BookRecommendationNotification notification) {
-        TestNotification testNotification = new TestNotification();
+        var testNotification = new TestNotification();
         testNotification.setNotificationId("notification_123");
         testNotification.setEmail(notification.getRecommencedEmail());
         testNotification.setBookInfo(notification.getBookInfo());

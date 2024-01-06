@@ -66,6 +66,52 @@ public class ServiceApp {
         var messagingOutputParameters =
                 MessagingStack.getOutputParametersFromParameterStore(parametersStack, appEnvironment);
 
+        PolicyStatement allowCreatingUsers = PolicyStatement.Builder.create()
+                .sid("AllowCreatingUsers")
+                .effect(Effect.ALLOW)
+                .resources(List.of("arn:aws:cognito-idp:%s:%s:userpool/%s"
+                        .formatted(region, accountId, cognitoOutputParameters.userPoolId())))
+                .actions(List.of("cognito-idp:AdminCreateUser"))
+                .build();
+
+        PolicyStatement allowSQSAccess = PolicyStatement.Builder.create()
+                .sid("AllowSQSAccess")
+                .effect(Effect.ALLOW)
+                .resources(List.of("arn:aws:sqs:%s:%s:%s"
+                        .formatted(region, accountId, messagingOutputParameters.recommendationQueueName())))
+                .actions(Arrays.asList(
+                        "sqs:DeleteMessage",
+                        "sqs:GetQueueUrl",
+                        "sqs:ListDeadLetterSourceQueues",
+                        "sqs:ListQueues",
+                        "sqs:ListQueueTags",
+                        "sqs:ReceiveMessage",
+                        "sqs:SendMessage",
+                        "sqs:ChangeMessageVisibility",
+                        "sqs:GetQueueAttributes"))
+                .build();
+
+        PolicyStatement allowSendingEmails = PolicyStatement.Builder.create()
+                .sid("AllowSendingEmails")
+                .effect(Effect.ALLOW)
+                .resources(List.of(String.format("arn:aws:ses:%s:%s:identity/b-l-s.click", region, accountId)))
+                .actions(List.of("ses:SendEmail", "ses:SendRawEmail"))
+                .build();
+
+        String tableName = appEnvironment.prefix("breadcrumb");
+        PolicyStatement allowDynamoTableAccess = PolicyStatement.Builder.create()
+                .sid("AllowDynamoTableAccess")
+                .effect(Effect.ALLOW)
+                .resources(List.of(String.format("arn:aws:dynamodb:%s:%s:table/%s", region, accountId, tableName)))
+                .actions(List.of(
+                        "dynamodb:Scan",
+                        "dynamodb:Query",
+                        "dynamodb:PutItem",
+                        "dynamodb:GetItem",
+                        "dynamodb:BatchWriteItem",
+                        "dynamodb:BatchWriteGet"))
+                .build();
+
         var serviceInputParameters = new Service.ServiceInputParameters(
                         dockerImageSource,
                         Collections.singletonList(databaseOutputParameters.databaseSecurityGroupId()),
@@ -74,44 +120,13 @@ public class ServiceApp {
                                 databaseOutputParameters,
                                 cognitoOutputParameters,
                                 messagingOutputParameters,
+                                tableName,
                                 springProfile))
                 .withHealthCheckPath("/actuator/info")
                 .withHealthCheckIntervalSeconds(30)
                 .withStickySessionsEnabled(true)
-                .withTaskRolePolicyStatements(List.of(
-                        PolicyStatement.Builder.create()
-                                .sid("AllowCreatingUsers")
-                                .effect(Effect.ALLOW)
-                                .resources(List.of("arn:aws:cognito-idp:%s:%s:userpool/%s"
-                                        .formatted(region, accountId, cognitoOutputParameters.userPoolId())))
-                                .actions(List.of("cognito-idp:AdminCreateUser"))
-                                .build(),
-                        PolicyStatement.Builder.create()
-                                .sid("AllowSQSAccess")
-                                .effect(Effect.ALLOW)
-                                .resources(List.of("arn:aws:sqs:%s:%s:%s"
-                                        .formatted(
-                                                region,
-                                                accountId,
-                                                messagingOutputParameters.recommendationQueueName())))
-                                .actions(Arrays.asList(
-                                        "sqs:DeleteMessage",
-                                        "sqs:GetQueueUrl",
-                                        "sqs:ListDeadLetterSourceQueues",
-                                        "sqs:ListQueues",
-                                        "sqs:ListQueueTags",
-                                        "sqs:ReceiveMessage",
-                                        "sqs:SendMessage",
-                                        "sqs:ChangeMessageVisibility",
-                                        "sqs:GetQueueAttributes"))
-                                .build(),
-                        PolicyStatement.Builder.create()
-                                .sid("AllowSendingEmails")
-                                .effect(Effect.ALLOW)
-                                .resources(List.of(
-                                        String.format("arn:aws:ses:%s:%s:identity/b-l-s.click", region, accountId)))
-                                .actions(List.of("ses:SendEmail", "ses:SendRawEmail"))
-                                .build()));
+                .withTaskRolePolicyStatements(
+                        List.of(allowCreatingUsers, allowSQSAccess, allowSendingEmails, allowDynamoTableAccess));
 
         var networkOutputParameters = Network.getOutputParametersFromParameterStore(serviceStack, appEnvironment);
 
@@ -131,6 +146,7 @@ public class ServiceApp {
             PostgresDatabase.DatabaseOutputParameters databaseOutputParameters,
             CognitoStack.CognitoOutputParameters cognitoOutputParameters,
             MessagingStack.MessagingOutputParameters messagingOutputParameters,
+            String tracingTableName,
             String springProfile) {
         Map<String, String> vars = new HashMap<>();
 
@@ -157,6 +173,7 @@ public class ServiceApp {
         vars.put("COGNITO_LOGOUT_URL", cognitoOutputParameters.logoutUrl());
         vars.put("COGNITO_PROVIDER_URL", cognitoOutputParameters.providerUrl());
         vars.put("BLS_RECOMMENDATION_QUEUE_NAME", messagingOutputParameters.recommendationQueueName());
+        vars.put("BLS_TRACING_TABLE", tracingTableName);
 
         return vars;
     }

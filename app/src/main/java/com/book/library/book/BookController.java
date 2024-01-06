@@ -2,9 +2,14 @@ package com.book.library.book;
 
 import com.book.library.controller.ViewController;
 import com.book.library.dto.*;
+import com.book.library.tracing.TracingEvent;
 import jakarta.validation.Valid;
+import java.security.Principal;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,14 +23,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/book")
 public class BookController extends AbstractBookController implements ViewController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(BookController.class);
     private static final String FORBIDDEN_ATTR = "forbidden";
     private static final String FOUND_ATTR = "found";
     private static final String BOOKS_ATTR = "books";
     private static final String PAGE_NUMBERS_ATTR = "pageNumbers";
     private static final String SAVE_BOOK_PAGE = "save-book";
 
-    public BookController(@Autowired BookService service) {
+    private final ApplicationEventPublisher publisher;
+
+    public BookController(@Autowired BookService service, @Autowired ApplicationEventPublisher publisher) {
         super(service);
+        this.publisher = publisher;
     }
 
     @ModelAttribute(FORBIDDEN_ATTR)
@@ -37,7 +46,8 @@ public class BookController extends AbstractBookController implements ViewContro
     public String showBooks(
             @RequestParam(name = "page", defaultValue = "0") int page,
             Model model,
-            @ModelAttribute(FORBIDDEN_ATTR) boolean forbidden) {
+            @ModelAttribute(FORBIDDEN_ATTR) boolean forbidden,
+            Principal principal) {
         Page<AnyBookDto> bookPage = getService().findBooks(page);
         PageData<AnyBookDto> pageData = providePageData(bookPage);
 
@@ -45,6 +55,10 @@ public class BookController extends AbstractBookController implements ViewContro
         model.addAttribute(FOUND_ATTR, !bookPage.isEmpty());
         model.addAttribute(BOOKS_ATTR, pageData.dtoPage());
         model.addAttribute(PAGE_NUMBERS_ATTR, pageData.pageNumbers());
+
+        TracingEvent event = new TracingEvent(this, "/book/all", principal != null ? principal.getName() : "anonymous");
+        publisher.publishEvent(event);
+        LOG.info("Successfully published event");
 
         return "all-books";
     }

@@ -10,7 +10,7 @@ import software.amazon.awscdk.Environment;
 public class DomainApp {
 
     public static void main(String[] args) {
-        App app = new App();
+        var app = new App();
 
         String accountId = Validations.requireNonEmpty(app, "accountId");
         String region = Validations.requireNonEmpty(app, "region");

@@ -49,7 +49,10 @@ public class ContainersConfig {
     public LocalStackContainer localStackContainer(DynamicPropertyRegistry registry)
             throws IOException, InterruptedException {
         try (var container = new LocalStackContainer(DockerImageName.parse("localstack/localstack:3.0.2"))) {
-            container.withServices(LocalStackContainer.Service.SQS, LocalStackContainer.Service.SES);
+            container.withServices(
+                    LocalStackContainer.Service.SQS,
+                    LocalStackContainer.Service.SES,
+                    LocalStackContainer.Service.DYNAMODB);
             container.start();
 
             Container.ExecResult createQueue = container.execInContainer(
@@ -57,15 +60,39 @@ public class ContainersConfig {
             LOGGER.info("SQS queue creation finished with exit code {}.", createQueue.getExitCode());
             LOGGER.info(createQueue.getStdout());
 
-            List<String> emails =
-                    List.of("duke@b-l-s.click", "mike@b-l-s.click", "jan@b-l-s.click", "lukas@b-l-s.click");
+            Container.ExecResult tracingTable = container.execInContainer(
+                    "awslocal",
+                    "dynamodb",
+                    "create-table",
+                    "--table-name",
+                    "bls-local-breadcrumb",
+                    "--attribute-definitions",
+                    "AttributeName=id,AttributeType=S",
+                    "--key-schema",
+                    "AttributeName=id,KeyType=HASH",
+                    "--provisioned-throughput",
+                    "ReadCapacityUnits=10,WriteCapacityUnits=10");
+            LOGGER.info("DynamoDB table creation finished with exit code {}.", tracingTable.getExitCode());
+            LOGGER.info(tracingTable.getStdout());
+            LOGGER.info(tracingTable.getStderr());
+
+            List<String> emails = List.of(
+                    "duke@b-l-s.click",
+                    "mike@b-l-s.click",
+                    "jan@b-l-s.click",
+                    "lukas@b-l-s.click",
+                    "info@b-l-s.click",
+                    "noreply@b-l-s.click");
             for (String email : emails) {
                 verifyEmail(container, email);
             }
 
-            registry.add("spring.cloud.aws.endpoint", () -> container
-                    .getEndpointOverride(LocalStackContainer.Service.SQS)
-                    .toString());
+            registry.add(
+                    "spring.cloud.aws.sqs.endpoint",
+                    () -> container.getEndpointOverride(LocalStackContainer.Service.SQS));
+            registry.add(
+                    "spring.cloud.aws.dynamodb.endpoint",
+                    () -> container.getEndpointOverride(LocalStackContainer.Service.DYNAMODB));
             registry.add("spring.cloud.aws.region.static", container::getRegion);
             registry.add("spring.cloud.aws.credentials.access-key", container::getAccessKey);
             registry.add("spring.cloud.aws.credentials.secret-key", container::getSecretKey);
