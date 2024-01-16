@@ -36,6 +36,7 @@ dependencies {
     implementation(libs.spring.cloud.aws.sqs)
     implementation(libs.spring.cloud.aws.ses)
     implementation(libs.aws.sdk.cognito.idp)
+    implementation(libs.logback.awslogs.json)
     runtimeOnly(libs.database.postgresql)
     testImplementation(libs.spring.boot.starter.test)
     testImplementation(libs.spring.boot.testcontainers)
