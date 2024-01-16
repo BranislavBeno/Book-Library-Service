@@ -8,17 +8,9 @@
         <encoder class="de.siegmar.logbackawslogsjsonencoder.AwsJsonLogEncoder"/>
     </appender>
 
-    <appender name="PLAIN" class="ch.qos.logback.core.ConsoleAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>
-                %cyan(%d{ISO8601}) %highlight(%-5level) [%blue(%-30t)] ...
-            </Pattern>
-        </layout>
-    </appender>
-
     <springProfile name="dev">
         <root level="INFO">
-            <appender-ref ref="PLAIN"/>
+            <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>
 
