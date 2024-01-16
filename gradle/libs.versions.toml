@@ -40,6 +40,6 @@ palantir-javaformat = { module = "com.palantir.javaformat:palantir-java-format",
 # gradle plugins
 spring-boot = { module = "org.springframework.boot:spring-boot-gradle-plugin", version = "3.2.1" }
 git-properties = { module = "com.gorylenko.gradle-git-properties:gradle-git-properties", version = "2.4.1" }
-diffplug-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "6.23.3" }
+diffplug-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "6.24.0" }
 sonarqube = { module = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin", version = "4.4.1.3373" }
 cyclonedx-sbom = { module = "org.cyclonedx:cyclonedx-gradle-plugin", version = "1.8.1" }
