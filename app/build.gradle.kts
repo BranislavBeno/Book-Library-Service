@@ -31,6 +31,7 @@ dependencies {
     implementation(libs.webjars.font.awesome)
     implementation(libs.problem.spring.web)
     implementation(libs.flyway.core)
+    implementation(libs.micrometer.registry.cloudwatch)
     implementation(platform(libs.spring.cloud.aws.bom))
     implementation(libs.spring.cloud.aws.dynamodb)
     implementation(libs.spring.cloud.aws.sqs)
