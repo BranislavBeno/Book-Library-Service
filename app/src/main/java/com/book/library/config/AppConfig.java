@@ -10,7 +10,9 @@ import com.book.library.recommendation.BookRecommendationRequestRepository;
 import com.book.library.recommendation.BookRecommendationService;
 import com.book.library.recommendation.DefaultBookRecommendationListener;
 import com.book.library.tracing.TraceDao;
+import com.book.library.user.*;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -18,6 +20,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.MailSender;
+import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.regions.providers.AwsRegionProvider;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
@@ -80,6 +85,49 @@ public class AppConfig {
                 .credentialsProvider(awsCredentialsProvider)
                 .region(regionProvider.getRegion())
                 .build();
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "custom", name = "use-cognito-as-identity-provider", havingValue = "true")
+    public UserService cognitoUserService(
+            @Autowired CognitoIdentityProviderClient identityProvider,
+            @Value("${spring.security.oauth2.client.registration.cognito.poolId}") String userPoolId,
+            @Value("${spring.security.oauth2.client.registration.cognito.clientId}") String clientId,
+            @Value("${spring.security.oauth2.client.registration.cognito.clientSecret}") String clientSecret) {
+        return new CognitoUserService(identityProvider, userPoolId, clientId, clientSecret);
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "custom", name = "use-cognito-as-identity-provider", havingValue = "false")
+    public UserService localUserService() {
+        return new LocalUserService();
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "custom", name = "use-cognito-as-identity-provider", havingValue = "true")
+    public LogoutSuccessHandler cognitoOidcLogoutSuccessHandler(
+            @Value("${spring.security.oauth2.client.registration.cognito.clientId}") String clientId,
+            @Value("${spring.security.oauth2.client.registration.cognito.logoutUrl}") String userPoolLogoutUrl) {
+        return new CognitoOidcLogoutSuccessHandler(userPoolLogoutUrl, clientId);
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "custom", name = "use-cognito-as-identity-provider", havingValue = "false")
+    public LogoutSuccessHandler oidcLogoutSuccessHandler(ClientRegistrationRepository clientRegistrationRepository) {
+        OidcClientInitiatedLogoutSuccessHandler successHandler =
+                new OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository);
+        successHandler.setPostLogoutRedirectUri("{baseUrl}");
+
+        return successHandler;
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "custom", name = "use-cognito-as-identity-provider", havingValue = "true")
+    public RegistrationService registrationService(
+            @Autowired CognitoIdentityProviderClient identityProvider,
+            @Autowired MeterRegistry meterRegistry,
+            @Value("${spring.security.oauth2.client.registration.cognito.poolId}") String userPoolId) {
+        return new CognitoRegistrationService(identityProvider, meterRegistry, userPoolId);
     }
 
     @Bean

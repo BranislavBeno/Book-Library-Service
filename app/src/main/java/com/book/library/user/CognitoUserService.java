@@ -5,14 +5,9 @@ import java.util.Base64;
 import java.util.Map;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
 
-@Service
-@ConditionalOnProperty(prefix = "custom", name = "use-cognito-as-identity-provider", havingValue = "true")
 public class CognitoUserService implements UserService {
 
     private final CognitoIdentityProviderClient cognitoIdentityProvider;
@@ -22,9 +17,9 @@ public class CognitoUserService implements UserService {
 
     public CognitoUserService(
             CognitoIdentityProviderClient cognitoIdentityProvider,
-            @Value("${spring.security.oauth2.client.registration.cognito.poolId}") String userPoolId,
-            @Value("${spring.security.oauth2.client.registration.cognito.clientId}") String clientId,
-            @Value("${spring.security.oauth2.client.registration.cognito.clientSecret}") String clientSecret) {
+            String userPoolId,
+            String clientId,
+            String clientSecret) {
         this.cognitoIdentityProvider = cognitoIdentityProvider;
         this.userPoolId = userPoolId;
         this.clientId = clientId;

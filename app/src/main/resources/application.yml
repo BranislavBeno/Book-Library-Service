@@ -15,7 +15,7 @@ management:
     metrics:
       export:
         enabled: true
-        namespace: book-library-service
+        namespace: b-l-s
         step: 1m
   metrics:
     tags:

@@ -1,5 +1,6 @@
 package com.book.library.recommendation;
 
+import io.micrometer.core.annotation.Timed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -19,6 +20,7 @@ public class BookRecommendationController {
         this.service = service;
     }
 
+    @Timed(value = "b-l-s.book.recommendation", description = "Measure the time how long it takes to recommend a book")
     @PostMapping("/{bookId}/recommend/{readerId}")
     public String recommendBook(
             @PathVariable("bookId") int bookId,
