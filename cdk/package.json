@@ -17,6 +17,8 @@
     "dynamo:destroy": "cdk destroy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.DynamoDbApp\" --force --require-approval never",
     "messaging:deploy": "cdk deploy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.MessagingApp\" --require-approval never",
     "messaging:destroy": "cdk destroy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.MessagingApp\" --force --require-approval never",
+    "monitoring:deploy": "cdk deploy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.MonitoringApp\" --require-approval never",
+    "monitoring:destroy": "cdk destroy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.MonitoringApp\" --force --require-approval never",
     "network:deploy": "cdk deploy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.NetworkApp\" --require-approval never",
     "network:destroy": "cdk destroy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.NetworkApp\" --force --require-approval never",
     "repository:deploy": "cdk deploy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.DockerRepositoryApp\" --require-approval never",
