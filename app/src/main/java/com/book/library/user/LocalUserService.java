@@ -1,11 +1,7 @@
 package com.book.library.user;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminInitiateAuthResponse;
 
-@Service
-@ConditionalOnProperty(prefix = "custom", name = "use-cognito-as-identity-provider", havingValue = "false")
 public class LocalUserService implements UserService {
 
     @Override

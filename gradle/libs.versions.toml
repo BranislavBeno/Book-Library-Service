@@ -13,6 +13,7 @@ spring-boot-testcontainers = { module = "org.springframework.boot:spring-boot-te
 spring-security-test = { module = "org.springframework.security:spring-security-test" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 micrometer-observation-test = { module = "io.micrometer:micrometer-observation-test" }
+micrometer-registry-cloudwatch = { module = "io.micrometer:micrometer-registry-cloudwatch" }
 testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version = "1.19.5" }
 testcontainers-common = { module = "org.testcontainers:testcontainers" }
 testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter" }

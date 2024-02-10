@@ -11,6 +11,15 @@ management:
     web:
       exposure:
         include: info,health,metrics
+  cloudwatch:
+    metrics:
+      export:
+        enabled: true
+        namespace: b-l-s
+        step: 1m
+  metrics:
+    tags:
+      environment: ${ENVIRONMENT_NAME}
 
 server:
   forward-headers-strategy: framework

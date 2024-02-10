@@ -112,6 +112,13 @@ public class ServiceApp {
                         "dynamodb:BatchWriteGet"))
                 .build();
 
+        PolicyStatement allowSendingMetricsToCloudWatch = PolicyStatement.Builder.create()
+                .sid("AllowSendingMetricsToCloudWatch")
+                .effect(Effect.ALLOW)
+                .resources(Collections.singletonList("*"))
+                .actions(Collections.singletonList("cloudwatch:PutMetricData"))
+                .build();
+
         var serviceInputParameters = new Service.ServiceInputParameters(
                         dockerImageSource,
                         Collections.singletonList(databaseOutputParameters.databaseSecurityGroupId()),
@@ -121,12 +128,17 @@ public class ServiceApp {
                                 cognitoOutputParameters,
                                 messagingOutputParameters,
                                 tableName,
-                                springProfile))
+                                springProfile,
+                                appEnvironment.environmentName()))
                 .withHealthCheckPath("/actuator/info")
                 .withHealthCheckIntervalSeconds(30)
                 .withStickySessionsEnabled(true)
-                .withTaskRolePolicyStatements(
-                        List.of(allowCreatingUsers, allowSQSAccess, allowSendingEmails, allowDynamoTableAccess));
+                .withTaskRolePolicyStatements(List.of(
+                        allowCreatingUsers,
+                        allowSQSAccess,
+                        allowSendingEmails,
+                        allowDynamoTableAccess,
+                        allowSendingMetricsToCloudWatch));
 
         var networkOutputParameters = Network.getOutputParametersFromParameterStore(serviceStack, appEnvironment);
 
@@ -147,7 +159,8 @@ public class ServiceApp {
             CognitoStack.CognitoOutputParameters cognitoOutputParameters,
             MessagingStack.MessagingOutputParameters messagingOutputParameters,
             String tracingTableName,
-            String springProfile) {
+            String springProfile,
+            String environmentName) {
         Map<String, String> vars = new HashMap<>();
 
         String databaseSecretArn = databaseOutputParameters.databaseSecretArn();
@@ -174,6 +187,7 @@ public class ServiceApp {
         vars.put("COGNITO_PROVIDER_URL", cognitoOutputParameters.providerUrl());
         vars.put("BLS_RECOMMENDATION_QUEUE_NAME", messagingOutputParameters.recommendationQueueName());
         vars.put("BLS_TRACING_TABLE", tracingTableName);
+        vars.put("ENVIRONMENT_NAME", environmentName);
 
         return vars;
     }
