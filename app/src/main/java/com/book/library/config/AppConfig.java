@@ -12,6 +12,7 @@ import com.book.library.recommendation.DefaultBookRecommendationListener;
 import com.book.library.tracing.TraceDao;
 import com.book.library.user.*;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
+import io.micrometer.core.aop.TimedAspect;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -134,5 +135,10 @@ public class AppConfig {
     public TraceDao traceDao(
             @Autowired DynamoDbClient dynamoDbClient, @Value("${custom.tracing-table}") String tableName) {
         return new TraceDao(dynamoDbClient, tableName);
+    }
+
+    @Bean
+    public TimedAspect timedAspect(@Autowired MeterRegistry registry) {
+        return new TimedAspect(registry);
     }
 }
