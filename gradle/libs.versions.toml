@@ -14,7 +14,7 @@ spring-security-test = { module = "org.springframework.security:spring-security-
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 micrometer-observation-test = { module = "io.micrometer:micrometer-observation-test" }
 micrometer-registry-cloudwatch = { module = "io.micrometer:micrometer-registry-cloudwatch" }
-testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version = "1.19.5" }
+testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version = "1.19.6" }
 testcontainers-common = { module = "org.testcontainers:testcontainers" }
 testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter" }
 testcontainers-postgresql = { module = "org.testcontainers:postgresql" }
@@ -34,12 +34,12 @@ spring-cloud-aws-sqs = { module = "io.awspring.cloud:spring-cloud-aws-starter-sq
 spring-cloud-aws-ses = { module = "io.awspring.cloud:spring-cloud-aws-starter-ses" }
 spring-cloud-aws-dynamodb = { module = "io.awspring.cloud:spring-cloud-aws-starter-dynamodb" }
 aws-sdk-cognito-idp = { module = "software.amazon.awssdk:cognitoidentityprovider" }
-aws-cdk-lib = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.128.0" }
+aws-cdk-lib = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.130.0" }
 logback-awslogs-json = { module = "de.siegmar:logback-awslogs-json-encoder", version = "2.0.0" }
 # code quality
 palantir-javaformat = { module = "com.palantir.javaformat:palantir-java-format", version = "2.40.0" }
 # gradle plugins
-spring-boot = { module = "org.springframework.boot:spring-boot-gradle-plugin", version = "3.2.2" }
+spring-boot = { module = "org.springframework.boot:spring-boot-gradle-plugin", version = "3.2.3" }
 git-properties = { module = "com.gorylenko.gradle-git-properties:gradle-git-properties", version = "2.4.1" }
 diffplug-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "6.25.0" }
 sonarqube = { module = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin", version = "4.4.1.3373" }
