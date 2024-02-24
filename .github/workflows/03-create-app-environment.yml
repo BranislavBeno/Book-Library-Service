@@ -122,6 +122,11 @@ jobs:
   deploy-monitoring-stack:
     name: Deploy the monitoring stack
     runs-on: ubuntu-22.04
+    needs:
+      - deploy-messaging-stack
+      - deploy-database-stack
+      - deploy-cognito-stack
+      - deploy-dynamo-db-stack
     if: github.ref == 'refs/heads/master'
     steps:
       - name: Checkout code
