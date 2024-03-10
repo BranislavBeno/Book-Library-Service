@@ -16,13 +16,14 @@ public class MonitoringApp {
         String region = Validations.requireNonEmpty(app, "region");
         String environmentName = Validations.requireNonEmpty(app, "environmentName");
         String applicationName = Validations.requireNonEmpty(app, "applicationName");
+        String confirmationEmail = Validations.requireNonEmpty(app, "confirmationEmail");
 
         Environment awsEnvironment = CdkUtil.makeEnv(accountId, region);
 
         var appEnvironment = new ApplicationEnvironment(applicationName, environmentName);
 
         String stackName = CdkUtil.createStackName("monitoring", appEnvironment);
-        new MonitoringStack(app, stackName, awsEnvironment, appEnvironment);
+        new MonitoringStack(app, stackName, awsEnvironment, appEnvironment, confirmationEmail);
 
         app.synth();
     }
