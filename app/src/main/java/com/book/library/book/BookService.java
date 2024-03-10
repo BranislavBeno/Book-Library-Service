@@ -8,7 +8,9 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 public record BookService(
         BookRepository bookRepository,
         BorrowedBookRepository borrowedBookRepository,
@@ -31,6 +33,7 @@ public record BookService(
         return readerRepository.findAllReaders();
     }
 
+    @Transactional
     public Book saveBook(Book book) {
         return bookRepository.save(book);
     }
@@ -44,10 +47,12 @@ public record BookService(
         return bookRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     public void deleteBook(int id) {
         bookRepository.deleteById(id);
     }
 
+    @Transactional
     @Nullable
     public AvailableBookDto availBook(int id) {
         Optional<BorrowedBook> borrowedBook = borrowedBookRepository.findById(id);
@@ -60,6 +65,7 @@ public record BookService(
                 .orElse(null);
     }
 
+    @Transactional
     @Nullable
     public BorrowedBookDto borrowBook(BorrowedDto dto) {
         Optional<BorrowedBook> borrowedBook = createBorrowedBook(dto);
