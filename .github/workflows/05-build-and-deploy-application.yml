@@ -48,7 +48,7 @@ jobs:
             workflow-deploy:
               - '.github/workflows/05-build-and-deploy-application.yml'
 
-  build-and-publish:
+  build-and-publish-docker-image:
     name: Build and publish the application
     runs-on: ubuntu-22.04
     outputs:
@@ -157,7 +157,7 @@ jobs:
         with:
           sarif_file: snyk.sarif
 
-  deploy:
+  deploy-application:
     runs-on: ubuntu-22.04
     name: Deploy the application to AWS
     needs: build-and-publish
@@ -196,3 +196,30 @@ jobs:
         run: |
           aws cloudformation describe-stacks --region ${AWS_REGION} --query "Stacks[].StackName" --output text | sed -e "s/\s\+/\n/g" | grep -e "b-l-s-service-params" | sort -r | tail -n+2 > stacks_to_be_deleted.txt
           for stack in $(cat stacks_to_be_deleted.txt); do aws cloudformation delete-stack --stack-name $stack --region ${AWS_REGION};  done
+
+  deploy-monitoring-stack:
+    name: Deploy the monitoring stack
+    runs-on: ubuntu-22.04
+    needs: deploy-application
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'zulu'
+          cache: 'gradle'
+
+      - name: NPM install
+        working-directory: cdk
+        run: |
+          npm i -D aws-cdk@latest
+          rm -fr node_modules package-lock.json cdk.out
+          npm i
+
+      - name: Deploy monitoring stack
+        working-directory: cdk
+        run: npm run monitoring:deploy -- -c environmentName=${{ github.event.inputs.environmentName }}
