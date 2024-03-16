@@ -5,6 +5,7 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+  APP_ENVIRONMENT_NAME: "staging"
 
 on:
   workflow_run:
@@ -185,7 +186,7 @@ jobs:
         env:
           DOCKER_IMAGE_TAG: ${{ needs.build-and-publish-docker-image.outputs.DOCKER_IMAGE_TAG }}
         working-directory: cdk
-        run: npm run service:deploy -- -c dockerImageTag=${DOCKER_IMAGE_TAG} -c environmentName=staging
+        run: npm run service:deploy -- -c dockerImageTag=${DOCKER_IMAGE_TAG} -c environmentName=${APP_ENVIRONMENT_NAME}
 
       # Each Service stack update creates a new parameter stack that CloudFormation does not clean up automatically.
       # This step deletes all "*service-params*" stacks except the latest one to keep the house clean.
@@ -222,4 +223,4 @@ jobs:
 
       - name: Deploy monitoring stack
         working-directory: cdk
-        run: npm run monitoring:deploy -- -c environmentName=${{ github.event.inputs.environmentName }}
+        run: npm run monitoring:deploy -- -c environmentName=${APP_ENVIRONMENT_NAME}
