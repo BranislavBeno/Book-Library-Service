@@ -7,7 +7,7 @@ const recordedScript = async function () {
   const navigationPromise = page.waitForNavigation()
 
   await synthetics.executeStep('Go to home page', async function() {
-    await page.goto("https://app.b-l-s.click/", {waitUntil: 'domcontentloaded', timeout: 60000})
+    await page.goto(process.env.TARGET_URL, {waitUntil: 'domcontentloaded', timeout: 30000})
   })
 
   await page.setViewport({ width: 1920, height: 961 })
