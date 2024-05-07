@@ -36,6 +36,11 @@ public record ApplicationEnvironment(String applicationName, String environmentN
         return this + "-" + string;
     }
 
+    public String prefix(String string, int characterLimit) {
+        String name = this + "-" + string;
+        return name.length() <= characterLimit ? name : name.substring(name.length() - characterLimit);
+    }
+
     public void tag(IConstruct construct) {
         Tags.of(construct).add("application", applicationName);
         Tags.of(construct).add("environment", environmentName);
