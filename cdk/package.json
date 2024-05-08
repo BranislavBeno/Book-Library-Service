@@ -5,6 +5,8 @@
   "scripts": {
     "info": "IMPORTANT NOTE: Please make sure to replace the values inside the cdk.json with your configuration",
     "bootstrap": "cdk bootstrap --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.BootstrapApp\"",
+    "canary:deploy": "cdk deploy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.CanaryApp\" --require-approval never",
+    "canary:destroy": "cdk destroy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.CanaryApp\" --force --require-approval never",
     "certificate:deploy": "cdk deploy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.CertificateApp\" --require-approval never",
     "certificate:destroy": "cdk destroy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.CertificateApp\" --force --require-approval never",
     "cognito:deploy": "cdk deploy --app \"../gradlew :cdk:run -PmainClass=com.book.library.cdk.CognitoApp\" --require-approval never",

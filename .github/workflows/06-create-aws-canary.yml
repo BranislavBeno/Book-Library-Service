@@ -1,0 +1,42 @@
+# This workflow deploys canary for synthetic monitoring with Amazon CloudWatch.
+name: 06 - Manually create canary for synthetic monitoring
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      environmentName:
+        description: 'The name of the environment in which to deploy the application specific environment resources.'
+        required: true
+        default: 'staging'
+
+jobs:
+  deploy-canary-stack:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-22.04
+    name: Deploy the Canary stack
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'zulu'
+          cache: 'gradle'
+
+      - name: NPM install
+        working-directory: cdk
+        run: |
+          npm i -D aws-cdk@latest
+          rm -fr node_modules package-lock.json cdk.out
+          npm i
+
+      - name: Deploy Canary stack
+        working-directory: cdk
+        run: npm run canary:deploy -- -c environmentName=${{ github.event.inputs.environmentName }} -c canaryUserPassword=${{ secrets.CANARY_USER_PASSWORD }}
