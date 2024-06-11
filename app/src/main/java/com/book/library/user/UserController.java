@@ -27,6 +27,7 @@ public class UserController {
     private static final String REGISTER_PAGE = "register";
     private static final String BASIC_PAGE = "index";
     private static final String CHANGE_PASSWD_PAGE = "change-password";
+    private static final String REDIRECT_TO_MAIN_PAGE = "redirect:/";
 
     private final UserService userService;
 
@@ -62,7 +63,7 @@ public class UserController {
                             + "Please check your email inbox for further instructions.");
             redirectAttributes.addFlashAttribute(MESSAGE_TYPE_ATTR, "success");
 
-            return "redirect:/";
+            return REDIRECT_TO_MAIN_PAGE;
 
         } catch (Exception exception) {
 
@@ -114,7 +115,7 @@ public class UserController {
                 return "redirect:/change-password";
             }
 
-            return "redirect:/";
+            return REDIRECT_TO_MAIN_PAGE;
 
         } catch (CognitoIdentityProviderException exception) {
 
@@ -127,7 +128,7 @@ public class UserController {
     }
 
     @GetMapping("/change-password")
-    public String getChangePasswordView(@RequestParam(name = "user", defaultValue = "") String user, Model model) {
+    public String getChangePasswordView(@RequestParam(defaultValue = "") String user, Model model) {
         model.addAttribute(CHANGE_PASSWD_ATTR, new ChangePassword(user));
 
         return CHANGE_PASSWD_PAGE;
@@ -159,7 +160,7 @@ public class UserController {
             redirectAttributes.addFlashAttribute(MESSAGE_ATTR, "Password was changed successfully.");
             redirectAttributes.addFlashAttribute(MESSAGE_TYPE_ATTR, "success");
 
-            return "redirect:/";
+            return REDIRECT_TO_MAIN_PAGE;
 
         } catch (Exception exception) {
 

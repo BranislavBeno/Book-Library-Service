@@ -7,6 +7,7 @@ plugins {
     id("spotless-conventions")
     id("sonarqube-conventions")
     id("cyclonedx-sbom-conventions")
+    id("openrewrite-conventions")
 }
 
 apply(plugin = "io.spring.dependency-management")

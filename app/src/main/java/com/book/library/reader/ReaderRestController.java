@@ -7,7 +7,6 @@ import jakarta.validation.Valid;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,13 +20,13 @@ public class ReaderRestController extends AbstractReaderController {
 
     private final ObservationRegistry registry;
 
-    public ReaderRestController(@Autowired ReaderService service, @Autowired ObservationRegistry registry) {
+    public ReaderRestController(ReaderService service, ObservationRegistry registry) {
         super(service);
         this.registry = registry;
     }
 
     @GetMapping("/all")
-    public List<ReaderDto> all(@RequestParam(name = "page", defaultValue = "0") int page) {
+    public List<ReaderDto> all(@RequestParam(defaultValue = "0") int page) {
         return getService().findAllReaders(page).toList();
     }
 

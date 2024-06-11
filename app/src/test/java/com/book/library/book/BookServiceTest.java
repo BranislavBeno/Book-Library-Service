@@ -1,6 +1,7 @@
 package com.book.library.book;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 
 import com.book.library.dto.AvailableBookDto;
 import com.book.library.dto.BorrowedBookDto;
