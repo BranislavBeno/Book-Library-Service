@@ -9,4 +9,11 @@ recipeList:
       methodPattern: org.mockito.ArgumentMatchers *(..)
   - org.openrewrite.java.NoStaticImport:
       methodPattern: org.hamcrest.Matchers *(..)
-  
+  - org.openrewrite.java.NoStaticImport:
+      methodPattern: org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors *(..)
+  - org.openrewrite.java.NoStaticImport:
+      methodPattern: org.springframework.test.web.servlet.request.MockMvcRequestBuilders *(..)
+  - org.openrewrite.java.NoStaticImport:
+      methodPattern: org.springframework.test.web.servlet.result.MockMvcResultHandlers *(..)
+  - org.openrewrite.java.NoStaticImport:
+      methodPattern: org.springframework.test.web.servlet.result.MockMvcResultMatchers *(..)

@@ -1,11 +1,5 @@
 package com.book.library.reader;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 import com.book.library.AbstractTestResources;
 import com.book.library.book.BookService;
 import com.book.library.book.EnableTestObservation;
@@ -21,9 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @EnableTestObservation
 class ReaderRestControllerTest extends AbstractTestResources {
@@ -121,116 +119,127 @@ class ReaderRestControllerTest extends AbstractTestResources {
         @Test
         void testForbidFindingAll() throws Exception {
             this.mockMvc
-                    .perform(get("/api/v1/reader/all")
+                    .perform(MockMvcRequestBuilders.get("/api/v1/reader/all")
                             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                            .with(csrf())
-                            .with(oidcLogin()))
-                    .andExpect(status().isForbidden());
+                            .with(SecurityMockMvcRequestPostProcessors.csrf())
+                            .with(SecurityMockMvcRequestPostProcessors.oidcLogin()))
+                    .andExpect(MockMvcResultMatchers.status().isForbidden());
         }
 
         @Test
         void testFindAll() throws Exception {
             this.mockMvc
-                    .perform(get("/api/v1/reader/all")
+                    .perform(MockMvcRequestBuilders.get("/api/v1/reader/all")
                             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                            .with(csrf())
-                            .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
-                    .andExpect(status().is(200))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$.size()", Matchers.is(5)))
-                    .andDo(print())
+                            .with(SecurityMockMvcRequestPostProcessors.csrf())
+                            .with(SecurityMockMvcRequestPostProcessors.oidcLogin()
+                                    .authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                    .andExpect(MockMvcResultMatchers.status().is(200))
+                    .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.size()", Matchers.is(5)))
+                    .andDo(MockMvcResultHandlers.print())
                     .andReturn();
         }
 
         @Test
         void testForbidAddingReader() throws Exception {
             this.mockMvc
-                    .perform(put("/api/v1/reader/add")
+                    .perform(MockMvcRequestBuilders.put("/api/v1/reader/add")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(REQUEST_BODY_1)
-                            .with(csrf())
-                            .with(oidcLogin()))
-                    .andExpect(status().isMethodNotAllowed());
+                            .with(SecurityMockMvcRequestPostProcessors.csrf())
+                            .with(SecurityMockMvcRequestPostProcessors.oidcLogin()))
+                    .andExpect(MockMvcResultMatchers.status().isMethodNotAllowed());
         }
 
         @ParameterizedTest
         @MethodSource("creationRequests")
         void testAddingReader(String body, ResultMatcher status) throws Exception {
             this.mockMvc
-                    .perform(post("/api/v1/reader/add")
+                    .perform(MockMvcRequestBuilders.post("/api/v1/reader/add")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(body)
-                            .with(csrf())
-                            .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                            .with(SecurityMockMvcRequestPostProcessors.csrf())
+                            .with(SecurityMockMvcRequestPostProcessors.oidcLogin()
+                                    .authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                     .andExpect(status);
         }
 
         private static Stream<Arguments> creationRequests() {
             return Stream.of(
-                    Arguments.of(BAD_REQUEST_BODY_1, status().isBadRequest()),
-                    Arguments.of(BAD_REQUEST_BODY_2, status().isBadRequest()),
-                    Arguments.of(BAD_REQUEST_BODY_3, status().isBadRequest()),
-                    Arguments.of(REQUEST_BODY_1, status().isOk()));
+                    Arguments.of(
+                            BAD_REQUEST_BODY_1, MockMvcResultMatchers.status().isBadRequest()),
+                    Arguments.of(
+                            BAD_REQUEST_BODY_2, MockMvcResultMatchers.status().isBadRequest()),
+                    Arguments.of(
+                            BAD_REQUEST_BODY_3, MockMvcResultMatchers.status().isBadRequest()),
+                    Arguments.of(REQUEST_BODY_1, MockMvcResultMatchers.status().isOk()));
         }
 
         @Test
         void testForbidUpdatingReader() throws Exception {
             this.mockMvc
-                    .perform(put("/api/v1/reader/update")
+                    .perform(MockMvcRequestBuilders.put("/api/v1/reader/update")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(REQUEST_BODY_2)
-                            .with(csrf())
-                            .with(oidcLogin()))
-                    .andExpect(status().isForbidden());
+                            .with(SecurityMockMvcRequestPostProcessors.csrf())
+                            .with(SecurityMockMvcRequestPostProcessors.oidcLogin()))
+                    .andExpect(MockMvcResultMatchers.status().isForbidden());
         }
 
         @ParameterizedTest
         @MethodSource("updateRequests")
         void testUpdatingReader(String body, ResultMatcher status) throws Exception {
             this.mockMvc
-                    .perform(put("/api/v1/reader/update")
+                    .perform(MockMvcRequestBuilders.put("/api/v1/reader/update")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(body)
-                            .with(csrf())
-                            .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                            .with(SecurityMockMvcRequestPostProcessors.csrf())
+                            .with(SecurityMockMvcRequestPostProcessors.oidcLogin()
+                                    .authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                     .andExpect(status);
         }
 
         private static Stream<Arguments> updateRequests() {
             return Stream.of(
-                    Arguments.of(BAD_REQUEST_BODY_4, status().isBadRequest()),
-                    Arguments.of(BAD_REQUEST_BODY_5, status().isBadRequest()),
-                    Arguments.of(BAD_REQUEST_BODY_6, status().isBadRequest()),
-                    Arguments.of(BAD_REQUEST_BODY_7, status().isNotFound()),
-                    Arguments.of(REQUEST_BODY_2, status().isOk()));
+                    Arguments.of(
+                            BAD_REQUEST_BODY_4, MockMvcResultMatchers.status().isBadRequest()),
+                    Arguments.of(
+                            BAD_REQUEST_BODY_5, MockMvcResultMatchers.status().isBadRequest()),
+                    Arguments.of(
+                            BAD_REQUEST_BODY_6, MockMvcResultMatchers.status().isBadRequest()),
+                    Arguments.of(
+                            BAD_REQUEST_BODY_7, MockMvcResultMatchers.status().isNotFound()),
+                    Arguments.of(REQUEST_BODY_2, MockMvcResultMatchers.status().isOk()));
         }
 
         @Test
         void testForbidDeletingReader() throws Exception {
             this.mockMvc
-                    .perform(delete("/api/v1/reader/delete")
+                    .perform(MockMvcRequestBuilders.delete("/api/v1/reader/delete")
                             .param("readerId", "1")
-                            .with(csrf())
-                            .with(oidcLogin()))
-                    .andExpect(status().isForbidden());
+                            .with(SecurityMockMvcRequestPostProcessors.csrf())
+                            .with(SecurityMockMvcRequestPostProcessors.oidcLogin()))
+                    .andExpect(MockMvcResultMatchers.status().isForbidden());
         }
 
         @ParameterizedTest
         @MethodSource("deleteRequests")
         void testDeletingReader(String id, ResultMatcher status) throws Exception {
             this.mockMvc
-                    .perform(delete("/api/v1/reader/delete")
+                    .perform(MockMvcRequestBuilders.delete("/api/v1/reader/delete")
                             .param("readerId", id)
-                            .with(csrf())
-                            .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                            .with(SecurityMockMvcRequestPostProcessors.csrf())
+                            .with(SecurityMockMvcRequestPostProcessors.oidcLogin()
+                                    .authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                     .andExpect(status);
         }
 
         private static Stream<Arguments> deleteRequests() {
             return Stream.of(
-                    Arguments.of("10", status().isNotFound()),
-                    Arguments.of("1", status().isForbidden()),
-                    Arguments.of("7", status().isOk()));
+                    Arguments.of("10", MockMvcResultMatchers.status().isNotFound()),
+                    Arguments.of("1", MockMvcResultMatchers.status().isForbidden()),
+                    Arguments.of("7", MockMvcResultMatchers.status().isOk()));
         }
     }
 
@@ -243,14 +252,15 @@ class ReaderRestControllerTest extends AbstractTestResources {
         @Test
         void testFindAll() throws Exception {
             this.mockMvc
-                    .perform(get("/api/v1/reader/all")
+                    .perform(MockMvcRequestBuilders.get("/api/v1/reader/all")
                             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                            .with(csrf())
-                            .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
-                    .andExpect(status().is(200))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$.size()", Matchers.is(0)))
-                    .andDo(print())
+                            .with(SecurityMockMvcRequestPostProcessors.csrf())
+                            .with(SecurityMockMvcRequestPostProcessors.oidcLogin()
+                                    .authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                    .andExpect(MockMvcResultMatchers.status().is(200))
+                    .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.size()", Matchers.is(0)))
+                    .andDo(MockMvcResultHandlers.print())
                     .andReturn();
         }
     }
