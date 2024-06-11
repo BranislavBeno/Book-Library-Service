@@ -1,7 +1,5 @@
 package com.book.library.reader;
 
-import static org.mockito.ArgumentMatchers.any;
-
 import com.book.library.dto.ReaderDto;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -36,16 +35,17 @@ class ReaderServiceTest {
 
     @Test
     void findAllReaders() {
-        Mockito.when(repository.findAllReadersPaged(any(PageRequest.class))).thenReturn(readerPage);
+        Mockito.when(repository.findAllReadersPaged(ArgumentMatchers.any(PageRequest.class)))
+                .thenReturn(readerPage);
         cut.findAllReaders(1);
-        Mockito.verify(repository).findAllReadersPaged(any(PageRequest.class));
+        Mockito.verify(repository).findAllReadersPaged(ArgumentMatchers.any(PageRequest.class));
     }
 
     @Test
     void saveReader() {
-        Mockito.when(repository.save(any(Reader.class))).thenReturn(reader);
+        Mockito.when(repository.save(ArgumentMatchers.any(Reader.class))).thenReturn(reader);
         cut.saveReader(reader);
-        Mockito.verify(repository).save(any(Reader.class));
+        Mockito.verify(repository).save(ArgumentMatchers.any(Reader.class));
     }
 
     @ParameterizedTest
@@ -59,7 +59,7 @@ class ReaderServiceTest {
     @Test
     void findReader() {
         int id = 1;
-        Mockito.when(repository.findById(id)).thenReturn(Optional.ofNullable(any(Reader.class)));
+        Mockito.when(repository.findById(id)).thenReturn(Optional.ofNullable(ArgumentMatchers.any(Reader.class)));
         cut.findReader(id);
         Mockito.verify(repository).findById(id);
     }

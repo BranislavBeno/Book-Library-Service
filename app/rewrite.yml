@@ -1,0 +1,12 @@
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.book.library.NoStaticImport
+displayName: Remove static import
+recipeList:
+  - org.openrewrite.java.NoStaticImport:
+      methodPattern: org.mockito.Mockito *(..)
+  - org.openrewrite.java.NoStaticImport:
+      methodPattern: org.mockito.ArgumentMatchers *(..)
+  - org.openrewrite.java.NoStaticImport:
+      methodPattern: org.hamcrest.Matchers *(..)
+  

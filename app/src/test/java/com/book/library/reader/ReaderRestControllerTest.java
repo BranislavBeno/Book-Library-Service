@@ -1,6 +1,5 @@
 package com.book.library.reader;
 
-import static org.hamcrest.Matchers.is;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -12,6 +11,7 @@ import com.book.library.book.BookService;
 import com.book.library.book.EnableTestObservation;
 import io.micrometer.observation.tck.TestObservationRegistry;
 import java.util.stream.Stream;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -137,7 +137,7 @@ class ReaderRestControllerTest extends AbstractTestResources {
                             .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                     .andExpect(status().is(200))
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$.size()", is(5)))
+                    .andExpect(jsonPath("$.size()", Matchers.is(5)))
                     .andDo(print())
                     .andReturn();
         }
@@ -249,7 +249,7 @@ class ReaderRestControllerTest extends AbstractTestResources {
                             .with(oidcLogin().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                     .andExpect(status().is(200))
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$.size()", is(0)))
+                    .andExpect(jsonPath("$.size()", Matchers.is(0)))
                     .andDo(print())
                     .andReturn();
         }

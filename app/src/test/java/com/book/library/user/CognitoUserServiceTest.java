@@ -1,10 +1,9 @@
 package com.book.library.user;
 
-import static org.mockito.Mockito.*;
-
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
 
@@ -15,40 +14,40 @@ class CognitoUserServiceTest implements WithAssertions {
 
     @BeforeEach
     void setUp() {
-        providerClient = mock(CognitoIdentityProviderClient.class);
+        providerClient = Mockito.mock(CognitoIdentityProviderClient.class);
         cut = new CognitoUserService(providerClient, "poolId", "clientId", "s3cr3d");
     }
 
     @Test
     void registerUser() {
-        when(providerClient.adminCreateUser(any(AdminCreateUserRequest.class)))
-                .thenReturn(any(AdminCreateUserResponse.class));
+        Mockito.when(providerClient.adminCreateUser(Mockito.any(AdminCreateUserRequest.class)))
+                .thenReturn(Mockito.any(AdminCreateUserResponse.class));
 
         cut.registerUser(new Registration());
 
-        verify(providerClient).adminCreateUser(any(AdminCreateUserRequest.class));
+        Mockito.verify(providerClient).adminCreateUser(Mockito.any(AdminCreateUserRequest.class));
     }
 
     @Test
     void loginUser() {
-        when(providerClient.adminInitiateAuth(any(AdminInitiateAuthRequest.class)))
-                .thenReturn(any(AdminInitiateAuthResponse.class));
+        Mockito.when(providerClient.adminInitiateAuth(Mockito.any(AdminInitiateAuthRequest.class)))
+                .thenReturn(Mockito.any(AdminInitiateAuthResponse.class));
 
         User user = new User();
         user.setUsername("duke");
         user.setPassword("passwd");
         cut.loginUser(user);
 
-        verify(providerClient).adminInitiateAuth(any(AdminInitiateAuthRequest.class));
+        Mockito.verify(providerClient).adminInitiateAuth(Mockito.any(AdminInitiateAuthRequest.class));
     }
 
     @Test
     void changePassword() {
-        when(providerClient.adminSetUserPassword(any(AdminSetUserPasswordRequest.class)))
-                .thenReturn(any(AdminSetUserPasswordResponse.class));
+        Mockito.when(providerClient.adminSetUserPassword(Mockito.any(AdminSetUserPasswordRequest.class)))
+                .thenReturn(Mockito.any(AdminSetUserPasswordResponse.class));
 
         cut.changePassword(new ChangePassword("duke"));
 
-        verify(providerClient).adminSetUserPassword(any(AdminSetUserPasswordRequest.class));
+        Mockito.verify(providerClient).adminSetUserPassword(Mockito.any(AdminSetUserPasswordRequest.class));
     }
 }
