@@ -1,11 +1,10 @@
 package com.book.library.cdk.stack;
 
-import static java.util.Collections.singletonList;
-
 import com.book.library.cdk.construct.ApplicationEnvironment;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Scanner;
 import software.amazon.awscdk.*;
@@ -48,9 +47,9 @@ public class CanaryStack extends Stack {
                 .inlinePolicies(Map.of(
                         appEnvironment.prefix("canaryExecutionRolePolicy"),
                         PolicyDocument.Builder.create()
-                                .statements(singletonList(PolicyStatement.Builder.create()
+                                .statements(Collections.singletonList(PolicyStatement.Builder.create()
                                         .effect(Effect.ALLOW)
-                                        .resources(singletonList("*"))
+                                        .resources(Collections.singletonList("*"))
                                         .actions(Arrays.asList(
                                                 "s3:PutObject",
                                                 "s3:GetBucketLocation",

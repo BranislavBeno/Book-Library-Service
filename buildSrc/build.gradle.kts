@@ -14,6 +14,7 @@ dependencies {
     implementation(libs.diffplug.spotless)
     implementation(libs.sonarqube)
     implementation(libs.cyclonedx.sbom)
+    implementation(libs.open.rewrite)
 }
 
 tasks

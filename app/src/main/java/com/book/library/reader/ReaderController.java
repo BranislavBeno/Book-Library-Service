@@ -3,7 +3,6 @@ package com.book.library.reader;
 import com.book.library.controller.ViewController;
 import com.book.library.dto.ReaderDto;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -23,7 +22,7 @@ public class ReaderController extends AbstractReaderController implements ViewCo
     private static final String PAGE_NUMBERS_ATTR = "pageNumbers";
     private static final String SAVE_READER_PAGE = "save-reader";
 
-    ReaderController(@Autowired ReaderService service) {
+    ReaderController(ReaderService service) {
         super(service);
     }
 
@@ -33,7 +32,7 @@ public class ReaderController extends AbstractReaderController implements ViewCo
     }
 
     @GetMapping("/all")
-    public String showReaders(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+    public String showReaders(@RequestParam(defaultValue = "0") int page, Model model) {
         Page<ReaderDto> readerPage = getService().findAllReaders(page);
         PageData<ReaderDto> pageData = providePageData(readerPage);
 

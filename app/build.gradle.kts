@@ -7,6 +7,7 @@ plugins {
     id("spotless-conventions")
     id("sonarqube-conventions")
     id("cyclonedx-sbom-conventions")
+    id("openrewrite-conventions")
 }
 
 apply(plugin = "io.spring.dependency-management")
@@ -31,6 +32,7 @@ dependencies {
     implementation(libs.webjars.font.awesome)
     implementation(libs.problem.spring.web)
     implementation(libs.flyway.core)
+    implementation(libs.flyway.database.postgresql)
     implementation(libs.micrometer.registry.cloudwatch)
     implementation(platform(libs.spring.cloud.aws.bom))
     implementation(libs.spring.cloud.aws.dynamodb)

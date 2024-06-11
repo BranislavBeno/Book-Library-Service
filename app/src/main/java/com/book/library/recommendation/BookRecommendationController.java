@@ -1,7 +1,6 @@
 package com.book.library.recommendation;
 
 import io.micrometer.core.annotation.Timed;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
@@ -16,16 +15,14 @@ public class BookRecommendationController {
     public static final String MESSAGE_TYPE_ATTR = "messageType";
     private final BookRecommendationService service;
 
-    public BookRecommendationController(@Autowired BookRecommendationService service) {
+    public BookRecommendationController(BookRecommendationService service) {
         this.service = service;
     }
 
     @Timed(value = "b-l-s.book.recommendation", description = "Measure the time how long it takes to recommend a book")
     @PostMapping("/{bookId}/recommend/{readerId}")
     public String recommendBook(
-            @PathVariable("bookId") int bookId,
-            @PathVariable("readerId") int readerId,
-            RedirectAttributes redirectAttributes) {
+            @PathVariable int bookId, @PathVariable int readerId, RedirectAttributes redirectAttributes) {
         try {
             String recommencedTo = service.recommendBookTo(bookId, readerId);
 
@@ -44,9 +41,9 @@ public class BookRecommendationController {
 
     @GetMapping("/{bookId}/recommend/{readerId}/confirm")
     public String confirmRecommendation(
-            @PathVariable("bookId") int bookId,
-            @PathVariable("readerId") int readerId,
-            @RequestParam("token") String token,
+            @PathVariable int bookId,
+            @PathVariable int readerId,
+            @RequestParam String token,
             @AuthenticationPrincipal OidcUser user,
             RedirectAttributes redirectAttributes) {
         boolean confirmed = service.confirmRecommendation(user.getEmail(), bookId, readerId, token);

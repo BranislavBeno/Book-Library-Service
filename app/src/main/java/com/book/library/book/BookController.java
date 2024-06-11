@@ -8,7 +8,6 @@ import java.security.Principal;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -32,7 +31,7 @@ public class BookController extends AbstractBookController implements ViewContro
 
     private final ApplicationEventPublisher publisher;
 
-    public BookController(@Autowired BookService service, @Autowired ApplicationEventPublisher publisher) {
+    public BookController(BookService service, ApplicationEventPublisher publisher) {
         super(service);
         this.publisher = publisher;
     }
@@ -44,7 +43,7 @@ public class BookController extends AbstractBookController implements ViewContro
 
     @GetMapping("/all")
     public String showBooks(
-            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(defaultValue = "0") int page,
             Model model,
             @ModelAttribute(FORBIDDEN_ATTR) boolean forbidden,
             Principal principal) {
@@ -64,7 +63,7 @@ public class BookController extends AbstractBookController implements ViewContro
     }
 
     @GetMapping("/available")
-    public String showAvailableBooks(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+    public String showAvailableBooks(@RequestParam(defaultValue = "0") int page, Model model) {
         Page<AvailableBookDto> bookPage = getService().findAvailableBooks(page);
         PageData<AvailableBookDto> pageData = providePageData(bookPage);
 
@@ -76,7 +75,7 @@ public class BookController extends AbstractBookController implements ViewContro
     }
 
     @GetMapping("/borrowed")
-    public String showBorrowedBooks(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+    public String showBorrowedBooks(@RequestParam(defaultValue = "0") int page, Model model) {
         Page<BorrowedBookDto> bookPage = getService().findBorrowedBooks(page);
         Page<BorrowedBookExtendedDto> extendedPage = extendPage(bookPage);
         PageData<BorrowedBookExtendedDto> pageData = providePageData(extendedPage);
@@ -139,10 +138,7 @@ public class BookController extends AbstractBookController implements ViewContro
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/show-borrow")
-    public String borrowBook(
-            @RequestParam("bookId") int bookId,
-            @RequestParam(name = "readerId", defaultValue = "1") int readerId,
-            Model model) {
+    public String borrowBook(@RequestParam int bookId, @RequestParam(defaultValue = "1") int readerId, Model model) {
         BorrowedDto borrowedDto = new BorrowedDto(bookId, readerId);
 
         return callBorrowTemplate(model, borrowedDto);

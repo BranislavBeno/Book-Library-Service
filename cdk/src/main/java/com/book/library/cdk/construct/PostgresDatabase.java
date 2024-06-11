@@ -95,7 +95,7 @@ public class PostgresDatabase extends Construct {
         dbInstance = CfnDBInstance.Builder.create(this, "postgresInstance")
                 .dbInstanceIdentifier(applicationEnvironment.prefix("database"))
                 .allocatedStorage(String.valueOf(DatabaseInputParameters.STORAGE_IN_GB))
-                .availabilityZone(networkOutputParameters.getAvailabilityZones().get(0))
+                .availabilityZone(networkOutputParameters.getAvailabilityZones().getFirst())
                 .dbInstanceClass(DatabaseInputParameters.INSTANCE_CLASS)
                 .dbName(sanitizeDbParameterName(applicationEnvironment.prefix("database")))
                 .dbSubnetGroupName(subnetGroup.getDbSubnetGroupName())

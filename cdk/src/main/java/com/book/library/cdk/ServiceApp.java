@@ -94,7 +94,7 @@ public class ServiceApp {
         PolicyStatement allowSendingEmails = PolicyStatement.Builder.create()
                 .sid("AllowSendingEmails")
                 .effect(Effect.ALLOW)
-                .resources(List.of(String.format("arn:aws:ses:%s:%s:identity/b-l-s.click", region, accountId)))
+                .resources(List.of("arn:aws:ses:%s:%s:identity/b-l-s.click".formatted(region, accountId)))
                 .actions(List.of("ses:SendEmail", "ses:SendRawEmail"))
                 .build();
 
@@ -102,7 +102,7 @@ public class ServiceApp {
         PolicyStatement allowDynamoTableAccess = PolicyStatement.Builder.create()
                 .sid("AllowDynamoTableAccess")
                 .effect(Effect.ALLOW)
-                .resources(List.of(String.format("arn:aws:dynamodb:%s:%s:table/%s", region, accountId, tableName)))
+                .resources(List.of("arn:aws:dynamodb:%s:%s:table/%s".formatted(region, accountId, tableName)))
                 .actions(List.of(
                         "dynamodb:Scan",
                         "dynamodb:Query",

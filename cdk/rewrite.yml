@@ -1,0 +1,9 @@
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.book.library.NoStaticImport
+displayName: Remove static import
+recipeList:
+  - org.openrewrite.java.NoStaticImport:
+      methodPattern: java.util.Collections *(..)
+  - org.openrewrite.java.NoStaticImport:
+      methodPattern: java.util.Arrays *(..)

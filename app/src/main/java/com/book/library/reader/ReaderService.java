@@ -1,7 +1,7 @@
 package com.book.library.reader;
 
 import com.book.library.dto.ReaderDto;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 

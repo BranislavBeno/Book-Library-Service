@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,23 +23,23 @@ public class BookRestController extends AbstractBookController {
 
     private final ObservationRegistry registry;
 
-    public BookRestController(@Autowired BookService bookService, @Autowired ObservationRegistry registry) {
+    public BookRestController(BookService bookService, ObservationRegistry registry) {
         super(bookService);
         this.registry = registry;
     }
 
     @GetMapping("/all")
-    public List<AnyBookDto> all(@RequestParam(name = "page", defaultValue = "0") int page) {
+    public List<AnyBookDto> all(@RequestParam(defaultValue = "0") int page) {
         return getService().findBooks(page).toList();
     }
 
     @GetMapping("/available")
-    public List<AvailableBookDto> available(@RequestParam(name = "page", defaultValue = "0") int page) {
+    public List<AvailableBookDto> available(@RequestParam(defaultValue = "0") int page) {
         return getService().findAvailableBooks(page).toList();
     }
 
     @GetMapping("/borrowed")
-    public List<BorrowedBookDto> borrowed(@RequestParam(name = "page", defaultValue = "0") int page) {
+    public List<BorrowedBookDto> borrowed(@RequestParam(defaultValue = "0") int page) {
         return getService().findBorrowedBooks(page).toList();
     }
 

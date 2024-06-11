@@ -1,7 +1,5 @@
 package com.book.library.cdk.stack;
 
-import static software.amazon.awscdk.customresources.AwsCustomResourcePolicy.ANY_RESOURCE;
-
 import com.book.library.cdk.construct.ApplicationEnvironment;
 import com.book.library.cdk.util.CdkUtil;
 import java.util.Arrays;
@@ -11,11 +9,7 @@ import software.amazon.awscdk.Duration;
 import software.amazon.awscdk.Environment;
 import software.amazon.awscdk.Stack;
 import software.amazon.awscdk.StackProps;
-import software.amazon.awscdk.customresources.AwsCustomResource;
-import software.amazon.awscdk.customresources.AwsCustomResourcePolicy;
-import software.amazon.awscdk.customresources.AwsSdkCall;
-import software.amazon.awscdk.customresources.PhysicalResourceId;
-import software.amazon.awscdk.customresources.SdkCallsPolicyOptions;
+import software.amazon.awscdk.customresources.*;
 import software.amazon.awscdk.services.cognito.*;
 import software.amazon.awscdk.services.ssm.StringParameter;
 import software.constructs.Construct;
@@ -142,8 +136,9 @@ public class CognitoStack extends Stack {
                                 "ClientId", this.userPoolClient.getUserPoolClientId()))
                         .physicalResourceId(PhysicalResourceId.of(this.userPoolClient.getUserPoolClientId()))
                         .build())
-                .policy(AwsCustomResourcePolicy.fromSdkCalls(
-                        SdkCallsPolicyOptions.builder().resources(ANY_RESOURCE).build()))
+                .policy(AwsCustomResourcePolicy.fromSdkCalls(SdkCallsPolicyOptions.builder()
+                        .resources(AwsCustomResourcePolicy.ANY_RESOURCE)
+                        .build()))
                 .build();
 
         String userPoolClientSecret = describeUserPoolResource.getResponseField("UserPoolClient.ClientSecret");
