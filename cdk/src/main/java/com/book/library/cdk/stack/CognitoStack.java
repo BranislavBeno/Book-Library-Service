@@ -1,7 +1,5 @@
 package com.book.library.cdk.stack;
 
-import static software.amazon.awscdk.customresources.AwsCustomResourcePolicy.ANY_RESOURCE;
-
 import com.book.library.cdk.construct.ApplicationEnvironment;
 import com.book.library.cdk.util.CdkUtil;
 import java.util.Arrays;
@@ -138,8 +136,9 @@ public class CognitoStack extends Stack {
                                 "ClientId", this.userPoolClient.getUserPoolClientId()))
                         .physicalResourceId(PhysicalResourceId.of(this.userPoolClient.getUserPoolClientId()))
                         .build())
-                .policy(AwsCustomResourcePolicy.fromSdkCalls(
-                        SdkCallsPolicyOptions.builder().resources(ANY_RESOURCE).build()))
+                .policy(AwsCustomResourcePolicy.fromSdkCalls(SdkCallsPolicyOptions.builder()
+                        .resources(AwsCustomResourcePolicy.ANY_RESOURCE)
+                        .build()))
                 .build();
 
         String userPoolClientSecret = describeUserPoolResource.getResponseField("UserPoolClient.ClientSecret");

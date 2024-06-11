@@ -13,6 +13,7 @@ dependencies {
 }
 
 rewrite {
+    activeRecipe("com.book.library.NoStaticImport")
     activeRecipe("org.openrewrite.java.RemoveUnusedImports")
     activeRecipe("org.openrewrite.java.OrderImports")
     activeRecipe("org.openrewrite.java.migrate.UpgradeToJava21")
