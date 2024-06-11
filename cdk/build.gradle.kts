@@ -3,6 +3,7 @@ plugins {
     application
     id("java-library-conventions")
     id("spotless-conventions")
+    id("openrewrite-conventions")
 }
 
 application {
