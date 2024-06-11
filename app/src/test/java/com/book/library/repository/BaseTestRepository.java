@@ -14,7 +14,7 @@ public abstract class BaseTestRepository {
 
     @ServiceConnection
     private static final PostgreSQLContainer<?> REPOSITORY_CONTAINER =
-            new PostgreSQLContainer<>(DockerImageName.parse("postgres:16.2"));
+            new PostgreSQLContainer<>(DockerImageName.parse("postgres:16.3"));
 
     static {
         REPOSITORY_CONTAINER.start();
