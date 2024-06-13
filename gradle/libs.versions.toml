@@ -35,7 +35,7 @@ spring-cloud-aws-sqs = { module = "io.awspring.cloud:spring-cloud-aws-starter-sq
 spring-cloud-aws-ses = { module = "io.awspring.cloud:spring-cloud-aws-starter-ses" }
 spring-cloud-aws-dynamodb = { module = "io.awspring.cloud:spring-cloud-aws-starter-dynamodb" }
 aws-sdk-cognito-idp = { module = "software.amazon.awssdk:cognitoidentityprovider" }
-aws-cdk-lib = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.145.0" }
+aws-cdk-lib = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.146.0" }
 logback-awslogs-json = { module = "de.siegmar:logback-awslogs-json-encoder", version = "2.0.0" }
 
 # code quality
