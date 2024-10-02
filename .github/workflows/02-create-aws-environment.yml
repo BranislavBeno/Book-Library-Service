@@ -18,7 +18,7 @@ on:
 jobs:
   deploy-network-stack:
     name: Deploy the network stack
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     if: github.ref == 'refs/heads/master'
     steps:
       - name: Checkout code
@@ -44,7 +44,7 @@ jobs:
 
   deploy-domain-stack:
     name: Deploy the domain stack
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: deploy-network-stack
     if: github.ref == 'refs/heads/master'
     steps:

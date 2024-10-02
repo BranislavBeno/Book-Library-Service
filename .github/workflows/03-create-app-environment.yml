@@ -17,7 +17,7 @@ on:
 jobs:
   deploy-messaging-stack:
     name: Deploy the messaging stack
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     if: github.ref == 'refs/heads/master'
     steps:
       - name: Checkout code
@@ -43,7 +43,7 @@ jobs:
 
   deploy-database-stack:
     name: Deploy the RDS stack
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     if: github.ref == 'refs/heads/master'
     steps:
       - name: Checkout code
@@ -69,7 +69,7 @@ jobs:
 
   deploy-cognito-stack:
     name: Deploy the Cognito stack
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     if: github.ref == 'refs/heads/master'
     steps:
       - name: Checkout code
@@ -95,7 +95,7 @@ jobs:
 
   deploy-dynamo-db-stack:
     name: Deploy the DynamoDB stack
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     if: github.ref == 'refs/heads/master'
     steps:
       - name: Checkout code
