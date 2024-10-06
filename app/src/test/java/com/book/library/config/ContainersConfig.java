@@ -48,7 +48,7 @@ public class ContainersConfig {
     @RestartScope
     public LocalStackContainer localStackContainer(DynamicPropertyRegistry registry)
             throws IOException, InterruptedException {
-        try (var container = new LocalStackContainer(DockerImageName.parse("localstack/localstack:3.7.2"))) {
+        try (var container = new LocalStackContainer(DockerImageName.parse("localstack/localstack:3.8.0"))) {
             container.withServices(
                     LocalStackContainer.Service.SQS,
                     LocalStackContainer.Service.SES,
