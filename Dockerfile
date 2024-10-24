@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk-alpine:21.0.4 AS build
+FROM azul/zulu-openjdk-alpine:21.0.5 AS build
 RUN mkdir /project
 COPY . /project
 WORKDIR /project
