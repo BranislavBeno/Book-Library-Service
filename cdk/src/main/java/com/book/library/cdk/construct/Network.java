@@ -4,8 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import software.amazon.awscdk.Duration;
 import software.amazon.awscdk.Tags;
 import software.amazon.awscdk.services.ec2.*;
@@ -104,7 +103,7 @@ public class Network extends Construct {
                 getLoadBalancerCanonicalHostedZoneIdFromParameterStore(scope, appEnvironment));
     }
 
-    @NotNull
+    @NonNull
     private static String createParameterName(ApplicationEnvironment appEnvironment, String parameterName) {
         return "%s-%s-Network-%s"
                 .formatted(appEnvironment.environmentName(), appEnvironment.applicationName(), parameterName);
@@ -449,8 +448,8 @@ public class Network extends Construct {
                 this.httpsListener != null ? this.httpsListener.getListenerArn() : null,
                 this.loadBalancerSecurityGroup.getSecurityGroupId(),
                 this.ecsCluster.getClusterName(),
-                this.vpc.getIsolatedSubnets().stream().map(ISubnet::getSubnetId).collect(Collectors.toList()),
-                this.vpc.getPublicSubnets().stream().map(ISubnet::getSubnetId).collect(Collectors.toList()),
+                this.vpc.getIsolatedSubnets().stream().map(ISubnet::getSubnetId).toList(),
+                this.vpc.getPublicSubnets().stream().map(ISubnet::getSubnetId).toList(),
                 this.vpc.getAvailabilityZones(),
                 this.loadBalancer.getLoadBalancerArn(),
                 this.loadBalancer.getLoadBalancerDnsName(),

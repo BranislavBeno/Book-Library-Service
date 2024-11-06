@@ -1,9 +1,12 @@
 ---
 type: specs.openrewrite.org/v1beta/recipe
 name: com.book.library.NoStaticImport
-displayName: Remove static import
+displayName: Remove static import and replace annotation
 recipeList:
   - org.openrewrite.java.NoStaticImport:
       methodPattern: java.util.Collections *(..)
   - org.openrewrite.java.NoStaticImport:
       methodPattern: java.util.Arrays *(..)
+  - org.openrewrite.java.ReplaceAnnotation:
+      annotationPatternToReplace: "@org.jetbrains.annotations.NotNull"
+      annotationTemplateToInsert: "@org.jspecify.annotations.NonNull"

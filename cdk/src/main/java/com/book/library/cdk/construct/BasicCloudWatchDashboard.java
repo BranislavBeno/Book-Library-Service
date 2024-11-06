@@ -2,7 +2,7 @@ package com.book.library.cdk.construct;
 
 import java.util.List;
 import java.util.Map;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import software.amazon.awscdk.Duration;
 import software.amazon.awscdk.Environment;
 import software.amazon.awscdk.services.cloudwatch.*;
@@ -11,8 +11,8 @@ import software.constructs.Construct;
 public class BasicCloudWatchDashboard extends Construct {
 
     public BasicCloudWatchDashboard(
-            @NotNull Construct scope,
-            @NotNull String id,
+            @NonNull Construct scope,
+            @NonNull String id,
             ApplicationEnvironment appEnvironment,
             Environment awsEnvironment,
             InputParameter inputParameter) {

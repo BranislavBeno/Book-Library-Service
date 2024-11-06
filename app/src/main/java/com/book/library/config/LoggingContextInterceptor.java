@@ -2,7 +2,7 @@ package com.book.library.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.constraints.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -17,7 +17,7 @@ class LoggingContextInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(
-            @NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) {
+            @NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userId = getUserIdFromPrincipal(authentication.getPrincipal());
         MDC.put("userId", userId);
@@ -50,9 +50,9 @@ class LoggingContextInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(
-            @NotNull HttpServletRequest request,
-            @NotNull HttpServletResponse response,
-            @NotNull Object handler,
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull Object handler,
             Exception ex) {
         MDC.clear();
     }

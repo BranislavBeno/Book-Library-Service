@@ -2,7 +2,7 @@ package com.book.library.cdk.construct;
 
 import java.util.Collections;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import software.amazon.awscdk.services.ec2.CfnSecurityGroup;
 import software.amazon.awscdk.services.rds.CfnDBInstance;
 import software.amazon.awscdk.services.rds.CfnDBSubnetGroup;
@@ -119,7 +119,7 @@ public class PostgresDatabase extends Construct {
         applicationEnvironment.tag(this);
     }
 
-    @NotNull
+    @NonNull
     private static String createParameterName(ApplicationEnvironment applicationEnvironment, String parameterName) {
         return applicationEnvironment.environmentName() + "-" + applicationEnvironment.applicationName() + "-Database-"
                 + parameterName;

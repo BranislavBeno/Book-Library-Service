@@ -1,5 +1,8 @@
+import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.jvm.toolchain.JvmVendorSpec
+
+val libs = the<LibrariesForLibs>()
 
 plugins {
     `java-library`
@@ -17,6 +20,10 @@ java {
 
 jacoco {
     toolVersion = "0.8.12"
+}
+
+dependencies {
+    implementation(libs.org.jspecify)
 }
 
 tasks.test {

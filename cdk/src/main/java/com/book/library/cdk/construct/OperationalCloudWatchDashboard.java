@@ -2,7 +2,7 @@ package com.book.library.cdk.construct;
 
 import java.util.List;
 import java.util.Map;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import software.amazon.awscdk.Duration;
 import software.amazon.awscdk.Environment;
 import software.amazon.awscdk.services.cloudwatch.*;
@@ -20,8 +20,8 @@ public class OperationalCloudWatchDashboard extends Construct {
     private static final String JVM_MEMORY_COMMITTED_VALUE = "jvm.memory.committed.value";
 
     public OperationalCloudWatchDashboard(
-            @NotNull Construct scope,
-            @NotNull String id,
+            @NonNull Construct scope,
+            @NonNull String id,
             ApplicationEnvironment appEnvironment,
             Environment awsEnvironment,
             InputParameter inputParameter) {
@@ -326,7 +326,7 @@ public class OperationalCloudWatchDashboard extends Construct {
                         .build());
     }
 
-    @NotNull
+    @NonNull
     private Metric createSqsMetric(String metricName, String queueName, String statistic) {
         return new Metric(MetricProps.builder()
                 .namespace("AWS/SQS")
@@ -337,7 +337,7 @@ public class OperationalCloudWatchDashboard extends Construct {
                 .build());
     }
 
-    @NotNull
+    @NonNull
     private Metric createElbTargetResponseTimeMetric(String statistic, String loadBalancerId) {
         return new Metric(MetricProps.builder()
                 .namespace("AWS/ApplicationELB")
@@ -348,7 +348,7 @@ public class OperationalCloudWatchDashboard extends Construct {
                 .build());
     }
 
-    @NotNull
+    @NonNull
     private IMetric createElbTargetResponseCountMetric(String metricName, String loadBalancerId) {
         return new Metric(MetricProps.builder()
                 .namespace("AWS/ApplicationELB")
@@ -359,7 +359,7 @@ public class OperationalCloudWatchDashboard extends Construct {
                 .build());
     }
 
-    @NotNull
+    @NonNull
     private IMetric createJvmMemoryMetric(ApplicationEnvironment appEnvironment, String id, String metricName) {
         return new Metric(MetricProps.builder()
                 .namespace(METRIC_NAMESPACE)
@@ -370,7 +370,7 @@ public class OperationalCloudWatchDashboard extends Construct {
                 .build());
     }
 
-    @NotNull
+    @NonNull
     private IMetric createLogMetric(
             ApplicationEnvironment appEnvironment, Environment awsEnvironment, String logLevel) {
         return new Metric(MetricProps.builder()
