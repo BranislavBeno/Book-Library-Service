@@ -2,8 +2,8 @@ package com.book.library.reader;
 
 import com.book.library.dto.ReaderDto;
 import com.book.library.repository.AbstractTestRepository;
-import jakarta.validation.constraints.NotNull;
 import org.assertj.core.api.WithAssertions;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -90,7 +90,7 @@ class ReaderRepositoryTest extends AbstractTestRepository<Reader> implements Wit
         assertEntity(5, r -> assertThat(r.getFirstName()).isEqualTo("Thomas"));
     }
 
-    @NotNull
+    @NonNull
     private static Reader createReader() {
         var reader = new Reader();
         reader.setFirstName("Mathias");

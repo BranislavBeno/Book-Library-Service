@@ -1,9 +1,9 @@
 package com.book.library.book;
 
 import com.book.library.repository.AbstractTestRepository;
-import jakarta.validation.constraints.NotNull;
 import java.util.Optional;
 import org.assertj.core.api.WithAssertions;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -74,7 +74,7 @@ class BookRepositoryTest extends AbstractTestRepository<Book> implements WithAss
         assertEntity(1, r -> assertThat(r.getAuthor()).isEqualTo("William Shakespeare"));
     }
 
-    @NotNull
+    @NonNull
     private static Book createBook() {
         var book = new Book();
         book.setName("Macbeth");

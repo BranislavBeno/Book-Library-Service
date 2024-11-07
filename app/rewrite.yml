@@ -1,7 +1,7 @@
 ---
 type: specs.openrewrite.org/v1beta/recipe
 name: com.book.library.NoStaticImport
-displayName: Remove static import
+displayName: Remove static import and replace annotation
 recipeList:
   - org.openrewrite.java.NoStaticImport:
       methodPattern: org.mockito.Mockito *(..)
@@ -17,3 +17,9 @@ recipeList:
       methodPattern: org.springframework.test.web.servlet.result.MockMvcResultHandlers *(..)
   - org.openrewrite.java.NoStaticImport:
       methodPattern: org.springframework.test.web.servlet.result.MockMvcResultMatchers *(..)
+  - org.openrewrite.java.ReplaceAnnotation:
+      annotationPatternToReplace: "@jakarta.annotation.Nullable"
+      annotationTemplateToInsert: "@org.jspecify.annotations.Nullable"
+  - org.openrewrite.java.ReplaceAnnotation:
+      annotationPatternToReplace: "@jakarta.validation.constraints.NotNull"
+      annotationTemplateToInsert: "@org.jspecify.annotations.NonNull"
