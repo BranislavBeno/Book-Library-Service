@@ -31,7 +31,7 @@ public abstract class AbstractTestResources {
     private static final KeycloakContainer KEYCLOAK_CONTAINER;
 
     private static final LocalStackContainer LOCAL_STACK_CONTAINER =
-            new LocalStackContainer(DockerImageName.parse("localstack/localstack:3.8.1"));
+            new LocalStackContainer(DockerImageName.parse("localstack/localstack:4.0.3"));
 
     static {
         REPOSITORY_CONTAINER.start();
