@@ -51,6 +51,6 @@ rewrite-spring = { module = "org.openrewrite.recipe:rewrite-spring" }
 spring-boot = { module = "org.springframework.boot:spring-boot-gradle-plugin", version = "3.3.5" }
 git-properties = { module = "com.gorylenko.gradle-git-properties:gradle-git-properties", version = "2.4.2" }
 diffplug-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "6.25.0" }
-sonarqube = { module = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin", version = "5.1.0.4882" }
+sonarqube = { module = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin", version = "6.0.1.5171" }
 cyclonedx-sbom = { module = "org.cyclonedx:cyclonedx-gradle-plugin", version = "1.10.0" }
 open-rewrite = { module = "org.openrewrite:plugin", version = "6.26.0" }
