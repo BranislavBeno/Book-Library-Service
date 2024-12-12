@@ -7,6 +7,7 @@ import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 
 abstract class AbstractBookController {
 
@@ -52,7 +53,7 @@ abstract class AbstractBookController {
             service.deleteBook(id);
             String message = "Book with id='%d' deleted successfully.".formatted(id);
             LOGGER.info(message);
-        } catch (DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException | InvalidDataAccessApiUsageException e) {
             String message = "Book with id='%d' can't be deleted due to is still borrowed.".formatted(id);
             LOGGER.error(message);
             throw new BookDeletionException(message);
