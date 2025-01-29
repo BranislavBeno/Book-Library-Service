@@ -43,7 +43,7 @@ org-jspecify = { module = "org.jspecify:jspecify", version = "1.0.0" }
 palantir-javaformat = { module = "com.palantir.javaformat:palantir-java-format", version = "2.50.0" }
 
 # code migration
-rewrite-recipe-bom = { module = "org.openrewrite.recipe:rewrite-recipe-bom", version = "2.23.2" }
+rewrite-recipe-bom = { module = "org.openrewrite.recipe:rewrite-recipe-bom", version = "3.1.0" }
 rewrite-migrate-java = { module = "org.openrewrite.recipe:rewrite-migrate-java" }
 rewrite-spring = { module = "org.openrewrite.recipe:rewrite-spring" }
 
