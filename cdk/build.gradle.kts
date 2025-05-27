@@ -20,4 +20,6 @@ repositories { mavenCentral() }
 
 dependencies { implementation(libs.aws.cdk.lib) }
 
+gitProperties { dotGitDirectory.set(File("${project.rootDir}/.git")) }
+
 version = "0.1.0-SNAPSHOT"
