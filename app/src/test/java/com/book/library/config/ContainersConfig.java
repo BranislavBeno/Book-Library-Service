@@ -31,7 +31,7 @@ public class ContainersConfig {
     @RestartScope
     public KeycloakContainer keycloakContainer(DynamicPropertyRegistry registry) {
         try (var container = new KeycloakContainer(
-                DockerImageName.parse("quay.io/keycloak/keycloak:26.2.4").asCanonicalNameString())) {
+                DockerImageName.parse("quay.io/keycloak/keycloak:26.2.5").asCanonicalNameString())) {
             container.withRealmImportFiles("keycloak/stratospheric-realm.json", "keycloak/stratospheric-users-0.json");
             container.start();
 
@@ -48,7 +48,7 @@ public class ContainersConfig {
     @RestartScope
     public LocalStackContainer localStackContainer(DynamicPropertyRegistry registry)
             throws IOException, InterruptedException {
-        try (var container = new LocalStackContainer(DockerImageName.parse("localstack/localstack:4.4.0"))) {
+        try (var container = new LocalStackContainer(DockerImageName.parse("localstack/localstack:4.5.0"))) {
             container.withServices(
                     LocalStackContainer.Service.SQS,
                     LocalStackContainer.Service.SES,
