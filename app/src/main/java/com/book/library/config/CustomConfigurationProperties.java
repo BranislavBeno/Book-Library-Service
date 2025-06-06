@@ -1,8 +1,8 @@
 package com.book.library.config;
 
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import java.util.Set;
+import org.jspecify.annotations.NonNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
@@ -13,7 +13,7 @@ public class CustomConfigurationProperties {
     @NotEmpty
     private Set<String> invitationCodes;
 
-    @NotNull
+    @NonNull
     private Boolean useCognitoAsIdentityProvider = Boolean.FALSE;
 
     public Set<String> getInvitationCodes() {
