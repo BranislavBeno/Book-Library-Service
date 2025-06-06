@@ -12,7 +12,7 @@ application {
             project.properties["mainClass"].toString()
         } else {
             "Main class not defined!"
-        },
+        }
     )
 }
 
