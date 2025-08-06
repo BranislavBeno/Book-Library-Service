@@ -1,4 +1,4 @@
-image: eclipse-temurin:21.0.7_6-jdk-jammy
+image: eclipse-temurin:21.0.8_9-jdk-jammy
 
 variables:
   CONTAINER_IMAGE: beo1975/book-library-service:latest
