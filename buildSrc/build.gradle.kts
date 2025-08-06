@@ -1,3 +1,8 @@
+import org.gradle.kotlin.dsl.withType
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     `kotlin-dsl`
 }
@@ -17,16 +22,15 @@ dependencies {
     implementation(libs.open.rewrite)
 }
 
-tasks
-    .withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>()
-    .configureEach {
-        compilerOptions.languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9)
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.jvmTarget = JavaVersion.VERSION_21.toString()
 }
 
-tasks.withType<JavaCompile> {
-    java.targetCompatibility = JavaVersion.VERSION_21
+tasks.withType<KotlinCompile> {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_21)
+        languageVersion.set(KotlinVersion.KOTLIN_2_2)
+    }
 }
