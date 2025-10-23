@@ -69,3 +69,10 @@ tasks.getByName<BootJar>("bootJar") { this.archiveFileName.set("book-library-ser
 tasks.getByName<BootRun>("bootRun") { this.jvmArgs = listOf("-Dspring.profiles.active=aws") }
 
 tasks.getByName<BootRun>("bootTestRun") { this.jvmArgs = listOf("-Dspring.profiles.active=dev") }
+
+val sBomName = "book-library-service"
+
+tasks.cyclonedxDirectBom {
+    xmlOutput.set(project.file("build/reports/sbom/${sBomName}.xml"))
+    jsonOutput.set(project.file("build/reports/sbom/${sBomName}.json"))
+}
