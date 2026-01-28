@@ -14,12 +14,12 @@ spring-security-test = { module = "org.springframework.security:spring-security-
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 micrometer-observation-test = { module = "io.micrometer:micrometer-observation-test" }
 micrometer-registry-cloudwatch = { module = "io.micrometer:micrometer-registry-cloudwatch2" }
-testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version = "2.0.1" }
+testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version = "2.0.3" }
 testcontainers-common = { module = "org.testcontainers:testcontainers" }
 testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter" }
 testcontainers-postgresql = { module = "org.testcontainers:postgresql" }
 testcontainers-localstack = { module = "org.testcontainers:localstack" }
-testcontainers-keycloak = { module = "com.github.dasniko:testcontainers-keycloak", version = "3.9.0" }
+testcontainers-keycloak = { module = "com.github.dasniko:testcontainers-keycloak", version = "3.9.1" }
 org-awaitility = { module = "org.awaitility:awaitility", version = "4.3.0" }
 database-postgresql = { module = "org.postgresql:postgresql" }
 flyway-core = { module = "org.flywaydb:flyway-core" }
@@ -28,29 +28,29 @@ thymeleaf-layout-dialect = { module = "nz.net.ultraq.thymeleaf:thymeleaf-layout-
 thymeleaf-spring-security = { module = "org.thymeleaf.extras:thymeleaf-extras-springsecurity6", version = "3.1.3.RELEASE" }
 webjars-locator-core = { module = "org.webjars:webjars-locator-core", version = "0.59" }
 webjars-bootstrap = { module = "org.webjars:bootstrap", version = "5.3.8" }
-webjars-font-awesome = { module = "org.webjars:font-awesome", version = "7.0.1" }
+webjars-font-awesome = { module = "org.webjars:font-awesome", version = "7.1.0" }
 problem-spring-web = { module = "org.zalando:problem-spring-web", version = "0.29.1" }
-spring-cloud-aws-bom = { module = "io.awspring.cloud:spring-cloud-aws-dependencies", version = "3.4.0" }
+spring-cloud-aws-bom = { module = "io.awspring.cloud:spring-cloud-aws-dependencies", version = "3.4.2" }
 spring-cloud-aws-sqs = { module = "io.awspring.cloud:spring-cloud-aws-starter-sqs" }
 spring-cloud-aws-ses = { module = "io.awspring.cloud:spring-cloud-aws-starter-ses" }
 spring-cloud-aws-dynamodb = { module = "io.awspring.cloud:spring-cloud-aws-starter-dynamodb" }
 aws-sdk-cognito-idp = { module = "software.amazon.awssdk:cognitoidentityprovider" }
-aws-cdk-lib = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.222.0" }
+aws-cdk-lib = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.236.0" }
 logback-awslogs-json = { module = "de.siegmar:logback-awslogs-json-encoder", version = "2.0.0" }
 org-jspecify = { module = "org.jspecify:jspecify", version = "1.0.0" }
 
 # code quality
-palantir-javaformat = { module = "com.palantir.javaformat:palantir-java-format", version = "2.81.0" }
+palantir-javaformat = { module = "com.palantir.javaformat:palantir-java-format", version = "2.85.0" }
 
 # code migration
-rewrite-recipe-bom = { module = "org.openrewrite.recipe:rewrite-recipe-bom", version = "3.18.0" }
+rewrite-recipe-bom = { module = "org.openrewrite.recipe:rewrite-recipe-bom", version = "3.23.0" }
 rewrite-migrate-java = { module = "org.openrewrite.recipe:rewrite-migrate-java" }
 rewrite-spring = { module = "org.openrewrite.recipe:rewrite-spring" }
 
 # gradle plugins
-spring-boot = { module = "org.springframework.boot:spring-boot-gradle-plugin", version = "3.5.7" }
-git-properties = { module = "com.gorylenko.gradle-git-properties:gradle-git-properties", version = "2.5.2" }
-diffplug-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "8.0.0" }
-sonarqube = { module = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin", version = "7.0.1.6134" }
-cyclonedx-sbom = { module = "org.cyclonedx:cyclonedx-gradle-plugin", version = "3.0.1" }
-open-rewrite = { module = "org.openrewrite:plugin", version = "7.20.0" }
+spring-boot = { module = "org.springframework.boot:spring-boot-gradle-plugin", version = "3.5.10" }
+git-properties = { module = "com.gorylenko.gradle-git-properties:gradle-git-properties", version = "2.5.4" }
+diffplug-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "8.2.1" }
+sonarqube = { module = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin", version = "7.2.2.6593" }
+cyclonedx-sbom = { module = "org.cyclonedx:cyclonedx-gradle-plugin", version = "3.1.0" }
+open-rewrite = { module = "org.openrewrite:plugin", version = "7.25.0" }
