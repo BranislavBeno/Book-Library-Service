@@ -48,7 +48,7 @@ rewrite-migrate-java = { module = "org.openrewrite.recipe:rewrite-migrate-java" 
 rewrite-spring = { module = "org.openrewrite.recipe:rewrite-spring" }
 
 # gradle plugins
-spring-boot = { module = "org.springframework.boot:spring-boot-gradle-plugin", version = "3.5.10" }
+spring-boot = { module = "org.springframework.boot:spring-boot-gradle-plugin", version = "4.0.2" }
 git-properties = { module = "com.gorylenko.gradle-git-properties:gradle-git-properties", version = "2.5.4" }
 diffplug-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "8.2.1" }
 sonarqube = { module = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin", version = "7.2.2.6593" }
