@@ -19,7 +19,7 @@ testcontainers-common = { module = "org.testcontainers:testcontainers" }
 testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter" }
 testcontainers-postgresql = { module = "org.testcontainers:postgresql" }
 testcontainers-localstack = { module = "org.testcontainers:localstack" }
-testcontainers-keycloak = { module = "com.github.dasniko:testcontainers-keycloak", version = "3.9.1" }
+testcontainers-keycloak = { module = "com.github.dasniko:testcontainers-keycloak", version = "4.1.1" }
 org-awaitility = { module = "org.awaitility:awaitility", version = "4.3.0" }
 database-postgresql = { module = "org.postgresql:postgresql" }
 flyway-core = { module = "org.flywaydb:flyway-core" }
