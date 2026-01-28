@@ -1,11 +1,11 @@
 package com.book.library.recommendation;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 @DynamoDbBean
 public class TestNotification {
@@ -18,7 +18,7 @@ public class TestNotification {
     public TestNotification() {}
 
     @JsonCreator
-    public TestNotification(String json) throws JsonProcessingException {
+    public TestNotification(String json) throws JacksonException {
         ObjectMapper objectMapper = new ObjectMapper();
         TestNotification notification = objectMapper.readValue(json, TestNotification.class);
         this.notificationId = notification.notificationId;

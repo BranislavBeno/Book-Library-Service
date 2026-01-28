@@ -35,8 +35,7 @@ public class OperationalCloudWatchDashboard extends Construct {
                         .widgets(List.of(
                                 List.of(
                                         TextWidget.Builder.create()
-                                                .markdown(
-                                                        """
+                                                .markdown("""
                                                 # Operations Dashboard
                                                 Created with the AWS CDK.
                                                 * IaC
@@ -49,8 +48,7 @@ public class OperationalCloudWatchDashboard extends Construct {
                                         LogQueryWidget.Builder.create()
                                                 .title("Application Logs")
                                                 .logGroupNames(List.of(appEnvironment + "-logs"))
-                                                .queryString(
-                                                        """
+                                                .queryString("""
                                                 fields timestamp, message, logger, @logStream
                                                 | sort timestamp desc
                                                 | limit 100""")
@@ -71,8 +69,7 @@ public class OperationalCloudWatchDashboard extends Construct {
                                         LogQueryWidget.Builder.create()
                                                 .title("Application Error Logs")
                                                 .logGroupNames(List.of(appEnvironment + "-logs"))
-                                                .queryString(
-                                                        """
+                                                .queryString("""
                                                 fields message, logger, @logStream
                                                 | filter (level = 'ERROR' OR level = 'WARN')
                                                 | sort timestamp desc""")

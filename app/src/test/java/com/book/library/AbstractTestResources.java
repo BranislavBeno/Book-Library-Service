@@ -4,15 +4,15 @@ import dasniko.testcontainers.keycloak.KeycloakContainer;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.Container;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.localstack.LocalStackContainer;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
 @SpringBootTest(
@@ -25,8 +25,8 @@ public abstract class AbstractTestResources {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractTestResources.class);
 
     @ServiceConnection
-    private static final PostgreSQLContainer<?> REPOSITORY_CONTAINER =
-            new PostgreSQLContainer<>(DockerImageName.parse("postgres:18.1"));
+    private static final PostgreSQLContainer REPOSITORY_CONTAINER =
+            new PostgreSQLContainer(DockerImageName.parse("postgres:18.1"));
 
     private static final KeycloakContainer KEYCLOAK_CONTAINER;
 
@@ -41,8 +41,7 @@ public abstract class AbstractTestResources {
                 .withRealmImportFile("keycloak/stratospheric-realm.json");
         KEYCLOAK_CONTAINER.start();
 
-        LOCAL_STACK_CONTAINER.withServices(
-                LocalStackContainer.Service.SQS, LocalStackContainer.Service.SES, LocalStackContainer.Service.DYNAMODB);
+        LOCAL_STACK_CONTAINER.withServices("SQS", "SES", "DYNAMODB");
         LOCAL_STACK_CONTAINER.start();
 
         try {
@@ -117,10 +116,10 @@ public abstract class AbstractTestResources {
 
         registry.add(
                 "spring.cloud.aws.sqs.endpoint",
-                () -> LOCAL_STACK_CONTAINER.getEndpointOverride(LocalStackContainer.Service.SQS));
+                () -> LOCAL_STACK_CONTAINER.getEndpoint().toString());
         registry.add(
                 "spring.cloud.aws.dynamodb.endpoint",
-                () -> LOCAL_STACK_CONTAINER.getEndpointOverride(LocalStackContainer.Service.DYNAMODB));
+                () -> LOCAL_STACK_CONTAINER.getEndpoint().toString());
         registry.add("spring.cloud.aws.region.static", LOCAL_STACK_CONTAINER::getRegion);
         registry.add("spring.cloud.aws.credentials.access-key", LOCAL_STACK_CONTAINER::getAccessKey);
         registry.add("spring.cloud.aws.credentials.secret-key", LOCAL_STACK_CONTAINER::getSecretKey);

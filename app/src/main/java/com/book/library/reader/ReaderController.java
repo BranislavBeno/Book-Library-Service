@@ -76,7 +76,7 @@ public class ReaderController extends AbstractReaderController implements ViewCo
         try {
             deleteReader(id);
             attributes.addFlashAttribute(FORBIDDEN_ATTR, false);
-        } catch (ReaderDeletionException e) {
+        } catch (ReaderDeletionException _) {
             attributes.addFlashAttribute(FORBIDDEN_ATTR, true);
         }
 

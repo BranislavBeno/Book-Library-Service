@@ -53,7 +53,7 @@ abstract class AbstractBookController {
             service.deleteBook(id);
             String message = "Book with id='%d' deleted successfully.".formatted(id);
             LOGGER.info(message);
-        } catch (DataIntegrityViolationException | InvalidDataAccessApiUsageException e) {
+        } catch (DataIntegrityViolationException | InvalidDataAccessApiUsageException _) {
             String message = "Book with id='%d' can't be deleted due to is still borrowed.".formatted(id);
             LOGGER.error(message);
             throw new BookDeletionException(message);

@@ -1,12 +1,14 @@
 package com.book.library.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import tools.jackson.databind.ObjectMapper;
 
+@NullMarked
 public class UserForbiddenErrorHandler implements AccessDeniedHandler {
 
     private final ObjectMapper objectMapper;

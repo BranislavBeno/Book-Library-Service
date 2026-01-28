@@ -47,7 +47,7 @@ abstract class AbstractReaderController {
             service.deleteReader(id);
             String message = "Reader with id='%d' deleted successfully.".formatted(id);
             LOGGER.info(message);
-        } catch (DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException _) {
             String message =
                     "Reader with id='%d' can't be deleted due to he/she still has borrowed books.".formatted(id);
             LOGGER.error(message);

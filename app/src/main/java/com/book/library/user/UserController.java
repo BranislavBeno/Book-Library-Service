@@ -100,9 +100,7 @@ public class UserController {
                 LOGGER.debug("Access Token Type: {}", resultType.tokenType());
                 LOGGER.debug("Access Token:      {}", resultType.accessToken());
             } else if (challengeNameType.equals(ChallengeNameType.NEW_PASSWORD_REQUIRED)) {
-                redirectAttributes.addFlashAttribute(
-                        MESSAGE_ATTR,
-                        """
+                redirectAttributes.addFlashAttribute(MESSAGE_ATTR, """
                                 Please create a new password and make sure that will contain:
                                 - at least 12 characters
                                 - at least 1 number

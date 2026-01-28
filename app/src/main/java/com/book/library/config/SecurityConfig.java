@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import org.springframework.boot.security.autoconfigure.web.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -49,14 +49,14 @@ public class SecurityConfig {
 
     @Bean
     @Order(1)
-    public SecurityFilterChain restFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain restFilterChain(HttpSecurity httpSecurity) {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .securityMatcher("/api/v1/book/**", "/api/v1/reader/**")
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/book/**", "/api/v1/reader/**")
                         .authenticated())
-                .oauth2Login(oauth2 -> new OAuth2LoginConfigurer<>())
+                .oauth2Login(_ -> new OAuth2LoginConfigurer<>())
                 .exceptionHandling(exception -> exception.accessDeniedHandler(new UserForbiddenErrorHandler()));
 
         return httpSecurity.build();
@@ -64,7 +64,7 @@ public class SecurityConfig {
 
     @Bean
     @Order(2)
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) {
         httpSecurity
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
