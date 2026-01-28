@@ -2,7 +2,7 @@ package com.book.library.book;
 
 import io.micrometer.observation.tck.TestObservationRegistry;
 import java.lang.annotation.*;
-import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
+import org.springframework.boot.micrometer.metrics.test.autoconfigure.AutoConfigureMetrics;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Import;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Import(EnableTestObservation.ObservationTestConfiguration.class)
-@AutoConfigureObservability
+@AutoConfigureMetrics
 public @interface EnableTestObservation {
 
     @TestConfiguration
