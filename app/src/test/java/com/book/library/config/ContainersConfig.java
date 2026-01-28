@@ -24,14 +24,14 @@ public class ContainersConfig {
     @ServiceConnection
     @RestartScope
     public PostgreSQLContainer<?> postgresSqlContainer() {
-        return new PostgreSQLContainer<>("postgres:17.6");
+        return new PostgreSQLContainer<>("postgres:17.7");
     }
 
     @Bean
     @RestartScope
     public KeycloakContainer keycloakContainer(DynamicPropertyRegistry registry) {
         try (var container = new KeycloakContainer(
-                DockerImageName.parse("quay.io/keycloak/keycloak:26.4.4").asCanonicalNameString())) {
+                DockerImageName.parse("quay.io/keycloak/keycloak:26.5.2").asCanonicalNameString())) {
             container.withRealmImportFiles("keycloak/stratospheric-realm.json", "keycloak/stratospheric-users-0.json");
             container.start();
 
@@ -48,7 +48,7 @@ public class ContainersConfig {
     @RestartScope
     public LocalStackContainer localStackContainer(DynamicPropertyRegistry registry)
             throws IOException, InterruptedException {
-        try (var container = new LocalStackContainer(DockerImageName.parse("localstack/localstack:4.10.0"))) {
+        try (var container = new LocalStackContainer(DockerImageName.parse("localstack/localstack:4.12.0"))) {
             container.withServices(
                     LocalStackContainer.Service.SQS,
                     LocalStackContainer.Service.SES,
