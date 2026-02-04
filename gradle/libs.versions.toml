@@ -34,7 +34,7 @@ webjars-locator-core = { module = "org.webjars:webjars-locator-core", version = 
 webjars-bootstrap = { module = "org.webjars:bootstrap", version = "5.3.8" }
 webjars-font-awesome = { module = "org.webjars:font-awesome", version = "7.1.0" }
 problem-spring-web = { module = "org.zalando:problem-spring-web", version = "0.29.1" }
-spring-cloud-aws-bom = { module = "io.awspring.cloud:spring-cloud-aws-dependencies", version = "3.4.2" }
+spring-cloud-aws-bom = { module = "io.awspring.cloud:spring-cloud-aws-dependencies", version = "4.0.0" }
 spring-cloud-aws-sqs = { module = "io.awspring.cloud:spring-cloud-aws-starter-sqs" }
 spring-cloud-aws-ses = { module = "io.awspring.cloud:spring-cloud-aws-starter-ses" }
 spring-cloud-aws-dynamodb = { module = "io.awspring.cloud:spring-cloud-aws-starter-dynamodb" }

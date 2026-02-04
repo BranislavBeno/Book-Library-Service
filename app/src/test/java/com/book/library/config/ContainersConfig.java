@@ -49,7 +49,7 @@ public class ContainersConfig {
     public LocalStackContainer localStackContainer(DynamicPropertyRegistry registry)
             throws IOException, InterruptedException {
         try (var container = new LocalStackContainer(DockerImageName.parse("localstack/localstack:4.12.0"))) {
-            container.withServices("SQS", "SES", "DYNAMODB");
+            container.withServices("sqs", "ses", "dynamodb");
             container.start();
 
             Container.ExecResult createQueue = container.execInContainer(
