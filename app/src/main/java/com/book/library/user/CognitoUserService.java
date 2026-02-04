@@ -91,7 +91,7 @@ public class CognitoUserService implements UserService {
             byte[] rawHMac = mac.doFinal(clientId.getBytes(StandardCharsets.UTF_8));
 
             return Base64.getEncoder().encodeToString(rawHMac);
-        } catch (Exception e) {
+        } catch (Exception _) {
             throw new UserServiceException("Error while secret calculating.");
         }
     }

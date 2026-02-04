@@ -29,7 +29,7 @@ public class BookRecommendationController {
             redirectAttributes.addFlashAttribute(
                     MESSAGE_ATTR, "You successfully recommended book to other reader %s.".formatted(recommencedTo));
             redirectAttributes.addFlashAttribute(MESSAGE_TYPE_ATTR, "success");
-        } catch (Exception e) {
+        } catch (Exception _) {
             redirectAttributes.addFlashAttribute(
                     MESSAGE_ATTR,
                     "Request processing failed: Invalid book id: %d or reader id: %d.".formatted(bookId, readerId));

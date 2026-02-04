@@ -78,7 +78,6 @@ public final class BookRecommendationNotification {
                     bookInfo=%s
                     bookId=%s
                     token=%s
-                }"""
-                .formatted(recommencedEmail, recommencedName, recommencedId, bookInfo, bookId, token);
+                }""".formatted(recommencedEmail, recommencedName, recommencedId, bookInfo, bookId, token);
     }
 }

@@ -1,28 +1,31 @@
 [libraries]
-spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
-spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
-spring-boot-starter-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
-spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
-spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security" }
+spring-boot-starter-webmvc-common = { module = "org.springframework.boot:spring-boot-starter-webmvc" }
+spring-boot-starter-actuator-common = { module = "org.springframework.boot:spring-boot-starter-actuator" }
+spring-boot-starter-data-jpa-common = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
+spring-boot-starter-validation-common = { module = "org.springframework.boot:spring-boot-starter-validation" }
+spring-boot-starter-flyway-common = { module = "org.springframework.boot:spring-boot-starter-flyway" }
+spring-boot-starter-security-oauth2-resource-server-common = { module = "org.springframework.boot:spring-boot-starter-security-oauth2-resource-server" }
 spring-boot-starter-oauth2-client = { module = "org.springframework.boot:spring-boot-starter-oauth2-client" }
-spring-boot-starter-oauth2-resource-server = { module = "org.springframework.boot:spring-boot-starter-oauth2-resource-server" }
 spring-boot-starter-thymeleaf = { module = "org.springframework.boot:spring-boot-starter-thymeleaf" }
-spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 spring-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+spring-boot-starter-webmvc-test = { module = "org.springframework.boot:spring-boot-starter-webmvc-test" }
+spring-boot-starter-data-jpa-test = { module = "org.springframework.boot:spring-boot-starter-data-jpa-test" }
+spring-boot-starter-validation-test = { module = "org.springframework.boot:spring-boot-starter-validation-test" }
+spring-boot-starter-flyway-test = { module = "org.springframework.boot:spring-boot-starter-flyway-test" }
+spring-boot-starter-security-test = { module = "org.springframework.boot:spring-boot-starter-security-test" }
+spring-boot-starter-security-oauth2-resource-server-test = { module = "org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test" }
+spring-boot-micrometer-metrics-test = { module = "org.springframework.boot:spring-boot-micrometer-metrics-test" }
 spring-boot-testcontainers = { module = "org.springframework.boot:spring-boot-testcontainers" }
-spring-security-test = { module = "org.springframework.security:spring-security-test" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
-micrometer-observation-test = { module = "io.micrometer:micrometer-observation-test" }
 micrometer-registry-cloudwatch = { module = "io.micrometer:micrometer-registry-cloudwatch2" }
 testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version = "2.0.3" }
-testcontainers-common = { module = "org.testcontainers:testcontainers" }
-testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter" }
-testcontainers-postgresql = { module = "org.testcontainers:postgresql" }
-testcontainers-localstack = { module = "org.testcontainers:localstack" }
+testcontainers-junit-jupiter = { module = "org.testcontainers:testcontainers-junit-jupiter" }
+testcontainers-postgresql = { module = "org.testcontainers:testcontainers-postgresql" }
+testcontainers-localstack = { module = "org.testcontainers:testcontainers-localstack" }
 testcontainers-keycloak = { module = "com.github.dasniko:testcontainers-keycloak", version = "4.1.1" }
 org-awaitility = { module = "org.awaitility:awaitility", version = "4.3.0" }
 database-postgresql = { module = "org.postgresql:postgresql" }
-flyway-core = { module = "org.flywaydb:flyway-core" }
 flyway-database-postgresql = { module = "org.flywaydb:flyway-database-postgresql" }
 thymeleaf-layout-dialect = { module = "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect", version = "3.4.0" }
 thymeleaf-spring-security = { module = "org.thymeleaf.extras:thymeleaf-extras-springsecurity6", version = "3.1.3.RELEASE" }
@@ -30,7 +33,7 @@ webjars-locator-core = { module = "org.webjars:webjars-locator-core", version = 
 webjars-bootstrap = { module = "org.webjars:bootstrap", version = "5.3.8" }
 webjars-font-awesome = { module = "org.webjars:font-awesome", version = "7.1.0" }
 problem-spring-web = { module = "org.zalando:problem-spring-web", version = "0.29.1" }
-spring-cloud-aws-bom = { module = "io.awspring.cloud:spring-cloud-aws-dependencies", version = "3.4.2" }
+spring-cloud-aws-bom = { module = "io.awspring.cloud:spring-cloud-aws-dependencies", version = "4.0.0" }
 spring-cloud-aws-sqs = { module = "io.awspring.cloud:spring-cloud-aws-starter-sqs" }
 spring-cloud-aws-ses = { module = "io.awspring.cloud:spring-cloud-aws-starter-ses" }
 spring-cloud-aws-dynamodb = { module = "io.awspring.cloud:spring-cloud-aws-starter-dynamodb" }
@@ -48,7 +51,7 @@ rewrite-migrate-java = { module = "org.openrewrite.recipe:rewrite-migrate-java" 
 rewrite-spring = { module = "org.openrewrite.recipe:rewrite-spring" }
 
 # gradle plugins
-spring-boot = { module = "org.springframework.boot:spring-boot-gradle-plugin", version = "3.5.10" }
+spring-boot = { module = "org.springframework.boot:spring-boot-gradle-plugin", version = "4.0.2" }
 git-properties = { module = "com.gorylenko.gradle-git-properties:gradle-git-properties", version = "2.5.4" }
 diffplug-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "8.2.1" }
 sonarqube = { module = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin", version = "7.2.2.6593" }

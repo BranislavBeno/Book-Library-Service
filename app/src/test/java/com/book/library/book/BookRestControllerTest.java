@@ -37,50 +37,43 @@ class BookRestControllerTest extends AbstractTestResources {
     @Sql(scripts = "/sql/clean_up_db.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     class BookListTest {
 
-        private static final String BAD_REQUEST_BODY_1 =
-                """
+        private static final String BAD_REQUEST_BODY_1 = """
                         {
                            "id": 1,
                             "name": "Very long book name",
                             "author": "John Doe"
                         }""";
-        private static final String BAD_REQUEST_BODY_2 =
-                """
+        private static final String BAD_REQUEST_BODY_2 = """
                         {
                             "id": 1,
                             "name": "",
                             "author": "John Doe"
                         }""";
-        private static final String BAD_REQUEST_BODY_3 =
-                """
+        private static final String BAD_REQUEST_BODY_3 = """
                         {
                             "id": 1,
                             "name": "Book name",
                             "author": ""
                         }""";
-        private static final String BAD_REQUEST_BODY_4 =
-                """
+        private static final String BAD_REQUEST_BODY_4 = """
                         {
                             "id": 10,
                             "name": "Book name",
                             "author": "John Doe"
                         }""";
-        private static final String REQUEST_BODY_1 =
-                """
+        private static final String REQUEST_BODY_1 = """
                         {
                             "id": 1,
                             "name": "Book name",
                             "author": "John Doe"
                         }""";
-        private static final String REQUEST_BODY_2 =
-                """
+        private static final String REQUEST_BODY_2 = """
                         {
                             "bookId": 4,
                             "readerId": 1,
                             "from": "2023-01-05"
                         }""";
-        private static final String BAD_REQUEST_BODY_5 =
-                """
+        private static final String BAD_REQUEST_BODY_5 = """
                         {
                             "bookId": 10,
                             "readerId": 1,

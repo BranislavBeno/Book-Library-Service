@@ -11,8 +11,8 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.testcontainers.containers.Container;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.containers.localstack.LocalStackContainer;
+import org.testcontainers.localstack.LocalStackContainer;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
 @TestConfiguration(proxyBeanMethods = false)
@@ -23,8 +23,8 @@ public class ContainersConfig {
     @Bean
     @ServiceConnection
     @RestartScope
-    public PostgreSQLContainer<?> postgresSqlContainer() {
-        return new PostgreSQLContainer<>("postgres:18.1");
+    public PostgreSQLContainer postgresSqlContainer() {
+        return new PostgreSQLContainer("postgres:18.1");
     }
 
     @Bean
@@ -49,10 +49,7 @@ public class ContainersConfig {
     public LocalStackContainer localStackContainer(DynamicPropertyRegistry registry)
             throws IOException, InterruptedException {
         try (var container = new LocalStackContainer(DockerImageName.parse("localstack/localstack:4.12.0"))) {
-            container.withServices(
-                    LocalStackContainer.Service.SQS,
-                    LocalStackContainer.Service.SES,
-                    LocalStackContainer.Service.DYNAMODB);
+            container.withServices("sqs", "ses", "dynamodb");
             container.start();
 
             Container.ExecResult createQueue = container.execInContainer(
@@ -89,10 +86,10 @@ public class ContainersConfig {
 
             registry.add(
                     "spring.cloud.aws.sqs.endpoint",
-                    () -> container.getEndpointOverride(LocalStackContainer.Service.SQS));
+                    () -> container.getEndpoint().toString());
             registry.add(
                     "spring.cloud.aws.dynamodb.endpoint",
-                    () -> container.getEndpointOverride(LocalStackContainer.Service.DYNAMODB));
+                    () -> container.getEndpoint().toString());
             registry.add("spring.cloud.aws.region.static", container::getRegion);
             registry.add("spring.cloud.aws.credentials.access-key", container::getAccessKey);
             registry.add("spring.cloud.aws.credentials.secret-key", container::getSecretKey);

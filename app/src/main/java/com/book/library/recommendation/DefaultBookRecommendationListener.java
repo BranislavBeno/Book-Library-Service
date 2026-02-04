@@ -25,8 +25,7 @@ public record DefaultBookRecommendationListener(
         message.setFrom(confirmEmailFromAddress);
         message.setTo(payload.getRecommencedEmail());
         message.setSubject("A book was recommended to you");
-        message.setText(
-                """
+        message.setText("""
                                 Hi %s,\s
 
                                 someone recommended a book from %s to you.
@@ -36,15 +35,14 @@ public record DefaultBookRecommendationListener(
                                 You can accept the collaboration by clicking this link: %s/book/%s/recommend/%s/confirm?token=%s\s
 
                                 Kind regards,\s
-                                Book library service"""
-                        .formatted(
-                                payload.getRecommencedName(),
-                                externalUrl,
-                                payload.getBookInfo(),
-                                externalUrl,
-                                payload.getBookId(),
-                                payload.getRecommencedId(),
-                                payload.getToken()));
+                                Book library service""".formatted(
+                        payload.getRecommencedName(),
+                        externalUrl,
+                        payload.getBookInfo(),
+                        externalUrl,
+                        payload.getBookId(),
+                        payload.getRecommencedId(),
+                        payload.getToken()));
         mailSender.send(message);
 
         LOG.info("Successfully informed reader about recommended book.");

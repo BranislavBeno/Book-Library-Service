@@ -10,20 +10,17 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ReaderRepository extends JpaRepository<Reader, Integer> {
 
-    @Query(
-            """
+    @Query("""
                     SELECT new com.book.library.dto.ReaderDto(r.id, r.firstName, r.lastName, r.email)
                     FROM Reader r""")
     List<ReaderDto> findAllReaders();
 
-    @Query(
-            """
+    @Query("""
                     SELECT new com.book.library.dto.ReaderDto(r.id, r.firstName, r.lastName, r.email)
                     FROM Reader r""")
     Page<ReaderDto> findAllReadersPaged(Pageable pageable);
 
-    @Query(
-            """
+    @Query("""
                     SELECT new com.book.library.dto.ReaderDto(r.id, r.firstName, r.lastName, r.email)
                     FROM Reader r WHERE r.id = :id""")
     Optional<ReaderDto> findReaderById(long id);

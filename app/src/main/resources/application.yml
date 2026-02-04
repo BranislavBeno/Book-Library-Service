@@ -23,9 +23,6 @@ management:
 
 server:
   forward-headers-strategy: framework
-  error:
-    whitelabel:
-      enabled: false
 
 spring:
   mvc:
@@ -35,6 +32,10 @@ spring:
     aws:
       region:
         static: eu-central-1
+  web:
+    error:
+      whitelabel:
+        enabled: false
   jpa:
     hibernate:
       ddl-auto: none

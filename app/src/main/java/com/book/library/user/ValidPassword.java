@@ -12,8 +12,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = PasswordValidator.class)
 public @interface ValidPassword {
 
-    String message() default
-            """
+    String message() default """
             Invalid password. Please recheck the password, whether it contains
             - at least 12 characters,
             - at least 1 number,

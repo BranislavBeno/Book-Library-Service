@@ -121,7 +121,7 @@ public class BookController extends AbstractBookController implements ViewContro
         try {
             deleteBook(id);
             attributes.addFlashAttribute(FORBIDDEN_ATTR, false);
-        } catch (BookDeletionException e) {
+        } catch (BookDeletionException _) {
             attributes.addFlashAttribute(FORBIDDEN_ATTR, true);
         }
 

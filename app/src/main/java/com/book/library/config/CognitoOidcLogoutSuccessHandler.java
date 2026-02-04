@@ -4,12 +4,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 import org.springframework.security.web.util.UrlUtils;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+@NullMarked
 public class CognitoOidcLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
 
     private final String logoutUrl;
@@ -22,9 +25,9 @@ public class CognitoOidcLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandl
 
     @Override
     protected String determineTargetUrl(
-            HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+            HttpServletRequest request, HttpServletResponse response, @Nullable Authentication authentication) {
 
-        UriComponents baseUrl = UriComponentsBuilder.fromHttpUrl(UrlUtils.buildFullRequestUrl(request))
+        UriComponents baseUrl = UriComponentsBuilder.fromUriString(UrlUtils.buildFullRequestUrl(request))
                 .replacePath(request.getContextPath())
                 .replaceQuery(null)
                 .fragment(null)

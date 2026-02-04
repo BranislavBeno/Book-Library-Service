@@ -25,8 +25,7 @@ public class BasicCloudWatchDashboard extends Construct {
                         .dashboardName(appEnvironment + "-basic-application-dashboard")
                         .widgets(List.of(List.of(
                                 TextWidget.Builder.create()
-                                        .markdown(
-                                                """
+                                        .markdown("""
                                                 # Book Library Service Dashboard
                                                   Created with AWS CDK.
                                                   * IaC
@@ -82,8 +81,7 @@ public class BasicCloudWatchDashboard extends Construct {
                                         .view(LogQueryVisualizationType.TABLE)
                                         .title("Backend Logs")
                                         .logGroupNames(List.of(appEnvironment + "-logs"))
-                                        .queryString(
-                                                """
+                                        .queryString("""
                                                 fields @timestamp, @message
                                                 | sort @timestamp desc
                                                 | limit 20

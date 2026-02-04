@@ -37,32 +37,28 @@ class ReaderRestControllerTest extends AbstractTestResources {
     @Sql(scripts = "/sql/clean_up_db.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     class ReaderListTest {
 
-        private static final String BAD_REQUEST_BODY_1 =
-                """
+        private static final String BAD_REQUEST_BODY_1 = """
                         {
                         "firstName": "",
                         "lastName": "Doe",
                         "email": "john@example.com"
                         }""";
 
-        private static final String BAD_REQUEST_BODY_2 =
-                """
+        private static final String BAD_REQUEST_BODY_2 = """
                         {
                         "firstName": "John",
                         "lastName": "",
                         "email": "john@example.com"
                         }""";
 
-        private static final String BAD_REQUEST_BODY_3 =
-                """
+        private static final String BAD_REQUEST_BODY_3 = """
                         {
                         "firstName": "John",
                         "lastName": "Doe",
                         "email": "john"
                         }""";
 
-        private static final String BAD_REQUEST_BODY_4 =
-                """
+        private static final String BAD_REQUEST_BODY_4 = """
                         {
                         "id": "1",
                         "firstName": "",
@@ -70,8 +66,7 @@ class ReaderRestControllerTest extends AbstractTestResources {
                         "email": "john@example.com"
                         }""";
 
-        private static final String BAD_REQUEST_BODY_5 =
-                """
+        private static final String BAD_REQUEST_BODY_5 = """
                         {
                         "id": "1",
                         "firstName": "John",
@@ -79,16 +74,14 @@ class ReaderRestControllerTest extends AbstractTestResources {
                         "email": "john@example.com"
                         }""";
 
-        private static final String BAD_REQUEST_BODY_6 =
-                """
+        private static final String BAD_REQUEST_BODY_6 = """
                         {
                         "id": "1",
                         "firstName": "John",
                         "lastName": "Doe",
                         "email": "john"
                         }""";
-        private static final String BAD_REQUEST_BODY_7 =
-                """
+        private static final String BAD_REQUEST_BODY_7 = """
                         {
                         "id": "100",
                         "firstName": "John",
@@ -96,16 +89,14 @@ class ReaderRestControllerTest extends AbstractTestResources {
                         "email": "john@example.com"
                         }""";
 
-        private static final String REQUEST_BODY_1 =
-                """
+        private static final String REQUEST_BODY_1 = """
                         {
                         "firstName": "John",
                         "lastName": "Doe",
                         "email": "john@example.com"
                         }""";
 
-        private static final String REQUEST_BODY_2 =
-                """
+        private static final String REQUEST_BODY_2 = """
                         {
                         "id": "1",
                         "firstName": "John",

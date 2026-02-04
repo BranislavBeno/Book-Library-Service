@@ -9,16 +9,14 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface BookRepository extends JpaRepository<Book, Integer> {
 
-    @Query(
-            """
+    @Query("""
             SELECT new com.book.library.dto.AvailableBookDto(b.id, b.name, b.author)
             FROM Book b
             LEFT JOIN b.borrowed bb
             WHERE bb IS NULL""")
     Page<AvailableBookDto> findAllAvailableBooks(Pageable pageable);
 
-    @Query(
-            """
+    @Query("""
             SELECT b
             FROM Book b
             JOIN FETCH b.recommendationRequests

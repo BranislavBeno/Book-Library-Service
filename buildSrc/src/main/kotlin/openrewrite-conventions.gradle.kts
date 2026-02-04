@@ -17,5 +17,6 @@ rewrite {
     activeRecipe("org.openrewrite.java.RemoveUnusedImports")
     activeRecipe("org.openrewrite.java.OrderImports")
     activeRecipe("org.openrewrite.java.migrate.UpgradeToJava25")
-    activeRecipe("org.openrewrite.java.spring.boot3.UpgradeSpringBoot_3_5")
+    activeRecipe("org.openrewrite.java.spring.boot4.SpringBootProperties_4_0")
+    activeRecipe("org.openrewrite.java.spring.boot4.UpgradeSpringBoot_4_0")
 }
