@@ -48,7 +48,7 @@ public class ContainersConfig {
     @RestartScope
     public LocalStackContainer localStackContainer(DynamicPropertyRegistry registry)
             throws IOException, InterruptedException {
-        try (var container = new LocalStackContainer(DockerImageName.parse("localstack/localstack:4.12.0"))) {
+        try (var container = new LocalStackContainer(DockerImageName.parse("localstack/localstack:4.13.1"))) {
             container.withServices("sqs", "ses", "dynamodb");
             container.start();
 
