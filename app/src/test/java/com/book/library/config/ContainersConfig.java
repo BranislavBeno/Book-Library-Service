@@ -24,14 +24,14 @@ public class ContainersConfig {
     @ServiceConnection
     @RestartScope
     public PostgreSQLContainer postgresSqlContainer() {
-        return new PostgreSQLContainer("postgres:18.1");
+        return new PostgreSQLContainer("postgres:18.2");
     }
 
     @Bean
     @RestartScope
     public KeycloakContainer keycloakContainer(DynamicPropertyRegistry registry) {
         try (var container = new KeycloakContainer(
-                DockerImageName.parse("quay.io/keycloak/keycloak:26.5.2").asCanonicalNameString())) {
+                DockerImageName.parse("quay.io/keycloak/keycloak:26.5.3").asCanonicalNameString())) {
             container.withRealmImportFiles("keycloak/stratospheric-realm.json", "keycloak/stratospheric-users-0.json");
             container.start();
 
