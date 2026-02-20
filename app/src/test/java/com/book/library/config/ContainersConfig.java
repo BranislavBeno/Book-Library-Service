@@ -31,7 +31,7 @@ public class ContainersConfig {
     @RestartScope
     public KeycloakContainer keycloakContainer(DynamicPropertyRegistry registry) {
         try (var container = new KeycloakContainer(
-                DockerImageName.parse("quay.io/keycloak/keycloak:26.5.3").asCanonicalNameString())) {
+                DockerImageName.parse("quay.io/keycloak/keycloak:26.5.4").asCanonicalNameString())) {
             container.withRealmImportFiles("keycloak/stratospheric-realm.json", "keycloak/stratospheric-users-0.json");
             container.start();
 
