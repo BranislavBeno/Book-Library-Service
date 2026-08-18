@@ -7,13 +7,7 @@ plugins {
 }
 
 application {
-    mainClass.set(
-        if (project.hasProperty("mainClass")) {
-            project.properties["mainClass"].toString()
-        } else {
-            "Main class not defined!"
-        }
-    )
+    mainClass.set(providers.gradleProperty("mainClass").orElse("Main class not defined!"))
 }
 
 repositories { mavenCentral() }

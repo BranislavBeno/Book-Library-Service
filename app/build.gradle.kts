@@ -10,8 +10,6 @@ plugins {
     id("openrewrite-conventions")
 }
 
-apply(plugin = "io.spring.dependency-management")
-
 springBoot { buildInfo() }
 
 repositories { mavenCentral() }

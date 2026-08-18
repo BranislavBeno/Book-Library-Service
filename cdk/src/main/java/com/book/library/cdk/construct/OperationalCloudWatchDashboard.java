@@ -83,58 +83,38 @@ public class OperationalCloudWatchDashboard extends Construct {
                                                 .region(awsEnvironment.getRegion())
                                                 .setPeriodToTimeRange(true)
                                                 .left(List.of(
-                                                        new MathExpression(
-                                                                MathExpressionProps.builder()
-                                                                        .label("JVM Process CPU Usage")
-                                                                        .expression("100*(processCpu)")
-                                                                        .usingMetrics(
-                                                                                Map.of(
-                                                                                        "processCpu",
-                                                                                        new Metric(
-                                                                                                MetricProps.builder()
-                                                                                                        .namespace(
-                                                                                                                METRIC_NAMESPACE)
-                                                                                                        .metricName(
-                                                                                                                "process.cpu.usage.value")
-                                                                                                        .period(
-                                                                                                                Duration
-                                                                                                                        .minutes(
-                                                                                                                                5))
-                                                                                                        .dimensionsMap(
-                                                                                                                Map.of(
-                                                                                                                        ENVIRONMENT_NAME,
-                                                                                                                        appEnvironment
-                                                                                                                                .environmentName()))
-                                                                                                        .statistic(
-                                                                                                                "avg")
-                                                                                                        .build())))
-                                                                        .build()),
-                                                        new MathExpression(
-                                                                MathExpressionProps.builder()
-                                                                        .label("System CPU Usage")
-                                                                        .expression("100*(systemCpu)")
-                                                                        .usingMetrics(
-                                                                                Map.of(
-                                                                                        "systemCpu",
-                                                                                        new Metric(
-                                                                                                MetricProps.builder()
-                                                                                                        .namespace(
-                                                                                                                METRIC_NAMESPACE)
-                                                                                                        .metricName(
-                                                                                                                "system.cpu.usage.value")
-                                                                                                        .period(
-                                                                                                                Duration
-                                                                                                                        .minutes(
-                                                                                                                                5))
-                                                                                                        .dimensionsMap(
-                                                                                                                Map.of(
-                                                                                                                        ENVIRONMENT_NAME,
-                                                                                                                        appEnvironment
-                                                                                                                                .environmentName()))
-                                                                                                        .statistic(
-                                                                                                                "avg")
-                                                                                                        .build())))
-                                                                        .build())))
+                                                        new MathExpression(MathExpressionProps.builder()
+                                                                .label("JVM Process CPU Usage")
+                                                                .expression("100*(processCpu)")
+                                                                .usingMetrics(Map.of(
+                                                                        "processCpu",
+                                                                        new Metric(MetricProps.builder()
+                                                                                .namespace(METRIC_NAMESPACE)
+                                                                                .metricName("process.cpu.usage.value")
+                                                                                .period(Duration.minutes(5))
+                                                                                .dimensionsMap(Map.of(
+                                                                                        ENVIRONMENT_NAME,
+                                                                                        appEnvironment
+                                                                                                .environmentName()))
+                                                                                .statistic("avg")
+                                                                                .build())))
+                                                                .build()),
+                                                        new MathExpression(MathExpressionProps.builder()
+                                                                .label("System CPU Usage")
+                                                                .expression("100*(systemCpu)")
+                                                                .usingMetrics(Map.of(
+                                                                        "systemCpu",
+                                                                        new Metric(MetricProps.builder()
+                                                                                .namespace(METRIC_NAMESPACE)
+                                                                                .metricName("system.cpu.usage.value")
+                                                                                .period(Duration.minutes(5))
+                                                                                .dimensionsMap(Map.of(
+                                                                                        ENVIRONMENT_NAME,
+                                                                                        appEnvironment
+                                                                                                .environmentName()))
+                                                                                .statistic("avg")
+                                                                                .build())))
+                                                                .build())))
                                                 .height(6)
                                                 .width(12)
                                                 .build(),
@@ -144,52 +124,48 @@ public class OperationalCloudWatchDashboard extends Construct {
                                                 .region(awsEnvironment.getRegion())
                                                 .setPeriodToTimeRange(true)
                                                 .left(List.of(
-                                                        new MathExpression(
-                                                                MathExpressionProps.builder()
-                                                                        .label("JVM Heap Memory Used")
-                                                                        .expression(
-                                                                                "(survivorUsed + edenUsed + tenuredUsed)/1000000")
-                                                                        .usingMetrics(
-                                                                                Map.of(
-                                                                                        "survivorUsed",
-                                                                                                createJvmMemoryMetric(
-                                                                                                        appEnvironment,
-                                                                                                        "Survivor Space",
-                                                                                                        JVM_MEMORY_USED_VALUE),
-                                                                                        "edenUsed",
-                                                                                                createJvmMemoryMetric(
-                                                                                                        appEnvironment,
-                                                                                                        "Eden Space",
-                                                                                                        JVM_MEMORY_USED_VALUE),
-                                                                                        "tenuredUsed",
-                                                                                                createJvmMemoryMetric(
-                                                                                                        appEnvironment,
-                                                                                                        "Tenured Gen",
-                                                                                                        JVM_MEMORY_USED_VALUE)))
-                                                                        .build()),
-                                                        new MathExpression(
-                                                                MathExpressionProps.builder()
-                                                                        .label("JVM Heap Memory Committed")
-                                                                        .expression(
-                                                                                "(survivorCommitted + edenCommitted + tenuredCommitted)/1000000")
-                                                                        .usingMetrics(
-                                                                                Map.of(
-                                                                                        "survivorCommitted",
-                                                                                                createJvmMemoryMetric(
-                                                                                                        appEnvironment,
-                                                                                                        "Survivor Space",
-                                                                                                        JVM_MEMORY_COMMITTED_VALUE),
-                                                                                        "edenCommitted",
-                                                                                                createJvmMemoryMetric(
-                                                                                                        appEnvironment,
-                                                                                                        "Eden Space",
-                                                                                                        JVM_MEMORY_COMMITTED_VALUE),
-                                                                                        "tenuredCommitted",
-                                                                                                createJvmMemoryMetric(
-                                                                                                        appEnvironment,
-                                                                                                        "Tenured Gen",
-                                                                                                        JVM_MEMORY_COMMITTED_VALUE)))
-                                                                        .build())))
+                                                        new MathExpression(MathExpressionProps.builder()
+                                                                .label("JVM Heap Memory Used")
+                                                                .expression(
+                                                                        "(survivorUsed + edenUsed + tenuredUsed)/1000000")
+                                                                .usingMetrics(Map.of(
+                                                                        "survivorUsed",
+                                                                                createJvmMemoryMetric(
+                                                                                        appEnvironment,
+                                                                                        "Survivor Space",
+                                                                                        JVM_MEMORY_USED_VALUE),
+                                                                        "edenUsed",
+                                                                                createJvmMemoryMetric(
+                                                                                        appEnvironment,
+                                                                                        "Eden Space",
+                                                                                        JVM_MEMORY_USED_VALUE),
+                                                                        "tenuredUsed",
+                                                                                createJvmMemoryMetric(
+                                                                                        appEnvironment,
+                                                                                        "Tenured Gen",
+                                                                                        JVM_MEMORY_USED_VALUE)))
+                                                                .build()),
+                                                        new MathExpression(MathExpressionProps.builder()
+                                                                .label("JVM Heap Memory Committed")
+                                                                .expression(
+                                                                        "(survivorCommitted + edenCommitted + tenuredCommitted)/1000000")
+                                                                .usingMetrics(Map.of(
+                                                                        "survivorCommitted",
+                                                                                createJvmMemoryMetric(
+                                                                                        appEnvironment,
+                                                                                        "Survivor Space",
+                                                                                        JVM_MEMORY_COMMITTED_VALUE),
+                                                                        "edenCommitted",
+                                                                                createJvmMemoryMetric(
+                                                                                        appEnvironment,
+                                                                                        "Eden Space",
+                                                                                        JVM_MEMORY_COMMITTED_VALUE),
+                                                                        "tenuredCommitted",
+                                                                                createJvmMemoryMetric(
+                                                                                        appEnvironment,
+                                                                                        "Tenured Gen",
+                                                                                        JVM_MEMORY_COMMITTED_VALUE)))
+                                                                .build())))
                                                 .height(6)
                                                 .width(12)
                                                 .build()),

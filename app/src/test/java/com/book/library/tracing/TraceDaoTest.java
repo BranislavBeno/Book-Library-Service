@@ -42,8 +42,9 @@ class TraceDaoTest extends AbstractTestResources implements WithAssertions {
             List<Breadcrumb> breadcrumbs = traceDao.findAllEventsForUser(username);
             assertThat(breadcrumbs).hasSize(count);
             Breadcrumb breadcrumb = breadcrumbs.stream().findFirst().orElse(null);
-            assertThat(breadcrumb).isNotNull().satisfies(b -> assertThat(b.getUri())
-                    .endsWith("/all"));
+            assertThat(breadcrumb)
+                    .isNotNull()
+                    .satisfies(b -> assertThat(b.getUri()).endsWith("/all"));
         });
     }
 
