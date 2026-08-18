@@ -7,8 +7,6 @@ val libs = the<LibrariesForLibs>()
 plugins {
     `java-library`
     jacoco
-    id("org.springframework.boot")
-    id("com.gorylenko.gradle-git-properties")
 }
 
 java {
