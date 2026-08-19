@@ -59,6 +59,10 @@ public class TraceDao {
         getItems().forEach(dynamoDbTable::deleteItem);
     }
 
+    boolean isEmpty() {
+        return getItems().findAny().isEmpty();
+    }
+
     private Stream<Breadcrumb> getItems() {
         return dynamoDbTable.scan().items().stream();
     }
