@@ -7,8 +7,6 @@ val libs = the<LibrariesForLibs>()
 plugins {
     `java-library`
     jacoco
-    id("org.springframework.boot")
-    id("com.gorylenko.gradle-git-properties")
 }
 
 java {
@@ -19,33 +17,39 @@ java {
 }
 
 jacoco {
-    toolVersion = "0.8.14"
+    toolVersion = "0.8.15"
 }
 
 dependencies {
     implementation(libs.org.jspecify)
 }
 
+val testSummaryListener = object : TestListener {
+    override fun beforeSuite(suite: TestDescriptor) = Unit
+
+    override fun afterSuite(suite: TestDescriptor, result: TestResult) {
+        if (suite.parent == null) {
+            logger.lifecycle("\nTest result: ${result.resultType}")
+            logger.lifecycle(
+                "Test summary: " +
+                        "${result.testCount} tests, " +
+                        "${result.successfulTestCount} succeeded, " +
+                        "${result.failedTestCount} failed, " +
+                        "${result.skippedTestCount} skipped"
+            )
+        }
+    }
+
+    override fun beforeTest(testDescriptor: TestDescriptor) = Unit
+
+    override fun afterTest(testDescriptor: TestDescriptor, result: TestResult) = Unit
+}
+
 tasks.test {
     this.jvmArgs = listOf("-Dspring.profiles.active=dev")
     useJUnitPlatform()
     finalizedBy(tasks.jacocoTestReport)
-    afterSuite(
-        KotlinClosure2<TestDescriptor, TestResult, Unit>({ descriptor, result ->
-            if (descriptor.parent == null) {
-                logger.lifecycle(
-                    "\nTest result: ${result.resultType}",
-                )
-                logger.lifecycle(
-                    "Test summary: " +
-                            "${result.testCount} tests, " +
-                            "${result.successfulTestCount} succeeded, " +
-                            "${result.failedTestCount} failed, " +
-                            "${result.skippedTestCount} skipped",
-                )
-            }
-        }),
-    )
+    addTestListener(testSummaryListener)
 }
 
 tasks.jacocoTestReport {

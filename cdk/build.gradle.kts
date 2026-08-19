@@ -1,19 +1,14 @@
 plugins {
     java
     application
+    alias(libs.plugins.git.properties)
     id("java-library-conventions")
     id("spotless-conventions")
     id("openrewrite-conventions")
 }
 
 application {
-    mainClass.set(
-        if (project.hasProperty("mainClass")) {
-            project.properties["mainClass"].toString()
-        } else {
-            "Main class not defined!"
-        }
-    )
+    mainClass.set(providers.gradleProperty("mainClass").orElse("Main class not defined!"))
 }
 
 repositories { mavenCentral() }

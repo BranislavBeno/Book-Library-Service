@@ -2,15 +2,16 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
-    application
+    java
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dependency.management)
+    alias(libs.plugins.git.properties)
     id("java-library-conventions")
     id("spotless-conventions")
     id("sonarqube-conventions")
     id("cyclonedx-sbom-conventions")
     id("openrewrite-conventions")
 }
-
-apply(plugin = "io.spring.dependency-management")
 
 springBoot { buildInfo() }
 

@@ -14,8 +14,6 @@ repositories {
 
 dependencies {
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
-    implementation(libs.spring.boot)
-    implementation(libs.git.properties)
     implementation(libs.diffplug.spotless)
     implementation(libs.sonarqube)
     implementation(libs.cyclonedx.sbom)
@@ -30,7 +28,7 @@ java {
 
 tasks.withType<KotlinCompile> {
     compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_24)
-        languageVersion.set(KotlinVersion.KOTLIN_2_2)
+        jvmTarget.set(JvmTarget.JVM_25)
+        languageVersion.set(KotlinVersion.KOTLIN_2_3)
     }
 }
