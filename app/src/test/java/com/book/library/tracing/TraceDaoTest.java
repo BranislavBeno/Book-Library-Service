@@ -32,7 +32,10 @@ class TraceDaoTest extends AbstractTestResources implements WithAssertions {
 
     @AfterEach
     void tearDown() {
-        traceDao.deleteItems();
+        Awaitility.await().atMost(30, TimeUnit.SECONDS).ignoreExceptions().untilAsserted(() -> {
+            traceDao.deleteItems();
+            assertThat(traceDao.isEmpty()).isTrue();
+        });
     }
 
     @ParameterizedTest
