@@ -38,7 +38,7 @@ spring-cloud-aws-sqs = { module = "io.awspring.cloud:spring-cloud-aws-starter-sq
 spring-cloud-aws-ses = { module = "io.awspring.cloud:spring-cloud-aws-starter-ses" }
 spring-cloud-aws-dynamodb = { module = "io.awspring.cloud:spring-cloud-aws-starter-dynamodb" }
 aws-sdk-cognito-idp = { module = "software.amazon.awssdk:cognitoidentityprovider" }
-aws-cdk-lib = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.265.0" }
+aws-cdk-lib = { module = "software.amazon.awscdk:aws-cdk-lib", version = "2.266.0" }
 logback-awslogs-json = { module = "de.siegmar:logback-awslogs-json-encoder", version = "2.0.0" }
 org-jspecify = { module = "org.jspecify:jspecify", version = "1.0.1" }
 
@@ -57,6 +57,6 @@ cyclonedx-sbom = { module = "org.cyclonedx:cyclonedx-gradle-plugin", version = "
 open-rewrite = { module = "org.openrewrite:plugin", version = "7.39.0" }
 
 [plugins]
-spring-boot = { id = "org.springframework.boot", version = "4.1.0" }
+spring-boot = { id = "org.springframework.boot", version = "4.1.1" }
 spring-dependency-management = { id = "io.spring.dependency-management", version = "1.1.7" }
 git-properties = { id = "com.gorylenko.gradle-git-properties", version = "4.0.1" }
