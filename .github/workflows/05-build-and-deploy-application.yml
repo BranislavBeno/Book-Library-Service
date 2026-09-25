@@ -88,6 +88,8 @@ jobs:
           context: .
           platforms: linux/amd64
           push: true
+          secrets: |
+            codegenome_token=${{ secrets.CODEGENOME_TOKEN }}
           tags: |
             beo1975/book-library-service:0.1.0
             beo1975/book-library-service:latest
@@ -185,6 +187,7 @@ jobs:
       - name: Deploy service stack
         env:
           DOCKER_IMAGE_TAG: ${{ needs.build-and-publish-docker-image.outputs.DOCKER_IMAGE_TAG }}
+          CODEGENOME_TOKEN: ${{ secrets.CODEGENOME_TOKEN }}
         working-directory: cdk
         run: npm run service:deploy -- -c dockerImageTag=${DOCKER_IMAGE_TAG} -c environmentName=${APP_ENVIRONMENT_NAME}
 
@@ -222,5 +225,7 @@ jobs:
           npm i
 
       - name: Deploy monitoring stack
+        env:
+          CODEGENOME_TOKEN: ${{ secrets.CODEGENOME_TOKEN }}
         working-directory: cdk
         run: npm run monitoring:deploy -- -c environmentName=${APP_ENVIRONMENT_NAME}
