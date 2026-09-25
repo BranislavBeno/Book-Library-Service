@@ -8,6 +8,13 @@ plugins {
 }
 
 repositories {
+    maven {
+        url = uri("https://artifacts.codegenomeproject.org/maven")
+        credentials {
+            username = providers.gradleProperty("codegenome.project.user").getOrElse("")
+            password = providers.gradleProperty("codegenome.project.token").getOrElse("")
+        }
+    }
     mavenCentral()
     gradlePluginPortal()
 }

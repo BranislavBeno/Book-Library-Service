@@ -38,5 +38,7 @@ jobs:
           npm i
 
       - name: Deploy Canary stack
+        env:
+          CODEGENOME_TOKEN: ${{ secrets.CODEGENOME_TOKEN }}
         working-directory: cdk
         run: npm run canary:deploy -- -c environmentName=${{ github.event.inputs.environmentName }} -c canaryUserPassword=${{ secrets.CANARY_USER_PASSWORD }}
